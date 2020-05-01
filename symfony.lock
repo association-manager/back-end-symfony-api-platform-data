@@ -90,6 +90,9 @@
     "doctrine/reflection": {
         "version": "1.2.1"
     },
+    "fzaninotto/faker": {
+        "version": "v1.9.1"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -119,6 +122,9 @@
     },
     "namshi/jose": {
         "version": "7.2.3"
+    },
+    "nikic/php-parser": {
+        "version": "v4.4.0"
     },
     "ocramius/package-versions": {
         "version": "1.8.0"
@@ -227,6 +233,15 @@
     },
     "symfony/inflector": {
         "version": "v5.0.8"
+    },
+    "symfony/maker-bundle": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
+        }
     },
     "symfony/mime": {
         "version": "v5.0.7"
