@@ -5,6 +5,7 @@
         "php": "^7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "api-platform/api-pack": "^1.2",
         "doctrine/doctrine-bundle": "^2.0",
         "lexik/jwt-authentication-bundle": "^2.6",
         "symfony/console": "5.0.*",
@@ -16,6 +17,8 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",
+        "fzaninotto/faker": "^1.9",
+        "symfony/maker-bundle": "^1.15",
         "symfony/phpunit-bridge": "^5.0"
     },
     "config": {
@@ -53,7 +56,19 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "load-data": {
+            "createDataBase": "php bin/console doctrine:database:create",
+            "migration": "php bin/console doctrine:migrations:migrate",
+            "loadFixture": "php bin/console doctrine:fixtures:load --append --no-interaction"
+        },
+        "test": {
+            "dropDataBase": "php bin/console doctrine:database:drop --force --env=test",
+            "createDataBase": "php bin/console doctrine:database:create --env=test",
+            "migration": "php bin/console doctrine:migrations:migrate --env=test",
+            "loadFixture": "php bin/console doctrine:fixtures:load --append --no-interaction --env=test",
+            "runTest":"phpdbg -qrr bin/phpunit --coverage-html var/log"
+        }
     },
     "conflict": {
         "symfony/symfony": "*"
