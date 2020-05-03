@@ -73,6 +73,16 @@ class User implements UserInterface
      */
     private $validatedBy;
 
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $sex;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $dob;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -244,6 +254,30 @@ class User implements UserInterface
     public function setValidatedBy(?self $validatedBy): self
     {
         $this->validatedBy = $validatedBy;
+
+        return $this;
+    }
+
+    public function getSex(): ?string
+    {
+        return $this->sex;
+    }
+
+    public function setSex(?string $sex): self
+    {
+        $this->sex = $sex;
+
+        return $this;
+    }
+
+    public function getDob(): ?\DateTimeInterface
+    {
+        return $this->dob;
+    }
+
+    public function setDob(?\DateTimeInterface $dob): self
+    {
+        $this->dob = $dob;
 
         return $this;
     }
