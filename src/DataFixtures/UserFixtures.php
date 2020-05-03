@@ -11,7 +11,7 @@ class UserFixtures extends BaseFixture
     protected function loadData(ObjectManager $manager)
     {
         $this->createMany(User::class, 10, function(User $user, $count){
-
+            $hash = $this->encoder->encodePassword($user, "password");
             $user->setFirstName($this->faker->firstName())
                 ->setLastName($this->faker->lastName)
                 ->setEmail($this->faker->email.$count)
@@ -19,7 +19,7 @@ class UserFixtures extends BaseFixture
                 ->setMobile($this->faker->phoneNumber)
                 ->setSex($this->faker->randomElement(['male','female', '']))
                 ->setDob($this->faker->dateTime)
-                ->setPassword('password')
+                ->setPassword($hash)
                 ->setDataUsageAgreement($this->faker->randomElement([1,0]))
             ;
         });

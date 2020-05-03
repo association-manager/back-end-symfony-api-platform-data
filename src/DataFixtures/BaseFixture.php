@@ -6,6 +6,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Generator;
 use Faker\Factory;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 abstract class BaseFixture extends Fixture
 {
@@ -13,8 +14,15 @@ abstract class BaseFixture extends Fixture
     private $manager;
     /** @var Generator */
     protected $faker;
+    /** @var UserPasswordEncoderInterface */
+    protected $encoder;
 
     abstract protected function loadData(ObjectManager $manager);
+
+    public function __construct(UserPasswordEncoderInterface $encoder)
+    {
+        $this->encoder = $encoder;
+    }
 
     public function load(ObjectManager $manager): void
     {
