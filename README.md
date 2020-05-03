@@ -12,8 +12,14 @@ composer install
 # Mysql in local System
 Copy and paste .env file as .env.local as change credential of your database 
 
-
-## To Excute test
+# To seed the data for fist time in your system
 ````bash
-php bin\phpunit
+composer run load-data
 ````
+
+## To Execute test
+- Need to install phpdbg in your system
+````bash
+composer run test
+````
+- To can find the coverage report in var/log/index.html
