@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -84,6 +85,12 @@ class User implements UserInterface
      * @ORM\Column(type="date", nullable=true)
      */
     private $dob;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTime();
+        $this->dataUsageAgreement = true;
+    }
 
     public function getId(): ?int
     {
@@ -187,12 +194,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
