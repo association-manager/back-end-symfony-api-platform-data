@@ -23,6 +23,7 @@ class Announce
      * @ORM\Column(type="smallint")
      */
     private $priority;
+
     /**
      * @ORM\Column(type="string", length=150)
      */

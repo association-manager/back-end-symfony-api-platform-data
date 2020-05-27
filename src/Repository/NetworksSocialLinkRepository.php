@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\NetworksSocilalLink;
+use App\Entity\NetworksSocialLink;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method NetwortSocilalLink|null find($id, $lockMode = null, $lockVersion = null)
- * @method NetwortSocilalLink|null findOneBy(array $criteria, array $orderBy = null)
- * @method NetwortSocilalLink[]    findAll()
- * @method NetwortSocilalLink[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method NetworksSocialLink|null find($id, $lockMode = null, $lockVersion = null)
+ * @method NetworksSocialLink|null findOneBy(array $criteria, array $orderBy = null)
+ * @method NetworksSocialLink[]    findAll()
+ * @method NetworksSocialLink[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class NetwortSocilalLinkRepository extends ServiceEntityRepository
+class NetworksSocialLinkRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, NetwortSocilalLink::class);
+        parent::__construct($registry, NetworksSocialLink::class);
     }
 
     // /**
-    //  * @return NetwortSocilalLink[] Returns an array of NetwortSocilalLink objects
+    //  * @return NetworksSocialLink[] Returns an array of NetworksSocialLink objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class NetwortSocilalLinkRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?NetwortSocilalLink
+    public function findOneBySomeField($value): ?NetworksSocialLink
     {
         return $this->createQueryBuilder('n')
             ->andWhere('n.exampleField = :val')

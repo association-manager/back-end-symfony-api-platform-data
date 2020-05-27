@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\NetworksSocilalLinkRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Repository\NetworksSocialLinkRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=NetworksSocilalLinkRepository::class)
+ * @ApiResource()
+ * @ORM\Entity(repositoryClass=NetworksSocialLinkRepository::class)
  */
-class NetwortSocilalLink
+class NetworksSocialLink
 {
     /**
      * @ORM\Id()
