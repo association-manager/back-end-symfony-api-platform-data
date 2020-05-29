@@ -80,6 +80,11 @@ class File
      */
     private $association;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=product::class, inversedBy="files")
+     */
+    private $product;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -230,6 +235,18 @@ class File
     public function setAssociation(?Association $association): self
     {
         $this->association = $association;
+
+        return $this;
+    }
+
+    public function getProduct(): ?product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?product $product): self
+    {
+        $this->product = $product;
 
         return $this;
     }
