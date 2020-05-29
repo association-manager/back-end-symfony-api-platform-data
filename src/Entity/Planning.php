@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,6 +40,15 @@ class Planning
      */
     private $color;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Event::class, mappedBy="planning")
+     */
+    private $events;
+
+    public function __construct()
+    {
+        $this->events = new ArrayCollection();
+    }
     /**
      * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="plannings")
      */
@@ -96,6 +107,32 @@ class Planning
         return $this;
     }
 
+    /**
+     * @return Collection|Event[]
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): self
+    {
+        if (!$this->events->contains($event)) {
+            $this->events[] = $event;
+            $event->addPlanning($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): self
+    {
+        if ($this->events->contains($event)) {
+            $this->events->removeElement($event);
+            $event->removePlanning($this);
+        }
+    }
+    
     public function getAssociation(): ?Association
     {
         return $this->association;
