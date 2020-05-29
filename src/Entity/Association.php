@@ -26,11 +26,6 @@ class Association
     private $name;
 
     /**
-     * @ORM\Column(type="blob", nullable=true)
-     */
-    private $cgu;
-
-    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $dataUsageAgreement;
@@ -90,9 +85,56 @@ class Association
      */
     private $groups;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Member::class, inversedBy="associations")
+     */
+    private $members;
+
+    /**
+     * @ORM\OneToMany(targetEntity=NetworksSocialLink::class, mappedBy="association")
+     */
+    private $networksSocialLinks;
+
+    /**
+     * @ORM\OneToOne(targetEntity=AssociationProfile::class, inversedBy="association", cascade={"persist", "remove"})
+     */
+    private $associationProfile;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Planning::class, mappedBy="association")
+     */
+    private $plannings;
+
+    /**
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="association", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $createdBy;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="association")
+     */
+    private $transactions;
+
+    /**
+     * @ORM\OneToMany(targetEntity=File::class, mappedBy="association")
+     */
+    private $files;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="association")
+     */
+    private $products;
+
     public function __construct()
     {
         $this->groups = new ArrayCollection();
+        $this->members = new ArrayCollection();
+        $this->networksSocialLinks = new ArrayCollection();
+        $this->plannings = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
+        $this->files = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -108,18 +150,6 @@ class Association
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCgu()
-    {
-        return $this->cgu;
-    }
-
-    public function setCgu($cgu): self
-    {
-        $this->cgu = $cgu;
 
         return $this;
     }
@@ -279,6 +309,211 @@ class Association
         if ($this->groups->contains($group)) {
             $this->groups->removeElement($group);
             $group->removeAssociationId($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Member[]
+     */
+    public function getMembers(): Collection
+    {
+        return $this->members;
+    }
+
+    public function addMember(Member $member): self
+    {
+        if (!$this->members->contains($member)) {
+            $this->members[] = $member;
+        }
+
+        return $this;
+    }
+
+    public function removeMember(Member $member): self
+    {
+        if ($this->members->contains($member)) {
+            $this->members->removeElement($member);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|NetworksSocialLink[]
+     */
+    public function getNetworksSocialLinks(): Collection
+    {
+        return $this->networksSocialLinks;
+    }
+
+    public function addNetworksSocialLink(NetworksSocialLink $networksSocialLink): self
+    {
+        if (!$this->networksSocialLinks->contains($networksSocialLink)) {
+            $this->networksSocialLinks[] = $networksSocialLink;
+            $networksSocialLink->setAssociation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNetworksSocialLink(NetworksSocialLink $networksSocialLink): self
+    {
+        if ($this->networksSocialLinks->contains($networksSocialLink)) {
+            $this->networksSocialLinks->removeElement($networksSocialLink);
+            // set the owning side to null (unless already changed)
+            if ($networksSocialLink->getAssociation() === $this) {
+                $networksSocialLink->setAssociation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAssociationProfile(): ?AssociationProfile
+    {
+        return $this->associationProfile;
+    }
+
+    public function setAssociationProfile(?AssociationProfile $associationProfile): self
+    {
+        $this->associationProfile = $associationProfile;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Planning[]
+     */
+    public function getPlannings(): Collection
+    {
+        return $this->plannings;
+    }
+
+    public function addPlanning(Planning $planning): self
+    {
+        if (!$this->plannings->contains($planning)) {
+            $this->plannings[] = $planning;
+            $planning->setAssociation($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanning(Planning $planning): self
+    {
+        if ($this->plannings->contains($planning)) {
+            $this->plannings->removeElement($planning);
+            // set the owning side to null (unless already changed)
+            if ($planning->getAssociation() === $this) {
+                $planning->setAssociation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): self
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions[] = $transaction;
+            $transaction->setAssociation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): self
+    {
+        if ($this->transactions->contains($transaction)) {
+            $this->transactions->removeElement($transaction);
+            // set the owning side to null (unless already changed)
+            if ($transaction->getAssociation() === $this) {
+                $transaction->setAssociation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|File[]
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    public function addFile(File $file): self
+    {
+        if (!$this->files->contains($file)) {
+            $this->files[] = $file;
+            $file->setAssociation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(File $file): self
+    {
+        if ($this->files->contains($file)) {
+            $this->files->removeElement($file);
+            // set the owning side to null (unless already changed)
+            if ($file->getAssociation() === $this) {
+                $file->setAssociation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setAssociation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->contains($product)) {
+            $this->products->removeElement($product);
+            // set the owning side to null (unless already changed)
+            if ($product->getAssociation() === $this) {
+                $product->setAssociation(null);
+            }
         }
 
         return $this;

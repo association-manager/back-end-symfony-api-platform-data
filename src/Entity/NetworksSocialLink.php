@@ -34,6 +34,11 @@ class NetworksSocialLink
      */
     private $icon;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="networksSocialLinks")
+     */
+    private $association;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -71,6 +76,18 @@ class NetworksSocialLink
     public function setIcon(string $icon): self
     {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(?Association $association): self
+    {
+        $this->association = $association;
 
         return $this;
     }

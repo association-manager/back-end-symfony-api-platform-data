@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,6 +35,16 @@ class Member
      * @ORM\JoinColumn(nullable=false)
      */
     private $userId;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Association::class, mappedBy="members")
+     */
+    private $associations;
+
+    public function __construct()
+    {
+        $this->associations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -71,6 +83,34 @@ class Member
     public function setUserId(?user $userId): self
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Association[]
+     */
+    public function getAssociations(): Collection
+    {
+        return $this->associations;
+    }
+
+    public function addAssociation(Association $association): self
+    {
+        if (!$this->associations->contains($association)) {
+            $this->associations[] = $association;
+            $association->addMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssociation(Association $association): self
+    {
+        if ($this->associations->contains($association)) {
+            $this->associations->removeElement($association);
+            $association->removeMember($this);
+        }
 
         return $this;
     }
