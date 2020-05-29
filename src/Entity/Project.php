@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -47,6 +49,26 @@ class Project
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Planning::class, inversedBy="projects")
+     */
+    private $planning;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ProjectPlanning::class, mappedBy="project")
+     */
+    private $projectPlannings;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=WorkGroup::class, inversedBy="projects")
+     */
+    private $workGroup;
+
+    public function __construct()
+    {
+        $this->projectPlannings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,6 +143,61 @@ class Project
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getPlanning(): ?Planning
+    {
+        return $this->planning;
+    }
+
+    public function setPlanning(?Planning $planning): self
+    {
+        $this->planning = $planning;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProjectPlanning[]
+     */
+    public function getProjectPlannings(): Collection
+    {
+        return $this->projectPlannings;
+    }
+
+    public function addProjectPlanning(ProjectPlanning $projectPlanning): self
+    {
+        if (!$this->projectPlannings->contains($projectPlanning)) {
+            $this->projectPlannings[] = $projectPlanning;
+            $projectPlanning->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectPlanning(ProjectPlanning $projectPlanning): self
+    {
+        if ($this->projectPlannings->contains($projectPlanning)) {
+            $this->projectPlannings->removeElement($projectPlanning);
+            // set the owning side to null (unless already changed)
+            if ($projectPlanning->getProject() === $this) {
+                $projectPlanning->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getWorkGroup(): ?WorkGroup
+    {
+        return $this->workGroup;
+    }
+
+    public function setWorkGroup(?WorkGroup $workGroup): self
+    {
+        $this->workGroup = $workGroup;
 
         return $this;
     }
