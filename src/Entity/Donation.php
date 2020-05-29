@@ -39,6 +39,11 @@ class Donation
      */
     private $createdAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Member::class, inversedBy="donations")
+     */
+    private $member;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -88,6 +93,18 @@ class Donation
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getMember(): ?Member
+    {
+        return $this->member;
+    }
+
+    public function setMember(?Member $member): self
+    {
+        $this->member = $member;
 
         return $this;
     }

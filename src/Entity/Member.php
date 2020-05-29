@@ -41,9 +41,15 @@ class Member
      */
     private $associations;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Donation::class, mappedBy="member")
+     */
+    private $donations;
+
     public function __construct()
     {
         $this->associations = new ArrayCollection();
+        $this->donations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -110,6 +116,37 @@ class Member
         if ($this->associations->contains($association)) {
             $this->associations->removeElement($association);
             $association->removeMember($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Donation[]
+     */
+    public function getDonations(): Collection
+    {
+        return $this->donations;
+    }
+
+    public function addDonation(Donation $donation): self
+    {
+        if (!$this->donations->contains($donation)) {
+            $this->donations[] = $donation;
+            $donation->setMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDonation(Donation $donation): self
+    {
+        if ($this->donations->contains($donation)) {
+            $this->donations->removeElement($donation);
+            // set the owning side to null (unless already changed)
+            if ($donation->getMember() === $this) {
+                $donation->setMember(null);
+            }
         }
 
         return $this;
