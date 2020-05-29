@@ -44,6 +44,11 @@ class Transaction
      */
     private $status;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="transactions")
+     */
+    private $association;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +110,18 @@ class Transaction
     public function setStatus(int $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(?Association $association): self
+    {
+        $this->association = $association;
 
         return $this;
     }

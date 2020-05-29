@@ -49,6 +49,10 @@ class Planning
     {
         $this->events = new ArrayCollection();
     }
+    /**
+     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="plannings")
+     */
+    private $association;
 
     public function getId(): ?int
     {
@@ -127,6 +131,16 @@ class Planning
             $this->events->removeElement($event);
             $event->removePlanning($this);
         }
+    }
+    
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(?Association $association): self
+    {
+        $this->association = $association;
 
         return $this;
     }

@@ -75,6 +75,10 @@ class File
     {
         $this->announces = new ArrayCollection();
     }
+    /**
+     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="files")
+     */
+    private $association;
 
     public function getId(): ?int
     {
@@ -216,6 +220,16 @@ class File
                 $announce->setFile(null);
             }
         }
+    }
+    
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(?Association $association): self
+    {
+        $this->association = $association;
 
         return $this;
     }

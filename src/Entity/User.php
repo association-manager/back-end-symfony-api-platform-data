@@ -100,12 +100,18 @@ class User implements UserInterface
      */
     private $files;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user")
+     */
+    private $address;
+
     public function __construct()
     {
         $this->createdAt = new DateTime();
         $this->dataUsageAgreement = true;
         $this->members = new ArrayCollection();
         $this->files = new ArrayCollection();
+        $this->address = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -373,6 +379,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($file->getCreatedBy() === $this) {
                 $file->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Address[]
+     */
+    public function getAddress(): Collection
+    {
+        return $this->address;
+    }
+
+    public function addAddress(Address $address): self
+    {
+        if (!$this->address->contains($address)) {
+            $this->address[] = $address;
+            $address->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Address $address): self
+    {
+        if ($this->address->contains($address)) {
+            $this->address->removeElement($address);
+            // set the owning side to null (unless already changed)
+            if ($address->getUser() === $this) {
+                $address->setUser(null);
             }
         }
 
