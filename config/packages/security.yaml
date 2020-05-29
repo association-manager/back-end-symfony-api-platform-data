@@ -49,5 +49,19 @@ security:
     access_control:
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY  }
         - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY, method: [GET, PUT, DELETE]  }
-        - { path: ^/api/plannings, roles: IS_AUTHENTICATED_ANONYMOUSLY  }
+        - { path: ^/api/members, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/announces, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/association_profiles, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/associations, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/categories, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/donations, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/events, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/networks_social_links, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/product_websites, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/project_plannings, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/tasks, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/projects, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/transactions, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/tutorials, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/api/plannings, roles: IS_AUTHENTICATED_FULLY  }
         # - { path: ^/profile, roles: ROLE_USER }
