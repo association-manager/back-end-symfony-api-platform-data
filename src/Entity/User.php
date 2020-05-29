@@ -105,6 +105,11 @@ class User implements UserInterface
      */
     private $address;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Association::class, mappedBy="createdBy", cascade={"persist", "remove"})
+     */
+    private $association;
+
     public function __construct()
     {
         $this->createdAt = new DateTime();
@@ -411,6 +416,21 @@ class User implements UserInterface
             if ($address->getUser() === $this) {
                 $address->setUser(null);
             }
+        }
+    }
+
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(Association $association): self
+    {
+        $this->association = $association;
+
+        // set the owning side of the relation if necessary
+        if ($association->getCreatedBy() !== $this) {
+            $association->setCreatedBy($this);
         }
 
         return $this;
