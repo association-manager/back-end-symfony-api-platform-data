@@ -81,7 +81,7 @@ class Association
     private $createdAt;
 
     /**
-     * @ORM\ManyToMany(targetEntity=WorkGroup::class, mappedBy="associationId")
+     * @ORM\ManyToMany(targetEntity=WorkGroup::class, mappedBy="association")
      */
     private $workGroups;
 

@@ -48,6 +48,11 @@ class Task
      */
     private $memberTaskGroupRelation;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=ProjectPlanning::class, inversedBy="tasks")
+     */
+    private $projectPlanning;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +126,18 @@ class Task
     public function setMemberTaskGroupRelation(?MemberTaskGroupRelation $memberTaskGroupRelation): self
     {
         $this->memberTaskGroupRelation = $memberTaskGroupRelation;
+
+        return $this;
+    }
+
+    public function getProjectPlanning(): ?ProjectPlanning
+    {
+        return $this->projectPlanning;
+    }
+
+    public function setProjectPlanning(?ProjectPlanning $projectPlanning): self
+    {
+        $this->projectPlanning = $projectPlanning;
 
         return $this;
     }

@@ -48,6 +48,7 @@ class Planning
     public function __construct()
     {
         $this->events = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
     /**
      * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="plannings")
@@ -58,6 +59,11 @@ class Planning
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="plannings")
      */
     private $category;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Project::class, mappedBy="planning")
+     */
+    private $projects;
 
     public function getId(): ?int
     {
@@ -158,6 +164,37 @@ class Planning
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Project[]
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): self
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects[] = $project;
+            $project->setPlanning($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): self
+    {
+        if ($this->projects->contains($project)) {
+            $this->projects->removeElement($project);
+            // set the owning side to null (unless already changed)
+            if ($project->getPlanning() === $this) {
+                $project->setPlanning(null);
+            }
+        }
 
         return $this;
     }
