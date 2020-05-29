@@ -2,16 +2,20 @@
 
 namespace App\DataFixtures;
 
-use Doctrine\Bundle\FixturesBundle\Fixture;
+use App\Entity\Announce;
 use Doctrine\Persistence\ObjectManager;
 
-class AnnounceFixtures extends Fixture
+class AnnounceFixtures extends BaseFixture
 {
-    public function load(ObjectManager $manager)
+    protected function loadData(ObjectManager $manager)
     {
-        // $product = new Product();
-        // $manager->persist($product);
-
+        $this->createMany(Announce::class, 10, function(Announce $announce, $count){
+                $announce->setName($this->faker->firstName())
+                    ->setPriority($this->faker->numberBetween($min = 0, $max = 1))
+                    ->setDescription($this->faker->realText($maxNbChars = 200, $indexSize = 2))
+                    ->setDuration($this->faker->numberBetween($min = 1000, $max = 9000))
+                    ->setAdUnitId($this->faker->uuid());
+        });
         $manager->flush();
     }
 }

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\FileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -63,6 +65,16 @@ class File
      * @ORM\Column(type="string", length=150)
      */
     private $size;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Announce::class, mappedBy="file")
+     */
+    private $announces;
+
+    public function __construct()
+    {
+        $this->announces = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -173,6 +185,37 @@ class File
     public function setSize(string $size): self
     {
         $this->size = $size;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Announce[]
+     */
+    public function getAnnounces(): Collection
+    {
+        return $this->announces;
+    }
+
+    public function addAnnounce(Announce $announce): self
+    {
+        if (!$this->announces->contains($announce)) {
+            $this->announces[] = $announce;
+            $announce->setFile($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnnounce(Announce $announce): self
+    {
+        if ($this->announces->contains($announce)) {
+            $this->announces->removeElement($announce);
+            // set the owning side to null (unless already changed)
+            if ($announce->getFile() === $this) {
+                $announce->setFile(null);
+            }
+        }
 
         return $this;
     }

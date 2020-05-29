@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,6 +35,16 @@ class Event
      * @ORM\Column(type="datetime")
      */
     private $endDate;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Planning::class, inversedBy="events")
+     */
+    private $planning;
+
+    public function __construct()
+    {
+        $this->planning = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -71,6 +83,32 @@ class Event
     public function setEndDate(\DateTimeInterface $endDate): self
     {
         $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Planning[]
+     */
+    public function getPlanning(): Collection
+    {
+        return $this->planning;
+    }
+
+    public function addPlanning(Planning $planning): self
+    {
+        if (!$this->planning->contains($planning)) {
+            $this->planning[] = $planning;
+        }
+
+        return $this;
+    }
+
+    public function removePlanning(Planning $planning): self
+    {
+        if ($this->planning->contains($planning)) {
+            $this->planning->removeElement($planning);
+        }
 
         return $this;
     }
