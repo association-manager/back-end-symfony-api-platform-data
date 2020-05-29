@@ -46,10 +46,22 @@ class Member
      */
     private $donations;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=staff::class, inversedBy="members")
+     */
+    private $staff;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=workgroup::class, inversedBy="members")
+     */
+    private $workGroups;
+
     public function __construct()
     {
         $this->associations = new ArrayCollection();
         $this->donations = new ArrayCollection();
+        $this->staff = new ArrayCollection();
+        $this->workGroups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -147,6 +159,58 @@ class Member
             if ($donation->getMember() === $this) {
                 $donation->setMember(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|staff[]
+     */
+    public function getStaff(): Collection
+    {
+        return $this->staff;
+    }
+
+    public function addStaff(staff $staff): self
+    {
+        if (!$this->staff->contains($staff)) {
+            $this->staff[] = $staff;
+        }
+
+        return $this;
+    }
+
+    public function removeStaff(staff $staff): self
+    {
+        if ($this->staff->contains($staff)) {
+            $this->staff->removeElement($staff);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|workgroup[]
+     */
+    public function getWorkGroups(): Collection
+    {
+        return $this->workGroups;
+    }
+
+    public function addWorkGroup(workgroup $workGroup): self
+    {
+        if (!$this->workGroups->contains($workGroup)) {
+            $this->workGroups[] = $workGroup;
+        }
+
+        return $this;
+    }
+
+    public function removeWorkGroup(workgroup $workGroup): self
+    {
+        if ($this->workGroups->contains($workGroup)) {
+            $this->workGroups->removeElement($workGroup);
         }
 
         return $this;

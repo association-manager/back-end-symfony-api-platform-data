@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\StaffRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -44,6 +46,16 @@ class Staff
      * @ORM\Column(type="integer", nullable=true)
      */
     private $phoneNumber;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Member::class, mappedBy="staff")
+     */
+    private $members;
+
+    public function __construct()
+    {
+        $this->members = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,6 +118,34 @@ class Staff
     public function setPhoneNumber(?int $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Member[]
+     */
+    public function getMembers(): Collection
+    {
+        return $this->members;
+    }
+
+    public function addMember(Member $member): self
+    {
+        if (!$this->members->contains($member)) {
+            $this->members[] = $member;
+            $member->addStaff($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMember(Member $member): self
+    {
+        if ($this->members->contains($member)) {
+            $this->members->removeElement($member);
+            $member->removeStaff($this);
+        }
 
         return $this;
     }

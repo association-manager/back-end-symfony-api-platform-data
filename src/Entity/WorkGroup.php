@@ -2,16 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\GroupRepository;
+use App\Repository\WorkGroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=GroupRepository::class)
- * @ORM\Table(name="`group`")
+ * @ORM\Entity(repositoryClass=WorkGroupRepository::class)
+ * @ORM\Table(name="`work_group`")
  */
-class Group
+class WorkGroup
 {
     /**
      * @ORM\Id()
@@ -30,9 +30,15 @@ class Group
      */
     private $associationId;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Member::class, mappedBy="workGroups")
+     */
+    private $members;
+
     public function __construct()
     {
         $this->associationId = new ArrayCollection();
+        $this->members = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -73,6 +79,34 @@ class Group
     {
         if ($this->associationId->contains($associationId)) {
             $this->associationId->removeElement($associationId);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Member[]
+     */
+    public function getMembers(): Collection
+    {
+        return $this->members;
+    }
+
+    public function addMember(Member $member): self
+    {
+        if (!$this->members->contains($member)) {
+            $this->members[] = $member;
+            $member->addWorkGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMember(Member $member): self
+    {
+        if ($this->members->contains($member)) {
+            $this->members->removeElement($member);
+            $member->removeWorkGroup($this);
         }
 
         return $this;

@@ -81,9 +81,9 @@ class Association
     private $createdAt;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Group::class, mappedBy="associationId")
+     * @ORM\ManyToMany(targetEntity=WorkGroup::class, mappedBy="associationId")
      */
-    private $groups;
+    private $workGroups;
 
 
     /**
@@ -134,7 +134,7 @@ class Association
 
     public function __construct()
     {
-        $this->groups = new ArrayCollection();
+        $this->workGroups = new ArrayCollection();
         $this->addresses = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->networksSocialLinks = new ArrayCollection();
@@ -294,28 +294,28 @@ class Association
     }
 
     /**
-     * @return Collection|Group[]
+     * @return Collection|WorkGroup[]
      */
-    public function getGroups(): Collection
+    public function getWorkGroups(): Collection
     {
-        return $this->groups;
+        return $this->workGroups;
     }
 
-    public function addGroup(Group $group): self
+    public function addWorkGroup(WorkGroup $workGroup): self
     {
-        if (!$this->groups->contains($group)) {
-            $this->groups[] = $group;
-            $group->addAssociationId($this);
+        if (!$this->workGroups->contains($workGroup)) {
+            $this->workGroups[] = $workGroup;
+            $workGroup->addAssociationId($this);
         }
 
         return $this;
     }
 
-    public function removeGroup(Group $group): self
+    public function removeWorkGroup(WorkGroup $workGroup): self
     {
-        if ($this->groups->contains($group)) {
-            $this->groups->removeElement($group);
-            $group->removeAssociationId($this);
+        if ($this->workGroups->contains($workGroup)) {
+            $this->workGroups->removeElement($workGroup);
+            $workGroup->removeAssociationId($this);
         }
 
         return $this;
