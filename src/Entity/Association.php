@@ -86,7 +86,7 @@ class Association
     private $createdAt;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Group::class, mappedBy="assocationId")
+     * @ORM\ManyToMany(targetEntity=Group::class, mappedBy="associationId")
      */
     private $groups;
 
@@ -268,7 +268,7 @@ class Association
     {
         if (!$this->groups->contains($group)) {
             $this->groups[] = $group;
-            $group->addAssocationId($this);
+            $group->addAssociationId($this);
         }
 
         return $this;
@@ -278,7 +278,7 @@ class Association
     {
         if ($this->groups->contains($group)) {
             $this->groups->removeElement($group);
-            $group->removeAssocationId($this);
+            $group->removeAssociationId($this);
         }
 
         return $this;

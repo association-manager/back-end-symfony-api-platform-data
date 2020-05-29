@@ -28,11 +28,11 @@ class Group
     /**
      * @ORM\ManyToMany(targetEntity=association::class, inversedBy="groups")
      */
-    private $assocationId;
+    private $associationId;
 
     public function __construct()
     {
-        $this->assocationId = new ArrayCollection();
+        $this->associationId = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -55,24 +55,24 @@ class Group
     /**
      * @return Collection|association[]
      */
-    public function getAssocationId(): Collection
+    public function getAssociationId(): Collection
     {
-        return $this->assocationId;
+        return $this->associationId;
     }
 
-    public function addAssocationId(association $assocationId): self
+    public function addAssociationId(association $associationId): self
     {
-        if (!$this->assocationId->contains($assocationId)) {
-            $this->assocationId[] = $assocationId;
+        if (!$this->associationId->contains($associationId)) {
+            $this->associationId[] = $associationId;
         }
 
         return $this;
     }
 
-    public function removeAssocationId(association $assocationId): self
+    public function removeAssociationId(association $associationId): self
     {
-        if ($this->assocationId->contains($assocationId)) {
-            $this->assocationId->removeElement($assocationId);
+        if ($this->associationId->contains($associationId)) {
+            $this->associationId->removeElement($associationId);
         }
 
         return $this;
