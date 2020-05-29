@@ -31,14 +31,13 @@ class WorkGroup
     private $associationId;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Member::class, mappedBy="workGroups")
+     * @ORM\ManyToOne(targetEntity=MemberTaskGroupRelation::class, inversedBy="workGroups")
      */
-    private $members;
+    private $memberTaskGroupRelation;
 
     public function __construct()
     {
         $this->associationId = new ArrayCollection();
-        $this->members = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -84,30 +83,14 @@ class WorkGroup
         return $this;
     }
 
-    /**
-     * @return Collection|Member[]
-     */
-    public function getMembers(): Collection
+    public function getMemberTaskGroupRelation(): ?MemberTaskGroupRelation
     {
-        return $this->members;
+        return $this->memberTaskGroupRelation;
     }
 
-    public function addMember(Member $member): self
+    public function setMemberTaskGroupRelation(?MemberTaskGroupRelation $memberTaskGroupRelation): self
     {
-        if (!$this->members->contains($member)) {
-            $this->members[] = $member;
-            $member->addWorkGroup($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMember(Member $member): self
-    {
-        if ($this->members->contains($member)) {
-            $this->members->removeElement($member);
-            $member->removeWorkGroup($this);
-        }
+        $this->memberTaskGroupRelation = $memberTaskGroupRelation;
 
         return $this;
     }

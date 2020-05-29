@@ -52,16 +52,15 @@ class Member
     private $staff;
 
     /**
-     * @ORM\ManyToMany(targetEntity=workgroup::class, inversedBy="members")
+     * @ORM\ManyToOne(targetEntity=MemberTaskGroupRelation::class, inversedBy="members")
      */
-    private $workGroups;
+    private $memberTaskGroupRelation;
 
     public function __construct()
     {
         $this->associations = new ArrayCollection();
         $this->donations = new ArrayCollection();
         $this->staff = new ArrayCollection();
-        $this->workGroups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -190,28 +189,14 @@ class Member
         return $this;
     }
 
-    /**
-     * @return Collection|workgroup[]
-     */
-    public function getWorkGroups(): Collection
+    public function getMemberTaskGroupRelation(): ?MemberTaskGroupRelation
     {
-        return $this->workGroups;
+        return $this->memberTaskGroupRelation;
     }
 
-    public function addWorkGroup(workgroup $workGroup): self
+    public function setMemberTaskGroupRelation(?MemberTaskGroupRelation $memberTaskGroupRelation): self
     {
-        if (!$this->workGroups->contains($workGroup)) {
-            $this->workGroups[] = $workGroup;
-        }
-
-        return $this;
-    }
-
-    public function removeWorkGroup(workgroup $workGroup): self
-    {
-        if ($this->workGroups->contains($workGroup)) {
-            $this->workGroups->removeElement($workGroup);
-        }
+        $this->memberTaskGroupRelation = $memberTaskGroupRelation;
 
         return $this;
     }

@@ -43,6 +43,11 @@ class Task
      */
     private $description;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=MemberTaskGroupRelation::class, inversedBy="tasks")
+     */
+    private $memberTaskGroupRelation;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +109,18 @@ class Task
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getMemberTaskGroupRelation(): ?MemberTaskGroupRelation
+    {
+        return $this->memberTaskGroupRelation;
+    }
+
+    public function setMemberTaskGroupRelation(?MemberTaskGroupRelation $memberTaskGroupRelation): self
+    {
+        $this->memberTaskGroupRelation = $memberTaskGroupRelation;
 
         return $this;
     }
