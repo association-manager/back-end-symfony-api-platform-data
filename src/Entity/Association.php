@@ -85,6 +85,12 @@ class Association
      */
     private $groups;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="association")
+     */
+    private $addresses;
+
     /**
      * @ORM\ManyToMany(targetEntity=Member::class, inversedBy="associations")
      */
@@ -129,6 +135,7 @@ class Association
     public function __construct()
     {
         $this->groups = new ArrayCollection();
+        $this->addresses = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->networksSocialLinks = new ArrayCollection();
         $this->plannings = new ArrayCollection();
@@ -513,6 +520,37 @@ class Association
             // set the owning side to null (unless already changed)
             if ($product->getAssociation() === $this) {
                 $product->setAssociation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Address[]
+     */
+    public function getAddresses(): Collection
+    {
+        return $this->addresses;
+    }
+
+    public function addAddress(Address $address): self
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses[] = $address;
+            $address->setAssociation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Address $address): self
+    {
+        if ($this->addresses->contains($address)) {
+            $this->addresses->removeElement($address);
+            // set the owning side to null (unless already changed)
+            if ($address->getAssociation() === $this) {
+                $address->setAssociation(null);
             }
         }
 

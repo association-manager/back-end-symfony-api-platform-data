@@ -47,6 +47,26 @@ class Address
      */
     private $type;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="yes")
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=association::class, inversedBy="addresses")
+     */
+    private $association;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=invoiceShop::class, inversedBy="addresses")
+     */
+    private $invoiceShop;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=invoiceDonation::class, inversedBy="addresses")
+     */
+    private $invoiceDonation;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +140,54 @@ class Address
     public function setType(?string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getUser(): ?user
+    {
+        return $this->user;
+    }
+
+    public function setUser(?user $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getAssociation(): ?association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(?association $association): self
+    {
+        $this->association = $association;
+
+        return $this;
+    }
+
+    public function getInvoiceShop(): ?invoiceShop
+    {
+        return $this->invoiceShop;
+    }
+
+    public function setInvoiceShop(?invoiceShop $invoiceShop): self
+    {
+        $this->invoiceShop = $invoiceShop;
+
+        return $this;
+    }
+
+    public function getInvoiceDonation(): ?invoiceDonation
+    {
+        return $this->invoiceDonation;
+    }
+
+    public function setInvoiceDonation(?invoiceDonation $invoiceDonation): self
+    {
+        $this->invoiceDonation = $invoiceDonation;
 
         return $this;
     }

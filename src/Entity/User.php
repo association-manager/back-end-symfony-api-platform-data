@@ -101,9 +101,9 @@ class User implements UserInterface
     private $files;
 
     /**
-     * @ORM\OneToOne(targetEntity=Association::class, mappedBy="createdBy", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user")
      */
-    private $association;
+    private $address;
 
     public function __construct()
     {
@@ -111,6 +111,7 @@ class User implements UserInterface
         $this->dataUsageAgreement = true;
         $this->members = new ArrayCollection();
         $this->files = new ArrayCollection();
+        $this->address = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -384,18 +385,32 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getAssociation(): ?Association
+    /**
+     * @return Collection|Address[]
+     */
+    public function getAddress(): Collection
     {
-        return $this->association;
+        return $this->address;
     }
 
-    public function setAssociation(Association $association): self
+    public function addAddress(Address $address): self
     {
-        $this->association = $association;
+        if (!$this->address->contains($address)) {
+            $this->address[] = $address;
+            $address->setUser($this);
+        }
 
-        // set the owning side of the relation if necessary
-        if ($association->getCreatedBy() !== $this) {
-            $association->setCreatedBy($this);
+        return $this;
+    }
+
+    public function removeAddress(Address $address): self
+    {
+        if ($this->address->contains($address)) {
+            $this->address->removeElement($address);
+            // set the owning side to null (unless already changed)
+            if ($address->getUser() === $this) {
+                $address->setUser(null);
+            }
         }
 
         return $this;
