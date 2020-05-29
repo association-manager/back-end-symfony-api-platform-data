@@ -34,6 +34,11 @@ class AssociationProfile
      */
     private $descriptionTitle;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Association::class, mappedBy="associationProfile", cascade={"persist", "remove"})
+     */
+    private $association;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -71,6 +76,24 @@ class AssociationProfile
     public function setDescriptionTitle(string $descriptionTitle): self
     {
         $this->descriptionTitle = $descriptionTitle;
+
+        return $this;
+    }
+
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(?Association $association): self
+    {
+        $this->association = $association;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newAssociationProfile = null === $association ? null : $this;
+        if ($association->getAssociationProfile() !== $newAssociationProfile) {
+            $association->setAssociationProfile($newAssociationProfile);
+        }
 
         return $this;
     }
