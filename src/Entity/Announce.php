@@ -44,6 +44,11 @@ class Announce
      */
     private $adUnitId;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=File::class, inversedBy="announces")
+     */
+    private $file;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +110,18 @@ class Announce
     public function setAdUnitId(string $adUnitId): self
     {
         $this->adUnitId = $adUnitId;
+
+        return $this;
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFile(?File $file): self
+    {
+        $this->file = $file;
 
         return $this;
     }

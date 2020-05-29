@@ -14,7 +14,7 @@ class UserFixtures extends BaseFixture
             $hash = $this->encoder->encodePassword($user, "password");
                 $user->setFirstName($this->faker->firstName())
                     ->setLastName($this->faker->lastName)
-                    ->setEmail($count != 0 ? $this->faker->email.$count : 'test@test.com')
+                    ->setEmail($count != 0 ? $this->faker->email.$count : 'test@test'.$count.'.com')
                     ->setCreatedAt($this->faker->dateTime)
                     ->setMobile($this->faker->phoneNumber)
                     ->setSex($this->faker->randomElement(['male','female', '']))
