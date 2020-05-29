@@ -95,11 +95,17 @@ class User implements UserInterface
      */
     private $members;
 
+    /**
+     * @ORM\OneToMany(targetEntity=File::class, mappedBy="createdBy")
+     */
+    private $files;
+
     public function __construct()
     {
         $this->createdAt = new DateTime();
         $this->dataUsageAgreement = true;
         $this->members = new ArrayCollection();
+        $this->files = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -336,6 +342,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($member->getUserId() === $this) {
                 $member->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|File[]
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    public function addFile(File $file): self
+    {
+        if (!$this->files->contains($file)) {
+            $this->files[] = $file;
+            $file->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(File $file): self
+    {
+        if ($this->files->contains($file)) {
+            $this->files->removeElement($file);
+            // set the owning side to null (unless already changed)
+            if ($file->getCreatedBy() === $this) {
+                $file->setCreatedBy(null);
             }
         }
 
