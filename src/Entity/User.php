@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use DateTime;
@@ -88,10 +90,16 @@ class User implements UserInterface
 
     private $plainPassword;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Member", mappedBy="userId", orphanRemoval=true)
+     */
+    private $members;
+
     public function __construct()
     {
         $this->createdAt = new DateTime();
         $this->dataUsageAgreement = true;
+        $this->members = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -300,6 +308,37 @@ class User implements UserInterface
     public function setPlainPassword(string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
+        return $this;
+    }
+
+    /**
+     * @return Collection|Member[]
+     */
+    public function getMembers(): Collection
+    {
+        return $this->members;
+    }
+
+    public function addMember(Member $member): self
+    {
+        if (!$this->members->contains($member)) {
+            $this->members[] = $member;
+            $member->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMember(Member $member): self
+    {
+        if ($this->members->contains($member)) {
+            $this->members->removeElement($member);
+            // set the owning side to null (unless already changed)
+            if ($member->getUserId() === $this) {
+                $member->setUserId(null);
+            }
+        }
+
         return $this;
     }
 }
