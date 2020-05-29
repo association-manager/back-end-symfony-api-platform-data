@@ -37,6 +37,11 @@ class Product
      */
     private $price;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="products")
+     */
+    private $association;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,18 @@ class Product
     public function setPrice(?float $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(?Association $association): self
+    {
+        $this->association = $association;
 
         return $this;
     }

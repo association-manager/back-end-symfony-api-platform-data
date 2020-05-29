@@ -64,6 +64,11 @@ class File
      */
     private $size;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="files")
+     */
+    private $association;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -173,6 +178,18 @@ class File
     public function setSize(string $size): self
     {
         $this->size = $size;
+
+        return $this;
+    }
+
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(?Association $association): self
+    {
+        $this->association = $association;
 
         return $this;
     }

@@ -38,6 +38,11 @@ class Planning
      */
     private $color;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="plannings")
+     */
+    private $association;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +92,18 @@ class Planning
     public function setColor(?string $color): self
     {
         $this->color = $color;
+
+        return $this;
+    }
+
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(?Association $association): self
+    {
+        $this->association = $association;
 
         return $this;
     }
