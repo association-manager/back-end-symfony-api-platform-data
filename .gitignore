@@ -9,6 +9,8 @@
 ###< symfony/framework-bundle ###
 /.idea
 /.vscode
+/node_modules
+/public/build
 
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
@@ -19,3 +21,5 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+###>
