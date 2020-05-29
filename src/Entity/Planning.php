@@ -54,6 +54,11 @@ class Planning
      */
     private $association;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="plannings")
+     */
+    private $category;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -141,6 +146,18 @@ class Planning
     public function setAssociation(?Association $association): self
     {
         $this->association = $association;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
