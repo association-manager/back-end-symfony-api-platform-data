@@ -367,7 +367,7 @@ class User implements UserInterface
         return $this->fileManagers;
     }
 
-    public function addFile(FileManager $fileManager): self
+    public function addFileManager(FileManager $fileManager): self
     {
         if (!$this->fileManagers->contains($fileManager)) {
             $this->fileManagers[] = $fileManager;
