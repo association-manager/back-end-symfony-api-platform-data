@@ -123,7 +123,7 @@ class Association
     private $transactions;
 
     /**
-     * @ORM\OneToMany(targetEntity=File::class, mappedBy="association")
+     * @ORM\OneToMany(targetEntity=FileManager::class, mappedBy="association")
      */
     private $files;
 
@@ -135,7 +135,7 @@ class Association
         $this->networksSocialLinks = new ArrayCollection();
         $this->plannings = new ArrayCollection();
         $this->transactions = new ArrayCollection();
-        $this->files = new ArrayCollection();
+        $this->fileManagers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -459,30 +459,30 @@ class Association
     }
 
     /**
-     * @return Collection|File[]
+     * @return Collection|FileManager[]
      */
-    public function getFiles(): Collection
+    public function getFileManagers(): Collection
     {
-        return $this->files;
+        return $this->fileManagers;
     }
 
-    public function addFile(File $file): self
+    public function addFileManager(FileManager $fileManager): self
     {
-        if (!$this->files->contains($file)) {
-            $this->files[] = $file;
-            $file->setAssociation($this);
+        if (!$this->fileManagers->contains($fileManager)) {
+            $this->fileManagers[] = $fileManager;
+            $fileManager->setAssociation($this);
         }
 
         return $this;
     }
 
-    public function removeFile(File $file): self
+    public function removeFileManager(FileManager $fileManager): self
     {
-        if ($this->files->contains($file)) {
-            $this->files->removeElement($file);
+        if ($this->fileManagers->contains($fileManager)) {
+            $this->fileManagers->removeElement($fileManager);
             // set the owning side to null (unless already changed)
-            if ($file->getAssociation() === $this) {
-                $file->setAssociation(null);
+            if ($fileManager->getAssociation() === $this) {
+                $fileManager->setAssociation(null);
             }
         }
 

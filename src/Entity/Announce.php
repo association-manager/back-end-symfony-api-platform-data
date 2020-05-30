@@ -45,7 +45,7 @@ class Announce
     private $adUnitId;
 
     /**
-     * @ORM\ManyToOne(targetEntity=File::class, inversedBy="announces")
+     * @ORM\ManyToOne(targetEntity=FileManager::class, inversedBy="announces")
      */
     private $file;
 
@@ -114,14 +114,14 @@ class Announce
         return $this;
     }
 
-    public function getFile(): ?File
+    public function getFileManager(): ?FileManager
     {
-        return $this->file;
+        return $this->fileManager;
     }
 
-    public function setFile(?File $file): self
+    public function setFileManager(?FileManager $fileManager): self
     {
-        $this->file = $file;
+        $this->fileManager = $fileManager;
 
         return $this;
     }
