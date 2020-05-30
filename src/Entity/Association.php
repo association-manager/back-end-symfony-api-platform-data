@@ -127,11 +127,6 @@ class Association
      */
     private $files;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="association")
-     */
-    private $products;
-
     public function __construct()
     {
         $this->workGroups = new ArrayCollection();
@@ -141,7 +136,6 @@ class Association
         $this->plannings = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->files = new ArrayCollection();
-        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -489,37 +483,6 @@ class Association
             // set the owning side to null (unless already changed)
             if ($file->getAssociation() === $this) {
                 $file->setAssociation(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Product[]
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(Product $product): self
-    {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->setAssociation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): self
-    {
-        if ($this->products->contains($product)) {
-            $this->products->removeElement($product);
-            // set the owning side to null (unless already changed)
-            if ($product->getAssociation() === $this) {
-                $product->setAssociation(null);
             }
         }
 
