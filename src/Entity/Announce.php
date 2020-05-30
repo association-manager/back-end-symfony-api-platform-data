@@ -47,7 +47,7 @@ class Announce
     /**
      * @ORM\ManyToOne(targetEntity=FileManager::class, inversedBy="announces")
      */
-    private $file;
+    private $fileManager;
 
     public function getId(): ?int
     {
