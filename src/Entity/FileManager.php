@@ -3,16 +3,16 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\FileRepository;
+use App\Repository\FileManagerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource()
- * @ORM\Entity(repositoryClass=FileRepository::class)
+ * @ORM\Entity(repositoryClass=FileManagerRepository::class)
  */
-class File
+class FileManager
 {
     /**
      * @ORM\Id()
@@ -52,7 +52,7 @@ class File
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="files")
+     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="fileManagers")
      */
     private $createdBy;
 
@@ -67,7 +67,7 @@ class File
     private $size;
 
     /**
-     * @ORM\OneToMany(targetEntity=Announce::class, mappedBy="file")
+     * @ORM\OneToMany(targetEntity=Announce::class, mappedBy="fileManager")
      */
     private $announces;
 
@@ -76,7 +76,7 @@ class File
         $this->announces = new ArrayCollection();
     }
     /**
-     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="files")
+     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="fileManagers")
      */
     private $association;
 
@@ -205,7 +205,7 @@ class File
     {
         if (!$this->announces->contains($announce)) {
             $this->announces[] = $announce;
-            $announce->setFile($this);
+            $announce->setFileManager($this);
         }
 
         return $this;
@@ -216,8 +216,8 @@ class File
         if ($this->announces->contains($announce)) {
             $this->announces->removeElement($announce);
             // set the owning side to null (unless already changed)
-            if ($announce->getFile() === $this) {
-                $announce->setFile(null);
+            if ($announce->getFileManager() === $this) {
+                $announce->setFileManager(null);
             }
         }
     }

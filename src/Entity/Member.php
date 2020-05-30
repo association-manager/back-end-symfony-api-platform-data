@@ -31,7 +31,7 @@ class Member
     private $roles = [];
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\user", inversedBy="members")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="members")
      * @ORM\JoinColumn(nullable=false)
      */
     private $userId;

@@ -96,9 +96,9 @@ class User implements UserInterface
     private $members;
 
     /**
-     * @ORM\OneToMany(targetEntity=File::class, mappedBy="createdBy")
+     * @ORM\OneToMany(targetEntity=FileManager::class, mappedBy="createdBy")
      */
-    private $files;
+    private $fileManagers;
 
     /**
      * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user")
@@ -115,7 +115,7 @@ class User implements UserInterface
         $this->createdAt = new DateTime();
         $this->dataUsageAgreement = true;
         $this->members = new ArrayCollection();
-        $this->files = new ArrayCollection();
+        $this->fileManagers = new ArrayCollection();
         $this->address = new ArrayCollection();
     }
 
@@ -360,30 +360,30 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|File[]
+     * @return Collection|FileManager[]
      */
-    public function getFiles(): Collection
+    public function getFileManagers(): Collection
     {
-        return $this->files;
+        return $this->fileManagers;
     }
 
-    public function addFile(File $file): self
+    public function addFile(FileManager $fileManager): self
     {
-        if (!$this->files->contains($file)) {
-            $this->files[] = $file;
-            $file->setCreatedBy($this);
+        if (!$this->fileManagers->contains($fileManager)) {
+            $this->fileManagers[] = $fileManager;
+            $fileManager->setCreatedBy($this);
         }
 
         return $this;
     }
 
-    public function removeFile(File $file): self
+    public function removeFileManager(FileManager $fileManager): self
     {
-        if ($this->files->contains($file)) {
-            $this->files->removeElement($file);
+        if ($this->fileManagers->contains($fileManager)) {
+            $this->fileManagers->removeElement($fileManager);
             // set the owning side to null (unless already changed)
-            if ($file->getCreatedBy() === $this) {
-                $file->setCreatedBy(null);
+            if ($fileManager->getCreatedBy() === $this) {
+                $fileManager->setCreatedBy(null);
             }
         }
 
