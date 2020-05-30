@@ -52,7 +52,7 @@ class FileManager
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="fileManagers")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="fileManagers")
      */
     private $createdBy;
 
@@ -157,12 +157,12 @@ class FileManager
         return $this;
     }
 
-    public function getCreatedBy(): ?user
+    public function getCreatedBy(): ?User
     {
         return $this->createdBy;
     }
 
-    public function setCreatedBy(?user $createdBy): self
+    public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
 
@@ -221,7 +221,7 @@ class FileManager
             }
         }
     }
-    
+
     public function getAssociation(): ?Association
     {
         return $this->association;

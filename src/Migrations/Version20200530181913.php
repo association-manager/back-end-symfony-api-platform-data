@@ -52,9 +52,9 @@ final class Version20200530181913 extends AbstractMigration
         $this->addSql('ALTER TABLE `work_group` ADD CONSTRAINT FK_453B3FEA2BE1531B FOREIGN KEY (work_group_id) REFERENCES `work_group` (id)');
         $this->addSql('ALTER TABLE work_group_association ADD CONSTRAINT FK_BE1EF8E62BE1531B FOREIGN KEY (work_group_id) REFERENCES `work_group` (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE work_group_association ADD CONSTRAINT FK_BE1EF8E6EFB9C8A5 FOREIGN KEY (association_id) REFERENCES association (id) ON DELETE CASCADE');
-        $this->addSql('ALTER TABLE announce ADD file_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE announce ADD CONSTRAINT FK_E6D6DD7593CB796C FOREIGN KEY (file_id) REFERENCES file_manager (id)');
-        $this->addSql('CREATE INDEX IDX_E6D6DD7593CB796C ON announce (file_id)');
+        $this->addSql('ALTER TABLE announce ADD file_manager_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE announce ADD CONSTRAINT FK_E6D6DD7593CB796C FOREIGN KEY (file_manager_id) REFERENCES file_manager (id)');
+        $this->addSql('CREATE INDEX IDX_E6D6DD7593CB796C ON announce (file_manager_id)');
         $this->addSql('ALTER TABLE association ADD association_profile_id INT DEFAULT NULL, ADD created_by_id INT NOT NULL, DROP cgu, CHANGE data_usage_agreement data_usage_agreement TINYINT(1) DEFAULT NULL, CHANGE association_type association_type VARCHAR(45) DEFAULT NULL, CHANGE phone_number phone_number VARCHAR(15) DEFAULT NULL, CHANGE mobile mobile VARCHAR(15) DEFAULT NULL, CHANGE website website VARCHAR(255) DEFAULT NULL, CHANGE founded_at founded_at DATETIME DEFAULT NULL');
         $this->addSql('ALTER TABLE association ADD CONSTRAINT FK_FD8521CCEC317002 FOREIGN KEY (association_profile_id) REFERENCES association_profile (id)');
         $this->addSql('ALTER TABLE association ADD CONSTRAINT FK_FD8521CCB03A8386 FOREIGN KEY (created_by_id) REFERENCES user (id)');
@@ -123,7 +123,7 @@ final class Version20200530181913 extends AbstractMigration
         $this->addSql('DROP TABLE `work_group`');
         $this->addSql('DROP TABLE work_group_association');
         $this->addSql('DROP INDEX IDX_E6D6DD7593CB796C ON announce');
-        $this->addSql('ALTER TABLE announce DROP file_id');
+        $this->addSql('ALTER TABLE announce DROP file_manager_id');
         $this->addSql('ALTER TABLE association DROP FOREIGN KEY FK_FD8521CCEC317002');
         $this->addSql('ALTER TABLE association DROP FOREIGN KEY FK_FD8521CCB03A8386');
         $this->addSql('DROP INDEX UNIQ_FD8521CCEC317002 ON association');

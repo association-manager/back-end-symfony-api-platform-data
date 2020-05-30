@@ -47,7 +47,7 @@ class Member
     private $donations;
 
     /**
-     * @ORM\ManyToMany(targetEntity=staff::class, inversedBy="members")
+     * @ORM\ManyToMany(targetEntity=Staff::class, inversedBy="members")
      */
     private $staff;
 
@@ -171,7 +171,7 @@ class Member
         return $this->staff;
     }
 
-    public function addStaff(staff $staff): self
+    public function addStaff(Staff $staff): self
     {
         if (!$this->staff->contains($staff)) {
             $this->staff[] = $staff;
@@ -180,7 +180,7 @@ class Member
         return $this;
     }
 
-    public function removeStaff(staff $staff): self
+    public function removeStaff(Staff $staff): self
     {
         if ($this->staff->contains($staff)) {
             $this->staff->removeElement($staff);

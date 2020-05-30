@@ -50,22 +50,22 @@ class Address
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="yes")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="yes")
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=association::class, inversedBy="addresses")
+     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="addresses")
      */
     private $association;
 
     /**
-     * @ORM\ManyToOne(targetEntity=invoiceShop::class, inversedBy="addresses")
+     * @ORM\ManyToOne(targetEntity=InvoiceShop::class, inversedBy="addresses")
      */
     private $invoiceShop;
 
     /**
-     * @ORM\ManyToOne(targetEntity=invoiceDonation::class, inversedBy="addresses")
+     * @ORM\ManyToOne(targetEntity=InvoiceDonation::class, inversedBy="addresses")
      */
     private $invoiceDonation;
 
@@ -146,48 +146,48 @@ class Address
         return $this;
     }
 
-    public function getUser(): ?user
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?user $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getAssociation(): ?association
+    public function getAssociation(): ?Association
     {
         return $this->association;
     }
 
-    public function setAssociation(?association $association): self
+    public function setAssociation(?Association $association): self
     {
         $this->association = $association;
 
         return $this;
     }
 
-    public function getInvoiceShop(): ?invoiceShop
+    public function getInvoiceShop(): ?InvoiceShop
     {
         return $this->invoiceShop;
     }
 
-    public function setInvoiceShop(?invoiceShop $invoiceShop): self
+    public function setInvoiceShop(?InvoiceShop $invoiceShop): self
     {
         $this->invoiceShop = $invoiceShop;
 
         return $this;
     }
 
-    public function getInvoiceDonation(): ?invoiceDonation
+    public function getInvoiceDonation(): ?InvoiceDonation
     {
         return $this->invoiceDonation;
     }
 
-    public function setInvoiceDonation(?invoiceDonation $invoiceDonation): self
+    public function setInvoiceDonation(?InvoiceDonation $invoiceDonation): self
     {
         $this->invoiceDonation = $invoiceDonation;
 

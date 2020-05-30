@@ -28,7 +28,7 @@ class WorkGroup
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=association::class, inversedBy="groups")
+     * @ORM\ManyToMany(targetEntity=Association::class, inversedBy="groups")
      */
     private $association;
 
@@ -84,7 +84,7 @@ class WorkGroup
         return $this->association;
     }
 
-    public function addAssociationId(association $association): self
+    public function addAssociationId(Association $association): self
     {
         if (!$this->association->contains($association)) {
             $this->association[] = $association;
@@ -93,7 +93,7 @@ class WorkGroup
         return $this;
     }
 
-    public function removeAssociationId(association $association): self
+    public function removeAssociationId(Association $association): self
     {
         if ($this->association->contains($association)) {
             $this->association->removeElement($association);
