@@ -41,13 +41,13 @@ class Planning
     private $color;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Event::class, mappedBy="planning")
+     * @ORM\ManyToMany(targetEntity=AssoManagerEvent::class, mappedBy="planning")
      */
-    private $events;
+    private $assoManagerEvents;
 
     public function __construct()
     {
-        $this->events = new ArrayCollection();
+        $this->assoManagerEvents = new ArrayCollection();
         $this->projects = new ArrayCollection();
     }
     /**
@@ -119,28 +119,28 @@ class Planning
     }
 
     /**
-     * @return Collection|Event[]
+     * @return Collection|AssoManagerEvent[]
      */
-    public function getEvents(): Collection
+    public function getAssoManagerEvents(): Collection
     {
-        return $this->events;
+        return $this->assoManagerEvents;
     }
 
-    public function addEvent(Event $event): self
+    public function addEvent(AssoManagerEvent $assoManagerEvent): self
     {
-        if (!$this->events->contains($event)) {
-            $this->events[] = $event;
-            $event->addPlanning($this);
+        if (!$this->assoManagerEvents->contains($assoManagerEvent)) {
+            $this->assoManagerEvents[] = $assoManagerEvent;
+            $assoManagerEvent->addPlanning($this);
         }
 
         return $this;
     }
 
-    public function removeEvent(Event $event): self
+    public function removeEvent(AssoManagerEvent $assoManagerEvent): self
     {
-        if ($this->events->contains($event)) {
-            $this->events->removeElement($event);
-            $event->removePlanning($this);
+        if ($this->assoManagerEvents->contains($assoManagerEvent)) {
+            $this->assoManagerEvents->removeElement($assoManagerEvent);
+            $assoManagerEvent->removePlanning($this);
         }
     }
     

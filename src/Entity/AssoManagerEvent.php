@@ -3,16 +3,16 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\EventRepository;
+use App\Repository\AssoManagerEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource()
- * @ORM\Entity(repositoryClass=EventRepository::class)
+ * @ORM\Entity(repositoryClass=AssoManagerEventRepository::class)
  */
-class Event
+class AssoManagerEvent
 {
     /**
      * @ORM\Id()
@@ -37,7 +37,7 @@ class Event
     private $endDate;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Planning::class, inversedBy="events")
+     * @ORM\ManyToMany(targetEntity=Planning::class, inversedBy="assoManagerEvents")
      */
     private $planning;
 

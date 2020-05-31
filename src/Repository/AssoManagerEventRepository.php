@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Event;
+use App\Entity\AssoManagerEvent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Event|null find($id, $lockMode = null, $lockVersion = null)
- * @method Event|null findOneBy(array $criteria, array $orderBy = null)
- * @method Event[]    findAll()
- * @method Event[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method AssoManagerEvent|null find($id, $lockMode = null, $lockVersion = null)
+ * @method AssoManagerEvent|null findOneBy(array $criteria, array $orderBy = null)
+ * @method AssoManagerEvent[]    findAll()
+ * @method AssoManagerEvent[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EventRepository extends ServiceEntityRepository
+class AssoManagerEventRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Event::class);
+        parent::__construct($registry, AssoManagerEvent::class);
     }
 
     // /**
-    //  * @return Event[] Returns an array of Event objects
+    //  * @return AssoManagerEvent[] Returns an array of AssoManagerEvent objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class EventRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Event
+    public function findOneBySomeField($value): ?AssoManagerEvent
     {
         return $this->createQueryBuilder('e')
             ->andWhere('e.exampleField = :val')
