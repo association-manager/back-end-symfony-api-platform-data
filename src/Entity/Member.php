@@ -52,15 +52,16 @@ class Member
     private $staff;
 
     /**
-     * @ORM\ManyToOne(targetEntity=MemberTaskGroupRelation::class, inversedBy="members")
+     * @ORM\OneToMany(targetEntity=MemberTaskWorkGroupRelation::class, mappedBy="member")
      */
-    private $memberTaskGroupRelation;
+    private $memberTaskWorkGroupRelations;
 
     public function __construct()
     {
         $this->associations = new ArrayCollection();
         $this->donations = new ArrayCollection();
         $this->staff = new ArrayCollection();
+        $this->memberTaskWorkGroupRelations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -189,14 +190,33 @@ class Member
         return $this;
     }
 
-    public function getMemberTaskGroupRelation(): ?MemberTaskGroupRelation
+    /**
+     * @return Collection|MemberTaskWorkGroupRelation[]
+     */
+    public function getMemberTaskWorkGroupRelations(): Collection
     {
-        return $this->memberTaskGroupRelation;
+        return $this->memberTaskWorkGroupRelations;
     }
 
-    public function setMemberTaskGroupRelation(?MemberTaskGroupRelation $memberTaskGroupRelation): self
+    public function addMemberTaskWorkGroupRelation(MemberTaskWorkGroupRelation $memberTaskWorkGroupRelation): self
     {
-        $this->memberTaskGroupRelation = $memberTaskGroupRelation;
+        if (!$this->memberTaskWorkGroupRelations->contains($memberTaskWorkGroupRelation)) {
+            $this->memberTaskWorkGroupRelations[] = $memberTaskWorkGroupRelation;
+            $memberTaskWorkGroupRelation->setMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMemberTaskWorkGroupRelation(MemberTaskWorkGroupRelation $memberTaskWorkGroupRelation): self
+    {
+        if ($this->memberTaskWorkGroupRelations->contains($memberTaskWorkGroupRelation)) {
+            $this->memberTaskWorkGroupRelations->removeElement($memberTaskWorkGroupRelation);
+            // set the owning side to null (unless already changed)
+            if ($memberTaskWorkGroupRelation->getMember() === $this) {
+                $memberTaskWorkGroupRelation->setMember(null);
+            }
+        }
 
         return $this;
     }

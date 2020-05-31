@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -44,14 +46,19 @@ class Task
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity=MemberTaskGroupRelation::class, inversedBy="tasks")
-     */
-    private $memberTaskGroupRelation;
-
-    /**
      * @ORM\ManyToOne(targetEntity=ProjectPlanning::class, inversedBy="tasks")
      */
     private $projectPlanning;
+
+    /**
+     * @ORM\OneToMany(targetEntity=MemberTaskWorkGroupRelation::class, mappedBy="task")
+     */
+    private $memberTaskWorkGroupRelations;
+
+    public function __construct()
+    {
+        $this->memberTaskWorkGroupRelations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -118,18 +125,6 @@ class Task
         return $this;
     }
 
-    public function getMemberTaskGroupRelation(): ?MemberTaskGroupRelation
-    {
-        return $this->memberTaskGroupRelation;
-    }
-
-    public function setMemberTaskGroupRelation(?MemberTaskGroupRelation $memberTaskGroupRelation): self
-    {
-        $this->memberTaskGroupRelation = $memberTaskGroupRelation;
-
-        return $this;
-    }
-
     public function getProjectPlanning(): ?ProjectPlanning
     {
         return $this->projectPlanning;
@@ -138,6 +133,37 @@ class Task
     public function setProjectPlanning(?ProjectPlanning $projectPlanning): self
     {
         $this->projectPlanning = $projectPlanning;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|MemberTaskWorkGroupRelation[]
+     */
+    public function getMemberTaskWorkGroupRelations(): Collection
+    {
+        return $this->memberTaskWorkGroupRelations;
+    }
+
+    public function addMemberTaskWorkGroupRelation(MemberTaskWorkGroupRelation $memberTaskWorkGroupRelation): self
+    {
+        if (!$this->memberTaskWorkGroupRelations->contains($memberTaskWorkGroupRelation)) {
+            $this->memberTaskWorkGroupRelations[] = $memberTaskWorkGroupRelation;
+            $memberTaskWorkGroupRelation->setTask($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMemberTaskWorkGroupRelation(MemberTaskWorkGroupRelation $memberTaskWorkGroupRelation): self
+    {
+        if ($this->memberTaskWorkGroupRelations->contains($memberTaskWorkGroupRelation)) {
+            $this->memberTaskWorkGroupRelations->removeElement($memberTaskWorkGroupRelation);
+            // set the owning side to null (unless already changed)
+            if ($memberTaskWorkGroupRelation->getTask() === $this) {
+                $memberTaskWorkGroupRelation->setTask(null);
+            }
+        }
 
         return $this;
     }
