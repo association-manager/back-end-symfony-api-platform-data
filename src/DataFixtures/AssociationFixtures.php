@@ -2,37 +2,35 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Association;
 use App\Entity\User;
+use App\Entity\Address;
+use App\Entity\Association;
 use Doctrine\Persistence\ObjectManager;
 
 
 class AssociationFixtures extends BaseFixture
 {
-    // private $types = [
-    //     'Association de fait ou association non déclarée',
-    //     'association loi de 1901','Association avec agrément',
-    //     'Association d\'utilité publique'
-    // ];
-
-
-    // public function getTypes()
-    // {
-    //     return $this->types;
-    // }
-
-    // public function setTypes($types): self
-    // {
-    //     $this->cgu = $types;
-
-    //     return $this;
-    // }
-
-
     protected function loadData(ObjectManager $manager)
     {
+        $this->manager = $manager;
 
         $this->createMany(Association::class, 10, function (Association $association, $count) {
+
+            // Association Address Type
+            $addressTypes = [
+                "Paris",
+                "Lyon"
+            ];
+
+            // Association Address 
+            $address = new Address();
+            $address->setAddressLine1($this->faker->streetAddress)
+                ->setPostalCode($this->faker->postcode)
+                ->setCity($this->faker->city)
+                ->setCountry($this->faker->country)
+                ->setType("Notre adresse à ".$this->faker->randomElement($addressTypes));
+
+            // Association Type
             $associationTypes = [
                 "Association1",
                 "association2",
@@ -40,6 +38,7 @@ class AssociationFixtures extends BaseFixture
                 "Association4"
             ];
 
+            // Association User
             $user = new User();
             $hash = $this->encoder->encodePassword($user, "password");
             $user->setFirstName($this->faker->firstName())
@@ -52,6 +51,7 @@ class AssociationFixtures extends BaseFixture
                 ->setPassword($hash)
                 ->setDataUsageAgreement($this->faker->randomElement([1, 0]));
 
+            // Association
             $customPhone = (87985471 + $count);
             $name = $this->faker->company;
             $customName = strtolower(str_replace(" ", "", $name));
@@ -69,7 +69,8 @@ class AssociationFixtures extends BaseFixture
                 ->setAssemblyConstituveDate($this->faker->dateTimeBetween('-6 months'))
                 ->setFoundedAt($this->faker->dateTimeBetween('-6 months'))
                 ->setCreatedAt($this->faker->dateTimeBetween('-3 months'))
-                ->setCreatedBy($user);
+                ->setCreatedBy($user)
+                ->addAddress($address);
         });
         $manager->flush();
     }
