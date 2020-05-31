@@ -30,7 +30,7 @@ class Address
     private $addressLine2;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $postalCode;
 
@@ -98,12 +98,12 @@ class Address
         return $this;
     }
 
-    public function getPostalCode(): ?int
+    public function getPostalCode(): ?string
     {
         return $this->postalCode;
     }
 
-    public function setPostalCode(?int $postalCode): self
+    public function setPostalCode(?string $postalCode): self
     {
         $this->postalCode = $postalCode;
 
