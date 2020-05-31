@@ -101,7 +101,7 @@ class User implements UserInterface
     private $fileManagers;
 
     /**
-     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user", cascade={"persist"})
      */
     private $address;
 

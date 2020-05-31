@@ -87,7 +87,7 @@ class Association
 
 
     /**
-     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="association")
+     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="association" , cascade={"persist", "remove"})
      */
     private $addresses;
 
@@ -125,7 +125,7 @@ class Association
     /**
      * @ORM\OneToMany(targetEntity=FileManager::class, mappedBy="association")
      */
-    private $files;
+    private $fileManagers;
 
     public function __construct()
     {
