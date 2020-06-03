@@ -2,13 +2,29 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductWebsiteRepository;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=ProductWebsiteRepository::class)
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/produits/site/vitrine/lister"},
+ *          "POST"={"path"="/produits/site/vitrine/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/produit/site/vitrine/{id}/afficher"}, 
+ *          "PUT"={"path"="/produit/site/vitrine/{id}/modifier"},
+ *          "DELETE"={"path"="/produit/site/vitrine/{id}/supprimer"}
+ *          },
+ *      normalizationContext={
+ *          "groups"={
+ *              "product_read"
+ *          }
+ *      }
+ * )
  */
 class ProductWebsite
 {
@@ -16,21 +32,33 @@ class ProductWebsite
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "product_read"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Groups({
+     *      "product_read"
+     * })
      */
     private $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({
+     *      "product_read"
+     * })
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Groups({
+     *      "product_read"
+     * })
      */
     private $logo;
 
