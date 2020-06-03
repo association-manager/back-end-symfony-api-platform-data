@@ -2,15 +2,31 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\InvoiceShopRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\InvoiceShopRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=InvoiceShopRepository::class)
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/boutique/factures/lister"},
+ *          "POST"={"path"="/boutique/facture/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/boutique/facture/{id}/afficher"}, 
+ *          "PUT"={"path"="/boutique/facture/{id}/modifier"},
+ *          "DELETE"={"path"="/boutique/facture/{id}/supprimer"}
+ *          },
+ *      normalizationContext={
+ *          "groups"={
+ *              "invoice_shop_read"
+ *          }
+ *      }
+ * )
  */
 class InvoiceShop
 {
@@ -18,26 +34,31 @@ class InvoiceShop
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"invoice_shop_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"invoice_shop_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"invoice_shop_read"})
      */
     private $amount;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float")
+     * @Groups({"invoice_shop_read"})
      */
     private $vat;
 
     /**
      * @ORM\OneToMany(targetEntity=Address::class, mappedBy="invoiceShop")
+     * @Groups({"invoice_shop_read"})
      */
     private $addresses;
 
@@ -75,12 +96,12 @@ class InvoiceShop
         return $this;
     }
 
-    public function getVat(): ?int
+    public function getVat(): ?float
     {
         return $this->vat;
     }
 
-    public function setVat(int $vat): self
+    public function setVat(float $vat): self
     {
         $this->vat = $vat;
 
