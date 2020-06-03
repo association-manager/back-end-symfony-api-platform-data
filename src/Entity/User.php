@@ -86,7 +86,7 @@ class User implements UserInterface
     private $dataUsageAgreement;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      * @Groups({"user_read", "member_read"})
      */
     private $mobile;
