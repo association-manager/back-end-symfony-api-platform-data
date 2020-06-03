@@ -7,7 +7,17 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TutorialRepository")
- * @ApiResource
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/tutoriels/lister"},
+ *          "POST"={"path"="/tutoriels/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/tutoriel/{id}/afficher"}, 
+ *          "PUT"={"path"="/tutoriel/{id}/modifier"},
+ *          "DELETE"={"path"="/tutoriel/{id}/supprimer"}
+ *          }
+ * )
  */
 class Tutorial
 {
