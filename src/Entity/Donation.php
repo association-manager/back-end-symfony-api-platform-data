@@ -2,13 +2,29 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\DonationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\DonationRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=DonationRepository::class)
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/donations/lister"},
+ *          "POST"={"path"="/donations/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/donation/{id}/afficher"}, 
+ *          "PUT"={"path"="/donation/{id}/modifier"},
+ *          "DELETE"={"path"="/donation/{id}/supprimer"}
+ *          },
+ *      normalizationContext={
+ *          "groups"={
+ *              "donation_read"
+ *          }
+ *      }
+ * )
  */
 class Donation
 {
@@ -16,31 +32,73 @@ class Donation
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "donation_read", 
+     *      "member_read", 
+     *      "association_read", 
+     *      "staff_read",
+     *      "members_subresource",
+     *      "associations_members_subresource"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=4)
+     * @Groups({
+     *      "donation_read", 
+     *      "member_read", 
+     *      "association_read", 
+     *      "staff_read",
+     *      "members_subresource",
+     *      "associations_members_subresource"
+     * })
      */
     private $amount;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({
+     *      "donation_read", 
+     *      "member_read", 
+     *      "association_read", 
+     *      "staff_read",
+     *      "members_subresource",
+     *      "associations_members_subresource"
+     * })
      */
     private $mensuality;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=4)
+     * @Groups({
+     *      "donation_read", 
+     *      "member_read", 
+     *      "association_read", 
+     *      "staff_read",
+     *      "members_subresource",
+     *      "associations_members_subresource"
+     * })
      */
     private $taxDeductionPercentage;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({
+     *      "donation_read", 
+     *      "member_read", 
+     *      "association_read", 
+     *      "staff_read",
+     *      "associations_members_subresource"
+     * })
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Member::class, inversedBy="donations")
+     * @Groups({
+     *      "donation_read"
+     * })
      */
     private $member;
 
