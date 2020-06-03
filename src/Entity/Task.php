@@ -2,14 +2,30 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TaskRepository")
- * @ApiResource
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/taches/lister"},
+ *          "POST"={"path"="/taches/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/tache/{id}/afficher"}, 
+ *          "PUT"={"path"="/tache/{id}/modifier"},
+ *          "DELETE"={"path"="/tache/{id}/supprimer"}
+ *          },
+ *      normalizationContext={
+ *          "groups"={
+ *              "task_read"
+ *          }
+ *      }
+ * )
  */
 class Task
 {
@@ -17,41 +33,113 @@ class Task
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "task_read", 
+     *      "project_planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read",
+     *      "projects_subresource"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({
+     *      "task_read", 
+     *      "project_planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read",
+     *      "projects_subresource"
+     * })
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({
+     *      "task_read", 
+     *      "project_planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read",
+     *      "projects_subresource"
+     * })
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({
+     *      "task_read", 
+     *      "project_planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read",
+     *      "projects_subresource"
+     * })
      */
     private $endDate;
 
     /**
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @Groups({
+     *      "task_read", 
+     *      "project_planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read",
+     *      "projects_subresource"
+     * })
      */
     private $type;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({
+     *      "task_read", 
+     *      "project_planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read",
+     *      "projects_subresource"
+     * })
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProjectPlanning::class, inversedBy="tasks")
+     * @Groups({
+     *      "task_read", 
+     *      "member_read"
+     * })
      */
     private $projectPlanning;
 
     /**
      * @ORM\OneToMany(targetEntity=MemberTaskWorkGroupRelation::class, mappedBy="task")
+     * @Groups({
+     *      "task_read", 
+     *      "project_planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read",
+     *      "projects_subresource"
+     * })
      */
     private $memberTaskWorkGroupRelations;
 
