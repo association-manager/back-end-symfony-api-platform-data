@@ -2,13 +2,29 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\NetworksSocialLinkRepository;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=NetworksSocialLinkRepository::class)
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET",
+ *          "POST"
+ *           },
+ *      itemOperations={
+ *          "GET", 
+ *          "PUT",
+ *          "DELETE"
+ *          },
+ *      normalizationContext={
+ *          "groups"={
+ *              "network_social_link_read"
+ *          }
+ *      }
+ * )
  */
 class NetworksSocialLink
 {
@@ -16,21 +32,49 @@ class NetworksSocialLink
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "network_social_link_read", 
+     *      "association_read", 
+     *      "association_profile_read", 
+     *      "donation_read", 
+     *      "staff_read"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({
+     *      "network_social_link_read", 
+     *      "association_read", 
+     *      "association_profile_read", 
+     *      "donation_read", 
+     *      "staff_read"
+     * })
      */
     private $website;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Groups({
+     *      "network_social_link_read", 
+     *      "association_read", 
+     *      "association_profile_read", 
+     *      "donation_read", 
+     *      "staff_read"
+     * })
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Groups({
+     *      "network_social_link_read", 
+     *      "association_read", 
+     *      "association_profile_read", 
+     *      "donation_read", 
+     *      "staff_read"
+     * })
      */
     private $icon;
 
