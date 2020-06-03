@@ -2,14 +2,36 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\PlanningRepository")
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/plannings/lister"},
+ *          "POST"={"path"="/plannings/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/planning/{id}/afficher"}, 
+ *          "PUT"={"path"="/planning/{id}/modifier"},
+ *          "DELETE"={"path"="/planning/{id}/supprimer"}
+ *          },
+ *      subresourceOperations={
+ *          "api_associations_plannings_get_subresource"={
+ *          "normalization_context"={"groups"={"associations_plannings_subresource"}}
+ *          } 
+ *      }, 
+ *      normalizationContext={
+ *          "groups"={
+ *              "planning_read"
+ *          }
+ *      }
+ * 
+ * )
  */
 class Planning
 {
@@ -17,53 +39,135 @@ class Planning
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "asso_manager_event_read", 
+     *      "category_read", 
+     *      "member_read", 
+     *      "task_read",
+     *      "projects_subresource",
+     *      "associations_plannings_subresource"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({
+     *      "planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "asso_manager_event_read", 
+     *      "category_read", 
+     *      "member_read", 
+     *      "task_read",
+     *      "projects_subresource",
+     *      "associations_plannings_subresource"
+     * })
      */
     private $name;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({
+     *      "planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "asso_manager_event_read", 
+     *      "category_read", 
+     *      "member_read", 
+     *      "task_read",
+     *      "projects_subresource",
+     *      "associations_plannings_subresource"
+     * })
      */
     private $startAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({
+     *      "planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "asso_manager_event_read", 
+     *      "category_read", 
+     *      "member_read", 
+     *      "task_read",
+     *      "projects_subresource",
+     *      "associations_plannings_subresource"
+     * })
      */
     private $endAt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({
+     *      "planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "asso_manager_event_read", 
+     *      "category_read", 
+     *      "member_read", 
+     *      "task_read",
+     *      "projects_subresource",
+     *      "associations_plannings_subresource"
+     * })
      */
     private $color;
 
     /**
      * @ORM\ManyToMany(targetEntity=AssoManagerEvent::class, mappedBy="planning")
+     * @Groups({
+     *      "planning_read", 
+     *      "category_read",
+     *      "associations_plannings_subresource"
+     * })
      */
     private $assoManagerEvents;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="plannings")
+     * @Groups({
+     *      "planning_read", 
+     *      "asso_manager_event_read", 
+     *      "category_read"
+     * })
+     */
+    private $association;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="plannings")
+     * @Groups({
+     *      "planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read",
+     *      "projects_subresource"
+     * })
+     */
+    private $category;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Project::class, mappedBy="planning")
+     * @Groups({
+     *      "planning_read", 
+     *      "category_read"
+     * })
+     */
+    private $projects;
 
     public function __construct()
     {
         $this->assoManagerEvents = new ArrayCollection();
         $this->projects = new ArrayCollection();
     }
-    /**
-     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="plannings")
-     */
-    private $association;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="plannings")
-     */
-    private $category;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Project::class, mappedBy="planning")
-     */
-    private $projects;
 
     public function getId(): ?int
     {
