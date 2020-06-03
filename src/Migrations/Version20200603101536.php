@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200531153755 extends AbstractMigration
+final class Version20200603101536 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -27,11 +27,11 @@ final class Version20200531153755 extends AbstractMigration
         $this->addSql('CREATE TABLE asso_manager_event_planning (asso_manager_event_id INT NOT NULL, planning_id INT NOT NULL, INDEX IDX_D025175AF203678F (asso_manager_event_id), INDEX IDX_D025175A3D865311 (planning_id), PRIMARY KEY(asso_manager_event_id, planning_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE file_manager (id INT AUTO_INCREMENT NOT NULL, created_by_id INT DEFAULT NULL, association_id INT DEFAULT NULL, type VARCHAR(45) NOT NULL, text VARCHAR(255) NOT NULL, url LONGTEXT DEFAULT NULL, status SMALLINT DEFAULT NULL, s3key VARCHAR(255) DEFAULT NULL, created_at DATETIME NOT NULL, name VARCHAR(150) DEFAULT NULL, size VARCHAR(150) NOT NULL, INDEX IDX_A1429C82B03A8386 (created_by_id), INDEX IDX_A1429C82EFB9C8A5 (association_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE invoice_donation (id INT AUTO_INCREMENT NOT NULL, created_at DATETIME NOT NULL, total_amount DOUBLE PRECISION NOT NULL, total_after_deduction DOUBLE PRECISION NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE invoice_shop (id INT AUTO_INCREMENT NOT NULL, created_at DATETIME NOT NULL, amount DOUBLE PRECISION NOT NULL, vat INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE invoice_shop (id INT AUTO_INCREMENT NOT NULL, created_at DATETIME NOT NULL, amount DOUBLE PRECISION NOT NULL, vat DOUBLE PRECISION NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE member (id INT AUTO_INCREMENT NOT NULL, user_id_id INT NOT NULL, profile JSON DEFAULT NULL, roles LONGTEXT NOT NULL COMMENT \'(DC2Type:array)\', INDEX IDX_70E4FA789D86650F (user_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE member_staff (member_id INT NOT NULL, staff_id INT NOT NULL, INDEX IDX_204F66617597D3FE (member_id), INDEX IDX_204F6661D4D57CD (staff_id), PRIMARY KEY(member_id, staff_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE member_task_work_group_relation (id INT AUTO_INCREMENT NOT NULL, member_id INT NOT NULL, task_id INT NOT NULL, work_group_id INT NOT NULL, INDEX IDX_15DA80237597D3FE (member_id), INDEX IDX_15DA80238DB60186 (task_id), INDEX IDX_15DA80232BE1531B (work_group_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE staff (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) DEFAULT NULL, description LONGTEXT DEFAULT NULL, data_usage_agreement SMALLINT DEFAULT NULL, association_type VARCHAR(45) NOT NULL, phone_number INT DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE staff (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) DEFAULT NULL, description LONGTEXT DEFAULT NULL, data_usage_agreement SMALLINT DEFAULT NULL, association_type VARCHAR(45) NOT NULL, phone_number VARCHAR(20) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE `work_group` (id INT AUTO_INCREMENT NOT NULL, work_group_id INT DEFAULT NULL, name VARCHAR(80) NOT NULL, INDEX IDX_453B3FEA2BE1531B (work_group_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE work_group_association (work_group_id INT NOT NULL, association_id INT NOT NULL, INDEX IDX_BE1EF8E62BE1531B (work_group_id), INDEX IDX_BE1EF8E6EFB9C8A5 (association_id), PRIMARY KEY(work_group_id, association_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE address ADD CONSTRAINT FK_D4E6F81A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
@@ -83,7 +83,7 @@ final class Version20200531153755 extends AbstractMigration
         $this->addSql('ALTER TABLE task ADD project_planning_id INT DEFAULT NULL, CHANGE title title VARCHAR(255) DEFAULT NULL, CHANGE start_date start_date DATETIME DEFAULT NULL, CHANGE end_date end_date DATETIME DEFAULT NULL, CHANGE type type VARCHAR(45) DEFAULT NULL');
         $this->addSql('ALTER TABLE task ADD CONSTRAINT FK_527EDB25F549A4EA FOREIGN KEY (project_planning_id) REFERENCES project_planning (id)');
         $this->addSql('CREATE INDEX IDX_527EDB25F549A4EA ON task (project_planning_id)');
-        $this->addSql('ALTER TABLE transaction ADD association_id INT DEFAULT NULL, ADD category_id INT NOT NULL');
+        $this->addSql('ALTER TABLE transaction ADD association_id INT DEFAULT NULL, ADD category_id INT NOT NULL, CHANGE detais details LONGTEXT NOT NULL');
         $this->addSql('ALTER TABLE transaction ADD CONSTRAINT FK_723705D1EFB9C8A5 FOREIGN KEY (association_id) REFERENCES association (id)');
         $this->addSql('ALTER TABLE transaction ADD CONSTRAINT FK_723705D112469DE2 FOREIGN KEY (category_id) REFERENCES category (id)');
         $this->addSql('CREATE INDEX IDX_723705D1EFB9C8A5 ON transaction (association_id)');
@@ -151,7 +151,7 @@ final class Version20200531153755 extends AbstractMigration
         $this->addSql('ALTER TABLE transaction DROP FOREIGN KEY FK_723705D112469DE2');
         $this->addSql('DROP INDEX IDX_723705D1EFB9C8A5 ON transaction');
         $this->addSql('DROP INDEX IDX_723705D112469DE2 ON transaction');
-        $this->addSql('ALTER TABLE transaction DROP association_id, DROP category_id');
+        $this->addSql('ALTER TABLE transaction DROP association_id, DROP category_id, CHANGE details detais LONGTEXT CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`');
         $this->addSql('ALTER TABLE user CHANGE updated_by_id updated_by_id INT DEFAULT NULL, CHANGE validated_by_id validated_by_id INT DEFAULT NULL, CHANGE validated_at validated_at DATETIME DEFAULT \'NULL\', CHANGE sex sex VARCHAR(10) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE dob dob DATE DEFAULT \'NULL\'');
     }
 }
