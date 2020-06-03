@@ -2,14 +2,38 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\MemberRepository")
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/membres/lister"},
+ *          "POST"={"path"="/membres/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/membre/{id}/afficher"}, 
+ *          "PUT"={"path"="/membre/{id}/modifier"},
+ *          "DELETE"={"path"="/membre/{id}/supprimer"}
+ *          },
+ *      subresourceOperations={
+ *          "api_users_members_get_subresource"={
+ *          "normalization_context"={"groups"={"members_subresource"}}
+ *          },
+ *          "api_associations_members_get_subresource"={
+ *          "normalization_context"={"groups"={"associations_members_subresource"}}
+ *          }             
+ *      },
+ *      normalizationContext={
+ *          "groups"={
+ *              "member_read"
+ *          }
+ *      }
+ * )
  */
 class Member
 {
@@ -17,16 +41,54 @@ class Member
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "member_read", 
+     *      "association_read", 
+     *      "staff_read", 
+     *      "donation_read", 
+     *      "project_read", 
+     *      "project_planning_read", 
+     *      "task_read", 
+     *      "work_group_read",
+     *      "members_subresource",
+     *      "associations_members_subresource"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="json", nullable=true)
+     * @Groups({
+     *      "member_read", 
+     *      "association_read", 
+     *      "staff_read", 
+     *      "donation_read", 
+     *      "project_read", 
+     *      "project_planning_read", 
+     *      "task_read", 
+     *      "work_group_read",
+     *      "projects_subresource",
+     *      "members_subresource",
+     *      "associations_members_subresource"
+     * })
      */
     private $profile = [];
 
     /**
      * @ORM\Column(type="array")
+     * @Groups({
+     *      "member_read", 
+     *      "association_read", 
+     *      "staff_read", 
+     *      "donation_read", 
+     *      "project_read", 
+     *      "project_planning_read", 
+     *      "task_read", 
+     *      "work_group_read",
+     *      "projects_subresource",
+     *      "members_subresource",
+     *      "associations_members_subresource"
+     * })
      */
     private $roles = [];
 
@@ -38,29 +100,53 @@ class Member
 
     /**
      * @ORM\ManyToMany(targetEntity=Association::class, mappedBy="members")
+     * @Groups({
+     *      "member_read", 
+     *      "staff_read", 
+     *      "donation_read", 
+     *      "donation_read", 
+     *      "task_read",
+     *      "members_subresource"
+     * })
      */
     private $associations;
 
     /**
      * @ORM\OneToMany(targetEntity=Donation::class, mappedBy="member")
+     * @Groups({
+     *      "member_read", 
+     *      "association_read", 
+     *      "staff_read",
+     *      "members_subresource",
+     *      "associations_members_subresource"
+     * })
      */
     private $donations;
 
     /**
      * @ORM\ManyToMany(targetEntity=Staff::class, inversedBy="members")
+     * @Groups({
+     *      "member_read", 
+     *      "association_read",
+     *      "members_subresource"
+     * })
      */
     private $staff;
 
     /**
-     * @ORM\ManyToOne(targetEntity=MemberTaskGroupRelation::class, inversedBy="members")
+     * @ORM\OneToMany(targetEntity=MemberTaskWorkGroupRelation::class, mappedBy="member")
+     *  @Groups({
+     *      "member_read"
+     * })
      */
-    private $memberTaskGroupRelation;
+    private $memberTaskWorkGroupRelations;
 
     public function __construct()
     {
         $this->associations = new ArrayCollection();
         $this->donations = new ArrayCollection();
         $this->staff = new ArrayCollection();
+        $this->memberTaskWorkGroupRelations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -189,14 +275,33 @@ class Member
         return $this;
     }
 
-    public function getMemberTaskGroupRelation(): ?MemberTaskGroupRelation
+    /**
+     * @return Collection|MemberTaskWorkGroupRelation[]
+     */
+    public function getMemberTaskWorkGroupRelations(): Collection
     {
-        return $this->memberTaskGroupRelation;
+        return $this->memberTaskWorkGroupRelations;
     }
 
-    public function setMemberTaskGroupRelation(?MemberTaskGroupRelation $memberTaskGroupRelation): self
+    public function addMemberTaskWorkGroupRelation(MemberTaskWorkGroupRelation $memberTaskWorkGroupRelation): self
     {
-        $this->memberTaskGroupRelation = $memberTaskGroupRelation;
+        if (!$this->memberTaskWorkGroupRelations->contains($memberTaskWorkGroupRelation)) {
+            $this->memberTaskWorkGroupRelations[] = $memberTaskWorkGroupRelation;
+            $memberTaskWorkGroupRelation->setMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMemberTaskWorkGroupRelation(MemberTaskWorkGroupRelation $memberTaskWorkGroupRelation): self
+    {
+        if ($this->memberTaskWorkGroupRelations->contains($memberTaskWorkGroupRelation)) {
+            $this->memberTaskWorkGroupRelations->removeElement($memberTaskWorkGroupRelation);
+            // set the owning side to null (unless already changed)
+            if ($memberTaskWorkGroupRelation->getMember() === $this) {
+                $memberTaskWorkGroupRelation->setMember(null);
+            }
+        }
 
         return $this;
     }

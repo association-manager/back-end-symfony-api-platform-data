@@ -2,13 +2,34 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\TransactionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TransactionRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=TransactionRepository::class)
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/transactions/lister"},
+ *          "POST"={"path"="/transactions/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/transaction/{id}/afficher"}, 
+ *          "PUT"={"path"="/transaction/{id}/modifier"},
+ *          "DELETE"={"path"="/transaction/{id}/supprimer"}
+ *          },
+ *      subresourceOperations={
+ *          "api_associations_transactions_get_subresource"={
+ *          "normalization_context"={"groups"={"associations_transactions_subresource"}}
+ *          } 
+ *      }, 
+ *      normalizationContext={
+ *          "groups"={
+ *              "transaction_read"
+ *          }
+ *      },
+ * )
  */
 class Transaction
 {
@@ -16,42 +37,86 @@ class Transaction
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "transaction_read", 
+     *      "association_read", 
+     *      "category_read",
+     *      "associations_transactions_subresource"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Groups({
+     *      "transaction_read", 
+     *      "association_read", 
+     *      "category_read",
+     *      "associations_transactions_subresource"
+     * })
      */
     private $type;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({
+     *      "transaction_read", 
+     *      "association_read", 
+     *      "category_read",
+     *      "associations_transactions_subresource"
+     * })
      */
     private $date;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({
+     *      "transaction_read", 
+     *      "association_read", 
+     *      "category_read",
+     *      "associations_transactions_subresource"
+     * })
      */
-    private $detais;
+    private $details;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=4)
+     * @Groups({
+     *      "transaction_read", 
+     *      "association_read", 
+     *      "category_read",
+     *      "associations_transactions_subresource"
+     * })
      */
     private $amount;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({
+     *      "transaction_read", 
+     *      "association_read", 
+     *      "category_read",
+     *      "associations_transactions_subresource"
+     * })
      */
     private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="transactions")
+     * @Groups({
+     *  "transaction_read", 
+     *  "category_read"
+     * })
      */
     private $association;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="transactions")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({
+     *  "transaction_read", 
+     *  "association_read"
+     * })
      */
     private $category;
 
@@ -84,14 +149,14 @@ class Transaction
         return $this;
     }
 
-    public function getDetais(): ?string
+    public function getDetails(): ?string
     {
-        return $this->detais;
+        return $this->details;
     }
 
-    public function setDetais(string $detais): self
+    public function setDetails(string $details): self
     {
-        $this->detais = $detais;
+        $this->details = $details;
 
         return $this;
     }

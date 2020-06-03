@@ -2,14 +2,35 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProjectRepository")
- * @ApiResource
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/projets/lister"},
+ *          "POST"={"path"="/projets/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/projet/{id}/afficher"}, 
+ *          "PUT"={"path"="/projet/{id}/modifier"},
+ *          "DELETE"={"path"="/projet/{id}/supprimer"}
+ *          },
+ *      subresourceOperations={
+ *          "api_work_groups_projects_get_subresource"={
+ *          "normalization_context"={"groups"={"projects_subresource"}}
+ *          }  
+ *      },
+ *      normalizationContext={
+ *          "groups"={
+ *              "project_read"
+ *          }
+ *      }
+ * )
  */
 class Project
 {
@@ -17,46 +38,136 @@ class Project
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "category_read", 
+     *      "member_read", 
+     *      "planning_read", 
+     *      "project_planning_read", 
+     *      "task_read",
+     *      "projects_subresource"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "category_read", 
+     *      "member_read", 
+     *      "planning_read", 
+     *      "project_planning_read", 
+     *      "task_read",
+     *      "projects_subresource"
+     * })
      */
     private $name;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read", 
+     *      "planning_read", 
+     *      "task_read",
+     *      "projects_subresource"
+     * })
      */
     private $startAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read", 
+     *      "planning_read", 
+     *      "task_read",
+     *      "projects_subresource"
+     * })
      */
     private $endAt;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read", 
+     *      "planning_read", 
+     *      "task_read",
+     *      "projects_subresource"
+     * })
      */
     private $status;
 
     /**
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @Groups({
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read", 
+     *      "planning_read", 
+     *      "task_read",
+     *      "projects_subresource"
+     * })
      */
     private $projectType;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read", 
+     *      "planning_read", 
+     *      "task_read",
+     *      "projects_subresource"
+     * })
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity=Planning::class, inversedBy="projects")
+     * @Groups({
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read", 
+     *      "task_read",
+     *      "projects_subresource"
+     * })
      */
     private $planning;
 
     /**
      * @ORM\OneToMany(targetEntity=ProjectPlanning::class, mappedBy="project")
+     * @Groups({
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read",
+     *      "projects_subresource"
+     * })
      */
     private $projectPlannings;
 

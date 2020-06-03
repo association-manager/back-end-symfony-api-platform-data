@@ -2,13 +2,29 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AssociationProfileRepository;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=AssociationProfileRepository::class)
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/associations/profils/lister"},
+ *          "POST"={"path"="/associations/profils/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/association/profil/{id}/afficher"}, 
+ *          "PUT"={"path"="/association/profil/{id}/modifier"},
+ *          "DELETE"={"path"="/association/profil/{id}/supprimer"}
+ *          },
+ *      normalizationContext={
+ *          "groups"={
+ *              "association_profile_read"
+ *          }
+ *      }
+ * )
  */
 class AssociationProfile
 {
@@ -16,26 +32,57 @@ class AssociationProfile
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "association_profile_read", 
+     *      "association_read", 
+     *      "address_read", 
+     *      "donation_read", 
+     *      "staff_read"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Groups({
+     *      "association_profile_read", 
+     *      "association_read", 
+     *      "address_read", 
+     *      "donation_read", 
+     *      "staff_read"
+     * })
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({
+     *      "association_profile_read", 
+     *      "association_read", 
+     *      "address_read", 
+     *      "donation_read", 
+     *      "staff_read"
+     * })
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Groups({
+     *      "association_profile_read", 
+     *      "association_read", 
+     *      "address_read", 
+     *      "donation_read", 
+     *      "staff_read"
+     * })
      */
     private $descriptionTitle;
 
     /**
      * @ORM\OneToOne(targetEntity=Association::class, mappedBy="associationProfile", cascade={"persist", "remove"})
+     * @Groups({
+     *      "association_profile_read"
+     * })
      */
     private $association;
 

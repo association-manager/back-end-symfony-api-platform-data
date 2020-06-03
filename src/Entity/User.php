@@ -2,16 +2,37 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use DateTime;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ApiResource
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/utilisateurs/lister"},
+ *          "POST"={"path"="/utilisateurs/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/utilisateur/{id}/afficher"}, 
+ *          "PUT"={"path"="/utilisateur/{id}/modifier"},
+ *          "DELETE"={"path"="/utilisateur/{id}/supprimer"}
+ *          },
+ *      subresourceOperations={
+ *          "addresses_get_subresource"={"path"="/utilisateurs/{id}/adresses"} ,
+ *          "members_get_subresource"={"path"="/utilisateurs/{id}/membres"}  
+ *      },
+ *      normalizationContext={
+ *          "groups"={
+ *              "user_read"
+ *          }
+ *      }
+ * )
  */
 class User implements UserInterface
 {
@@ -19,16 +40,19 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"user_read", "member_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"user_read", "member_read"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"user_read", "member_read"})
      */
     private $roles = [];
 
@@ -40,16 +64,19 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user_read", "member_read"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user_read", "member_read"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"user_read", "member_read"})
      */
     private $createdAt;
 
@@ -60,6 +87,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Groups({"user_read", "member_read"})
      */
     private $mobile;
 
@@ -80,6 +108,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     * @Groups({"user_read", "member_read"})
      */
     private $sex;
 
@@ -92,21 +121,26 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Member", mappedBy="userId", orphanRemoval=true)
+     * @ApiSubresource
      */
     private $members;
 
     /**
      * @ORM\OneToMany(targetEntity=FileManager::class, mappedBy="createdBy")
+     * @Groups({"user_read", "member_read"})
      */
     private $fileManagers;
 
     /**
-     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user", cascade={"persist"})
+     * @Groups({"user_read", "member_read"})
+     * @ApiSubresource
      */
     private $address;
 
     /**
      * @ORM\OneToOne(targetEntity=Association::class, mappedBy="createdBy", cascade={"persist", "remove"})
+     * @ApiSubresource
      */
     private $association;
 
@@ -122,6 +156,10 @@ class User implements UserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getFullName(){
+        return "{$this->firstName} {$this->lastName}";
     }
 
     public function getEmail(): ?string

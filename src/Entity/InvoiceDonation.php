@@ -2,15 +2,26 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\InvoiceDonationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=InvoiceDonationRepository::class)
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/donations/factures/lister"},
+ *          "POST"={"path"="/donations/facture/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/donation/facture/{id}/afficher"}, 
+ *          "PUT"={"path"="/donation/facture/{id}/modifier"},
+ *          "DELETE"={"path"="/donation/facture/{id}/supprimer"}
+ *          }
+ * )
  */
 class InvoiceDonation
 {

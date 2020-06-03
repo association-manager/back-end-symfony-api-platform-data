@@ -2,16 +2,36 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\WorkGroupRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\WorkGroupRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=WorkGroupRepository::class)
  * @ORM\Table(name="`work_group`")
- * @ApiResource
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/groupes/lister"},
+ *          "POST"={"path"="/groupes/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/groupe/{id}/afficher"}, 
+ *          "PUT"={"path"="/groupe/{id}/modifier"},
+ *          "DELETE"={"path"="/groupe/{id}/supprimer"}
+ *          },
+ *      subresourceOperations={
+ *          "projects_get_subresource"={"path"="/groupe/{id}/projets"}   
+ *      },
+ *      normalizationContext={
+ *          "groups"={
+ *              "work_group_read"
+ *          }
+ *      }
+ * )
  */
 class WorkGroup
 {
@@ -19,26 +39,49 @@ class WorkGroup
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read", 
+     *      "project_read", 
+     *      "project_planning_read", 
+     *      "task_read"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=80)
+     * @Groups({
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read", 
+     *      "member_read", 
+     *      "project_read", 
+     *      "project_planning_read", 
+     *      "task_read"
+     * })
      */
     private $name;
 
     /**
      * @ORM\ManyToMany(targetEntity=Association::class, inversedBy="groups")
+     * @Groups({
+     *      "work_group_read", 
+     *      "member_task_work_group_relation_read"
+     * })
      */
     private $association;
 
     /**
-     * @ORM\ManyToOne(targetEntity=MemberTaskGroupRelation::class, inversedBy="workGroups")
-     */
-    private $memberTaskGroupRelation;
-
-    /**
      * @ORM\OneToMany(targetEntity=Project::class, mappedBy="workGroup")
+     * @Groups({
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "member_task_work_group_relation_read"
+     * })
+     * @ApiSubresource
      */
     private $projects;
 
@@ -52,11 +95,20 @@ class WorkGroup
      */
     private $workGroups;
 
+    /**
+     * @ORM\OneToMany(targetEntity=MemberTaskWorkGroupRelation::class, mappedBy="workGroup")
+     * @Groups({
+     *      "work_group_read"
+     * })
+     */
+    private $memberTaskWorkGroupRelations;
+
     public function __construct()
     {
         $this->association = new ArrayCollection();
         $this->projects = new ArrayCollection();
         $this->workGroups = new ArrayCollection();
+        $this->memberTaskWorkGroupRelations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,18 +150,6 @@ class WorkGroup
         if ($this->association->contains($association)) {
             $this->association->removeElement($association);
         }
-
-        return $this;
-    }
-
-    public function getMemberTaskGroupRelation(): ?MemberTaskGroupRelation
-    {
-        return $this->memberTaskGroupRelation;
-    }
-
-    public function setMemberTaskGroupRelation(?MemberTaskGroupRelation $memberTaskGroupRelation): self
-    {
-        $this->memberTaskGroupRelation = $memberTaskGroupRelation;
 
         return $this;
     }
@@ -182,6 +222,37 @@ class WorkGroup
             // set the owning side to null (unless already changed)
             if ($workGroup->getWorkGroup() === $this) {
                 $workGroup->setWorkGroup(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|MemberTaskWorkGroupRelation[]
+     */
+    public function getMemberTaskWorkGroupRelations(): Collection
+    {
+        return $this->memberTaskWorkGroupRelations;
+    }
+
+    public function addMemberTaskWorkGroupRelation(MemberTaskWorkGroupRelation $memberTaskWorkGroupRelation): self
+    {
+        if (!$this->memberTaskWorkGroupRelations->contains($memberTaskWorkGroupRelation)) {
+            $this->memberTaskWorkGroupRelations[] = $memberTaskWorkGroupRelation;
+            $memberTaskWorkGroupRelation->setWorkGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMemberTaskWorkGroupRelation(MemberTaskWorkGroupRelation $memberTaskWorkGroupRelation): self
+    {
+        if ($this->memberTaskWorkGroupRelations->contains($memberTaskWorkGroupRelation)) {
+            $this->memberTaskWorkGroupRelations->removeElement($memberTaskWorkGroupRelation);
+            // set the owning side to null (unless already changed)
+            if ($memberTaskWorkGroupRelation->getWorkGroup() === $this) {
+                $memberTaskWorkGroupRelation->setWorkGroup(null);
             }
         }
 

@@ -2,15 +2,31 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\FileManagerRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\FileManagerRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=FileManagerRepository::class)
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/fichiers/lister"},
+ *          "POST"={"path"="/fichiers/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/fichier/{id}/afficher"}, 
+ *          "PUT"={"path"="/fichier/{id}/modifier"},
+ *          "DELETE"={"path"="/fichier/{id}/supprimer"}
+ *          },
+ *      normalizationContext={
+ *          "groups"={
+ *              "file_manager_read"
+ *          }
+ *      },
+ * )
  */
 class FileManager
 {
@@ -18,21 +34,49 @@ class FileManager
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "file_manager_read", 
+     *      "association_read", 
+     *      "announce_read", 
+     *      "association_profile_read", 
+     *      "user_read"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Groups({
+     *      "file_manager_read", 
+     *      "association_read", 
+     *      "announce_read", 
+     *      "association_profile_read", 
+     *      "user_read"
+     * })
      */
     private $type;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({
+     *      "file_manager_read", 
+     *      "association_read", 
+     *      "announce_read", 
+     *      "association_profile_read", 
+     *      "user_read"
+     * })
      */
     private $text;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({
+     *      "file_manager_read", 
+     *      "association_read", 
+     *      "announce_read", 
+     *      "association_profile_read", 
+     *      "user_read"
+     * })
      */
     private $url;
 
@@ -58,6 +102,13 @@ class FileManager
 
     /**
      * @ORM\Column(type="string", length=150, nullable=true)
+     * @Groups({
+     *      "file_manager_read", 
+     *      "association_read", 
+     *      "announce_read", 
+     *      "association_profile_read", 
+     *      "user_read"
+     * })
      */
     private $name;
 
@@ -68,6 +119,10 @@ class FileManager
 
     /**
      * @ORM\OneToMany(targetEntity=Announce::class, mappedBy="fileManager")
+     * @Groups({
+     *      "file_manager_read", 
+     *      "association_read"
+     * })
      */
     private $announces;
 
@@ -77,6 +132,9 @@ class FileManager
     }
     /**
      * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="fileManagers")
+     * @Groups({
+     *      "file_manager_read"
+     * })
      */
     private $association;
 

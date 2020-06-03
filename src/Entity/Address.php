@@ -2,13 +2,37 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\AddressRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AddressRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=AddressRepository::class)
- * @ApiResource
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/adresses/lister"},
+ *          "POST"={"path"="/adresses/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/adresse/{id}/afficher"}, 
+ *          "PUT"={"path"="/adresse/{id}/modifier"},
+ *          "DELETE"={"path"="/adresse/{id}/supprimer"}
+ *          },
+ *      subresourceOperations={
+ *          "api_users_addresses_get_subresource"={
+ *          "normalization_context"={"groups"={"addresses_subresource"}}
+ *          },
+ *          "api_associations_addresses_get_subresource"={
+ *          "normalization_context"={"groups"={"associations_addresses_subresource"}}
+ *          }   
+ *      },
+ *      normalizationContext={
+ *          "groups"={
+ *              "address_read"
+ *          }
+ *      },
+ * )
  */
 class Address
 {
@@ -16,62 +40,151 @@ class Address
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "address_read", 
+     *      "association_read", 
+     *      "donation_read", 
+     *      "association_profile_read", 
+     *      "staff_read", 
+     *      "user_read",
+     *      "addresses_subresource",
+     *      "associations_addresses_subresource"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({
+     *      "address_read", 
+     *      "association_read", 
+     *      "donation_read", 
+     *      "association_profile_read", 
+     *      "staff_read", 
+     *      "user_read",
+     *      "addresses_subresource",
+     *      "associations_addresses_subresource"
+     * })
      */
     private $addressLine1;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({
+     *      "address_read", 
+     *      "association_read", 
+     *      "donation_read", 
+     *      "association_profile_read", 
+     *      "staff_read", 
+     *      "user_read",
+     *      "addresses_subresource",
+     *      "associations_addresses_subresource"
+     * })
      */
     private $addressLine2;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
+     * @Groups({
+     *      "address_read", 
+     *      "association_read", 
+     *      "donation_read", 
+     *      "association_profile_read", 
+     *      "staff_read", 
+     *      "user_read",
+     *      "addresses_subresource",
+     *      "associations_addresses_subresource"
+     * })
      */
     private $postalCode;
 
     /**
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @Groups({
+     *      "address_read", 
+     *      "association_read", 
+     *      "donation_read", 
+     *      "association_profile_read", 
+     *      "staff_read", 
+     *      "user_read",
+     *      "addresses_subresource",
+     *      "associations_addresses_subresource"
+     * })
      */
     private $city;
 
     /**
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @Groups({
+     *      "address_read", 
+     *      "association_read", 
+     *      "donation_read", 
+     *      "association_profile_read", 
+     *      "staff_read", 
+     *      "user_read",
+     *      "addresses_subresource",
+     *      "associations_addresses_subresource"
+     * })
      */
     private $country;
 
     /**
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @Groups({
+     *      "address_read", 
+     *      "association_read", 
+     *      "donation_read", 
+     *      "association_profile_read", 
+     *      "staff_read", 
+     *      "user_read",
+     *      "addresses_subresource",
+     *      "associations_addresses_subresource"
+     * })
      */
     private $type;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="yes")
+     * @Groups({
+     *      "address_read"
+     * })
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="addresses")
+     * @Groups({
+     *      "address_read"
+     * })
      */
     private $association;
 
     /**
      * @ORM\ManyToOne(targetEntity=InvoiceShop::class, inversedBy="addresses")
+     * @Groups({"
+     *      address_read"
+     * })
      */
     private $invoiceShop;
 
     /**
      * @ORM\ManyToOne(targetEntity=InvoiceDonation::class, inversedBy="addresses")
+     * @Groups({
+     *      "address_read"
+     * })
      */
     private $invoiceDonation;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getOwnerAddres(){
+        if (empty($this->user))
+            return $this->association->getName();
+        else
+            return $this->user->getFullName();
     }
 
     public function getAddressLine1(): ?string
@@ -98,12 +211,12 @@ class Address
         return $this;
     }
 
-    public function getPostalCode(): ?int
+    public function getPostalCode(): ?string
     {
         return $this->postalCode;
     }
 
-    public function setPostalCode(?int $postalCode): self
+    public function setPostalCode(?string $postalCode): self
     {
         $this->postalCode = $postalCode;
 

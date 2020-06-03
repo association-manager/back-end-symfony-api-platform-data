@@ -2,42 +2,83 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\EventRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Repository\AssoManagerEventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
- * @ORM\Entity(repositoryClass=EventRepository::class)
+ * @ORM\Entity(repositoryClass=AssoManagerEventRepository::class)
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/evenements/lister"},
+ *          "POST"={"path"="/evenements/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/evenement/{id}/afficher"}, 
+ *          "PUT"={"path"="/evenement/{id}/modifier"},
+ *          "DELETE"={"path"="/evenement/{id}/supprimer"}
+ *          },
+ *      normalizationContext={
+ *          "groups"={
+ *              "asso_manager_event_read"
+ *          }
+ *      }
+ * )
  */
-class Event
+class AssoManagerEvent
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "asso_manager_event_read", 
+     *      "planning_read", 
+     *      "category_read",
+     *      "associations_plannings_subresource"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Groups({
+     *      "asso_manager_event_read", 
+     *      "planning_read", 
+     *      "category_read",
+     *      "associations_plannings_subresource"
+     * })
      */
     private $name;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({
+     *      "asso_manager_event_read", 
+     *      "planning_read",
+     *      "associations_plannings_subresource"
+     * })
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({
+     *      "asso_manager_event_read", 
+     *      "planning_read",
+     *      "associations_plannings_subresource"
+     * })
      */
     private $endDate;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Planning::class, inversedBy="events")
+     * @ORM\ManyToMany(targetEntity=Planning::class, inversedBy="assoManagerEvents")
+     * @Groups({
+     *      "asso_manager_event_read"
+     * })
      */
     private $planning;
 
