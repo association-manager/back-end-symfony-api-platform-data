@@ -2,14 +2,37 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AssociationRepository")
- * @ApiResource
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/associations/lister"},
+ *          "POST"={"path"="/associations/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/association/{id}/afficher"}, 
+ *          "PUT"={"path"="/association/{id}/modifier"},
+ *          "DELETE"={"path"="/association/{id}/supprimer"}
+ *          },
+ *      subresourceOperations={
+ *          "addresses_get_subresource"={"path"="/associations/{id}/adresses"},
+ *          "transactions_get_subresource"={"path"="/associations/{id}/transactions"},
+*           "plannings_get_subresource"={"path"="/associations/{id}/plannings"},
+ *          "members_get_subresource"={"path"="/associations/{id}/membres"}       
+ *      },
+ *      normalizationContext={
+ *          "groups"={
+ *              "association_read"
+ *          }
+ *      }
+ * )
  */
 class Association
 {
@@ -17,97 +40,216 @@ class Association
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "association_read", 
+     *      "donation_read", 
+     *      "staff_read", 
+     *      "address_read", 
+     *      "association_profile_read", 
+     *      "asso_manager_event_read", 
+     *      "category_read", 
+     *      "file_manager_read", 
+     *      "member_read", 
+     *      "planning_read", 
+     *      "task_read", 
+     *      "transaction_read", 
+     *      "work_group_read",
+     *      "members_subresource"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({
+     *      "association_read", 
+     *      "donation_read", 
+     *      "staff_read", 
+     *      "address_read", 
+     *      "association_profile_read", 
+     *      "asso_manager_event_read", 
+     *      "category_read", 
+     *      "file_manager_read", 
+     *      "member_read", 
+     *      "planning_read", 
+     *      "task_read", 
+     *      "transaction_read", 
+     *      "work_group_read",
+     *      "members_subresource"
+     * })
      */
     private $name;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({
+     *      "association_read"
+     * })
      */
     private $dataUsageAgreement;
 
     /**
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @Groups({
+     *      "association_read", 
+     *      "donation_read", 
+     *      "staff_read", 
+     *      "association_profile_read"
+     * })
      */
     private $associationType;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
+     * @Groups({
+     *      "association_read", 
+     *      "donation_read", 
+     *      "staff_read", 
+     *      "address_read", 
+     *      "association_profile_read"
+     * })
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
+     * @Groups({
+     *      "association_read", 
+     *      "donation_read", 
+     *      "staff_read", 
+     *      "address_read", 
+     *      "association_profile_read"
+     * })
      */
     private $mobile;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({
+     *      "association_read", 
+     *      "donation_read", 
+     *      "staff_read", 
+     *      "address_read", 
+     *      "association_profile_read"
+     * })
      */
     private $website;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({
+     *      "association_read", 
+     *      "donation_read", 
+     *      "staff_read", 
+     *      "address_read", 
+     *      "association_profile_read"
+     * })
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Groups({
+     *      "association_read", 
+     *      "association_profile_read"
+     * })
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Groups({
+     *      "association_read", 
+     *      "association_profile_read"
+     * })
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({
+     *      "association_read", 
+     *      "association_profile_read"
+     * })
      */
     private $assemblyConstituveDate;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({
+     *      "association_read", 
+     *      "association_profile_read"
+     * })
      */
     private $foundedAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({
+     *      "association_read", 
+     *      "association_profile_read"
+     * })
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToMany(targetEntity=WorkGroup::class, mappedBy="association")
+     * @Groups({
+     *      "association_read"
+     * })
      */
     private $workGroups;
 
 
     /**
      * @ORM\OneToMany(targetEntity=Address::class, mappedBy="association" , cascade={"persist", "remove"})
+     * @Groups({
+     *      "association_read", 
+     *      "donation_read", 
+     *      "staff_read", 
+     *      "association_profile_read"
+     * })
+     * @ApiSubresource
      */
     private $addresses;
 
     /**
      * @ORM\ManyToMany(targetEntity=Member::class, inversedBy="associations")
+     * @Groups({
+     *      "association_read"
+     * })
+     * @ApiSubresource
      */
     private $members;
 
     /**
      * @ORM\OneToMany(targetEntity=NetworksSocialLink::class, mappedBy="association")
+     * @Groups({
+     *      "association_read", 
+     *      "donation_read", 
+     *      "staff_read", 
+     *      "association_profile_read"
+     * })
      */
     private $networksSocialLinks;
 
     /**
      * @ORM\OneToOne(targetEntity=AssociationProfile::class, inversedBy="association", cascade={"persist", "remove"})
+     * @Groups({
+     *      "association_read", 
+     *      "donation_read", 
+     *      "staff_read", 
+     *      "address_read"
+     * })
      */
     private $associationProfile;
 
     /**
      * @ORM\OneToMany(targetEntity=Planning::class, mappedBy="association")
+     * @Groups({
+     *      "association_read"
+     * })
+     * @ApiSubresource
      */
     private $plannings;
 
@@ -119,11 +261,19 @@ class Association
 
     /**
      * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="association")
+     * @Groups({
+     *      "association_read"
+     * })
+     * @ApiSubresource
      */
     private $transactions;
 
     /**
      * @ORM\OneToMany(targetEntity=FileManager::class, mappedBy="association")
+     * @Groups({
+     *      "association_read", 
+     *      "association_profile_read"
+     * })
      */
     private $fileManagers;
 
@@ -363,7 +513,7 @@ class Association
     {
         if ($this->networksSocialLinks->contains($networksSocialLink)) {
             $this->networksSocialLinks->removeElement($networksSocialLink);
-            // set the owning side to null (unless already changed)
+            // set the owning side to null (unless alassociation_ready changed)
             if ($networksSocialLink->getAssociation() === $this) {
                 $networksSocialLink->setAssociation(null);
             }
@@ -406,7 +556,7 @@ class Association
     {
         if ($this->plannings->contains($planning)) {
             $this->plannings->removeElement($planning);
-            // set the owning side to null (unless already changed)
+            // set the owning side to null (unless alassociation_ready changed)
             if ($planning->getAssociation() === $this) {
                 $planning->setAssociation(null);
             }
@@ -449,7 +599,7 @@ class Association
     {
         if ($this->transactions->contains($transaction)) {
             $this->transactions->removeElement($transaction);
-            // set the owning side to null (unless already changed)
+            // set the owning side to null (unless alassociation_ready changed)
             if ($transaction->getAssociation() === $this) {
                 $transaction->setAssociation(null);
             }
@@ -480,7 +630,7 @@ class Association
     {
         if ($this->fileManagers->contains($fileManager)) {
             $this->fileManagers->removeElement($fileManager);
-            // set the owning side to null (unless already changed)
+            // set the owning side to null (unless alassociation_ready changed)
             if ($fileManager->getAssociation() === $this) {
                 $fileManager->setAssociation(null);
             }
@@ -511,7 +661,7 @@ class Association
     {
         if ($this->addresses->contains($address)) {
             $this->addresses->removeElement($address);
-            // set the owning side to null (unless already changed)
+            // set the owning side to null (unless alassociation_ready changed)
             if ($address->getAssociation() === $this) {
                 $address->setAssociation(null);
             }
