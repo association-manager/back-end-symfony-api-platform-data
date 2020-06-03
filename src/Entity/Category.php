@@ -2,14 +2,31 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
- * @ApiResource
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/categories/lister"},
+ *          "POST"={"path"="/categories/creer"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/categorie/{id}/afficher"}, 
+ *          "PUT"={"path"="/categorie/{id}/modifier"},
+ *          "DELETE"={"path"="/categorie/{id}/supprimer"}
+ *          },
+ *      normalizationContext={
+ *          "groups"={
+ *              "category_read"
+ *          }
+ *      }
+ * 
+ * )
  */
 class Category
 {
@@ -17,26 +34,59 @@ class Category
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "category_read", 
+     *      "planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "transaction_read",
+     *      "projects_subresource"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Groups({
+     *      "category_read", 
+     *      "planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "transaction_read",
+     *      "projects_subresource"
+     * })
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Groups({
+     *      "category_read", 
+     *      "planning_read", 
+     *      "project_read", 
+     *      "work_group_read", 
+     *      "association_read", 
+     *      "transaction_read",
+     *      "projects_subresource"
+     * })
      */
     private $type;
 
     /**
      * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="category")
+     * @Groups({
+     *      "category_read"
+     * })
      */
     private $transactions;
 
     /**
      * @ORM\OneToMany(targetEntity=Planning::class, mappedBy="category")
+     * @Groups({
+     *      "category_read"
+     * })
      */
     private $plannings;
 
