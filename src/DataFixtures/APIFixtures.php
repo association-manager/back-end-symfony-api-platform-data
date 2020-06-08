@@ -79,6 +79,23 @@ class APIFixtures extends BaseFixture
                 ->addAddress($userAddress);
             // En User - fictures 
 
+            // Others Users
+            $otherUserCustomPhone = (6013150011 + $count);
+            
+            $otherUser = new User();
+            $otherHash = $this->encoder->encodePassword($otherUser, "password");
+            $otherUser->setFirstName($this->faker->firstName())
+                ->setLastName($this->faker->lastName)
+                ->setEmail('test265987'.$count.'@test.com')
+                ->setCreatedAt($this->faker->dateTime)
+                ->setMobile($count != 0 ? '+336' . strval($otherUserCustomPhone) : '+336013150011')
+                ->setSex($this->faker->randomElement(['male', 'female', '']))
+                ->setDob($this->faker->dateTime)
+                ->setPassword($otherHash)
+                ->setDataUsageAgreement($this->faker->randomElement([1, 0]))
+                ->addAddress($userAddress);
+
+            $this->manager->persist($otherUser);
 
             // Start Member - fixtures
             // Member Type
@@ -311,10 +328,9 @@ class APIFixtures extends BaseFixture
 
                 // Association Type
             $associationTypes = [
-                "Association1",
-                "association2",
-                "Association3",
-                "Association4"
+                1,
+                2,
+                3,
             ];
 
                 // Association
@@ -589,11 +605,56 @@ class APIFixtures extends BaseFixture
 
 
             // Start InvoiceShop -- fixtures
+
+            // Data
+
+            $a = [
+                "user" => [
+                    "id" => 20, 
+                    "email" => "test@test.com", 
+                    "mobile" => 123456789, 
+                    "last_name" => "last_name", 
+                    "first_name" => "first_name"], 
+                "address" => [
+                    "city" => "city", 
+                    "postalCode" => 91080, 
+                    "addressLine1" => "addressLine1", 
+                    "addressLine2" => "addressLine2"], 
+                "products" => [
+                    [
+                        "id" => "15", 
+                        "url" => "url", 
+                        "vat" => 5, 
+                        "name" => "test", 
+                        "price" => 15.5, 
+                        "quantity" => 15, 
+                        "description" => "test", 
+                        "associationId" => 15
+                    ], 
+                    [
+                        "id" => "15", 
+                        "url" => "url", 
+                        "vat" => 5, 
+                        "name" => "test", 
+                        "price" => 15.5, 
+                        "quantity" => 15, 
+                        "description" => "test", 
+                        "associationId" => 15
+                    ]
+                ], 
+                "totalVat" => 15, 
+                "totalAmount" => 31
+            ];
+
+            // $data = json_encode($a);
+
+
             $invoiceShop = new InvoiceShop();
             
             $invoiceShop->setCreatedAt($this->faker->dateTimeBetween('-20 days'))
                         ->setAmount($this->faker->randomElement($amounts))
-                        ->setVat($this->faker->randomElement($invoiceTva));
+                        ->setVat($this->faker->randomElement($invoiceTva))
+                        ->setData($a);
 
             $this->manager->persist($invoiceShop);
 

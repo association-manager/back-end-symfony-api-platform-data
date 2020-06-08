@@ -39,7 +39,7 @@ class InvoiceShop
     private $id;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
      * @Groups({"invoice_shop_read"})
      */
     private $createdAt;
@@ -61,6 +61,11 @@ class InvoiceShop
      * @Groups({"invoice_shop_read"})
      */
     private $addresses;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $data = [];
 
     public function __construct()
     {
@@ -135,6 +140,18 @@ class InvoiceShop
                 $address->setInvoiceShop(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getData(): ?array
+    {
+        return $this->data;
+    }
+
+    public function setData(array $data): self
+    {
+        $this->data = $data;
 
         return $this;
     }
