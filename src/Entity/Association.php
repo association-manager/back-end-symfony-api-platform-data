@@ -9,6 +9,10 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AssociationRepository")
  * @ApiResource(
@@ -32,6 +36,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "association_read"
  *          }
  *      }
+ * )
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="Cette adresse email {{ value }} est déjà utilisée."
  * )
  */
 class Association
@@ -77,6 +85,8 @@ class Association
      *      "work_group_read",
      *      "members_subresource"
      * })
+     * @Assert\NotBlank(message="Le prénom de l'association est obligatoire")
+     * @Assert\Length(min=3, minMessage="Le nom de l'association doit faire entre 3 et 255 caractères", max=255, maxMessage="Le nom de l'association doit faire entre 3 et 255 caractères")
      */
     private $name;
 
@@ -89,7 +99,7 @@ class Association
     private $dataUsageAgreement;
 
     /**
-     * @ORM\Column(type="string", length=45, nullable=true)
+     * @ORM\Column(type="string", length=45, nullable=true, columnDefinition="enum('Association loi de 1901', 'Association avec agrément', 'Association d\'utilité publique')")
      * @Groups({
      *      "association_read", 
      *      "donation_read", 
@@ -144,6 +154,10 @@ class Association
      *      "address_read", 
      *      "association_profile_read"
      * })
+     * @Assert\NotBlank(message="L'email est obligatoire")
+     * @Assert\Email(
+     *     message = "Cette adresse email '{{ value }}' n'est pas valide."
+     * )
      */
     private $email;
 
@@ -153,6 +167,7 @@ class Association
      *      "association_read", 
      *      "association_profile_read"
      * })
+     * @Assert\NotBlank(message="Le prénom est obligatoire")
      */
     private $firstName;
 
@@ -162,6 +177,7 @@ class Association
      *      "association_read", 
      *      "association_profile_read"
      * })
+     * @Assert\NotBlank(message="Le nom est obligatoire")
      */
     private $lastName;
 
@@ -171,6 +187,7 @@ class Association
      *      "association_read", 
      *      "association_profile_read"
      * })
+     * @Assert\NotBlank(message="La date de constitution de l'assemblée est obligatoire")
      */
     private $assemblyConstituveDate;
 
@@ -184,7 +201,7 @@ class Association
     private $foundedAt;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
      * @Groups({
      *      "association_read", 
      *      "association_profile_read"
@@ -286,6 +303,12 @@ class Association
         $this->plannings = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->fileManagers = new ArrayCollection();
+
+        // Set auto createdAt
+        // if(null !== $this->name){
+        //     $this->createdAt = new \DateTimeImmutable();
+        // }
+
     }
 
     public function getId(): ?int
