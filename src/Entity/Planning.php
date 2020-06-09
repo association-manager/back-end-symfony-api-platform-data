@@ -68,6 +68,13 @@ class Planning
      *      "projects_subresource",
      *      "associations_plannings_subresource"
      * })
+     * @Assert\Length(
+     *  min = 2,
+     *  max = 255,
+     *  minMessage = "Votre titre doit être superieur à {{ limit }} caractères",
+     *  maxMessage = "Votre titre doit être inferieur à {{ limit }} caractères",
+     *  allowEmptyString = false
+     * )
      */
     private $name;
 
@@ -85,6 +92,8 @@ class Planning
      *      "projects_subresource",
      *      "associations_plannings_subresource"
      * })
+     * @Assert\DateTime
+     * @var string A "J/m/Y H:i:s" formatted value
      */
     private $startAt;
 
@@ -102,6 +111,8 @@ class Planning
      *      "projects_subresource",
      *      "associations_plannings_subresource"
      * })
+     * @Assert\DateTime
+     * @var string A "J/m/Y H:i:s" formatted value
      */
     private $endAt;
 

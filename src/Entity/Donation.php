@@ -53,11 +53,6 @@ class Donation
      *      "members_subresource",
      *      "associations_members_subresource"
      * })
-     * 
-     * @Assert\Type(
-     *   type="decimal",
-     *   message="la valeur {{ value }} n'est pas de type {{decimal}}."
-     * )
      */
     private $amount;
 

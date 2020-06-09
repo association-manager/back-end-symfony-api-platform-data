@@ -51,13 +51,6 @@ class AssoManagerEvent
      *      "category_read",
      *      "associations_plannings_subresource"
      * })
-     * @Assert\Length(
-     *  min = 2,
-     *  max = 45,
-     *  minMessage = "Votre titre doit être superieur à {{ limit }} caractères",
-     *  maxMessage = "Votre titre doit être inferieur à {{ limit }} caractères",
-     *  allowEmptyString = false
-     * )
      */
     private $name;
 
@@ -68,8 +61,6 @@ class AssoManagerEvent
      *      "planning_read",
      *      "associations_plannings_subresource"
      * })
-     * @Assert\DateTime
-     * @var string A "J/m/Y H:i:s" formatted value
      */
     private $startDate;
 
@@ -80,8 +71,6 @@ class AssoManagerEvent
      *      "planning_read",
      *      "associations_plannings_subresource"
      * })
-     * @Assert\DateTime
-     * @var string A "J/m/Y H:i:s" formatted value
      */
     private $endDate;
 
