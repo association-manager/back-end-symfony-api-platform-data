@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AssociationProfileRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AssociationProfileRepository::class)
@@ -51,6 +52,14 @@ class AssociationProfile
      *      "donation_read", 
      *      "staff_read"
      * })
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 150,
+     *      minMessage = "Votre titre doit être superieur à {{ limit }} caractères",
+     *      maxMessage = "Votre titre doit être inferieur à {{ limit }} caractères",
+     *      allowEmptyString = false
+     * )
      */
     private $title;
 
@@ -63,6 +72,7 @@ class AssociationProfile
      *      "donation_read", 
      *      "staff_read"
      * })
+     * 
      */
     private $description;
 
@@ -75,6 +85,13 @@ class AssociationProfile
      *      "donation_read", 
      *      "staff_read"
      * })
+     * @Assert\Length(
+     *  min = 10,
+     *  max = 150,
+     *  minMessage = "Votre titre doit être superieur à {{ limit }} caractères",
+     *  maxMessage = "Votre titre doit être inferieur à {{ limit }} caractères",
+     *  allowEmptyString = false
+     * )
      */
     private $descriptionTitle;
 
