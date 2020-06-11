@@ -12,7 +12,7 @@ jobs:
 
     - name: Validate composer.json and composer.lock
       run: composer validate
-      
+
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v2
@@ -57,4 +57,4 @@ jobs:
       - name: Load Fixture
         run: php bin/console doctrine:fixtures:load --append --no-interaction --env=test -vvv
       - name: Run Test
-        run: phpdbg -d memory_limit=-1 -qrr vendor/bin/phpunit --coverage-text
+        run: phpdbg -d memory_limit=-1 -qrr bin/phpunit --coverage-text

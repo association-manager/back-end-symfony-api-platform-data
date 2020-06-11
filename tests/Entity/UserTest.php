@@ -11,10 +11,13 @@ class UserTest extends TestCase
     {
         $user = new User();
         $user->setFirstName('firstName')
-            ->setEmail('test@test.com');
+            ->setEmail('test@test.com')
+            ->setLastName('LastName')
+        ;
 
         $this->assertEquals('firstName', $user->getFirstName());
         $this->assertEquals('test@test.com', $user->getEmail());
+        $this->assertEquals('LastName', $user->getLastName());
     }
 
 }
