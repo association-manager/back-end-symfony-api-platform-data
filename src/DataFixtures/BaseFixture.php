@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 abstract class BaseFixture extends Fixture
 {
     /** @var ObjectManager */
-    private $manager;
+    protected $manager;
     /** @var Generator */
     protected $faker;
     /** @var UserPasswordEncoderInterface */
