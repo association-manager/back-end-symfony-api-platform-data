@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200608112242 extends AbstractMigration
+final class Version20200610095109 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -24,10 +24,11 @@ final class Version20200608112242 extends AbstractMigration
 
         $this->addSql('ALTER TABLE address CHANGE user_id user_id INT DEFAULT NULL, CHANGE association_id association_id INT DEFAULT NULL, CHANGE invoice_shop_id invoice_shop_id INT DEFAULT NULL, CHANGE invoice_donation_id invoice_donation_id INT DEFAULT NULL, CHANGE address_line1 address_line1 VARCHAR(255) DEFAULT NULL, CHANGE address_line2 address_line2 VARCHAR(255) DEFAULT NULL, CHANGE postal_code postal_code VARCHAR(255) DEFAULT NULL, CHANGE city city VARCHAR(45) DEFAULT NULL, CHANGE country country VARCHAR(45) DEFAULT NULL, CHANGE type type VARCHAR(45) DEFAULT NULL');
         $this->addSql('ALTER TABLE announce CHANGE file_manager_id file_manager_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE association CHANGE association_profile_id association_profile_id INT DEFAULT NULL, CHANGE data_usage_agreement data_usage_agreement TINYINT(1) DEFAULT NULL, CHANGE association_type association_type enum(\'Association loi de 1901\', \'Association avec agrément\', \'Association d\\\'utilité publique\'), CHANGE phone_number phone_number VARCHAR(15) DEFAULT NULL, CHANGE mobile mobile VARCHAR(15) DEFAULT NULL, CHANGE website website VARCHAR(255) DEFAULT NULL, CHANGE founded_at founded_at DATETIME DEFAULT NULL, CHANGE created_at created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL');
+        $this->addSql('ALTER TABLE association DROP INDEX UNIQ_FD8521CCB03A8386, ADD INDEX IDX_FD8521CCB03A8386 (created_by_id)');
+        $this->addSql('ALTER TABLE association CHANGE association_profile_id association_profile_id INT DEFAULT NULL, CHANGE association_type association_type enum(\'Association loi de 1901\', \'Association avec agrément\', \'Association d\\\'utilité publique\'), CHANGE phone_number phone_number VARCHAR(15) DEFAULT NULL, CHANGE mobile mobile VARCHAR(15) DEFAULT NULL, CHANGE website website VARCHAR(255) DEFAULT NULL, CHANGE founded_at founded_at DATETIME DEFAULT NULL, CHANGE created_at created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL');
         $this->addSql('ALTER TABLE donation CHANGE member_id member_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE file_manager CHANGE created_by_id created_by_id INT DEFAULT NULL, CHANGE association_id association_id INT DEFAULT NULL, CHANGE status status SMALLINT DEFAULT NULL, CHANGE s3key s3key VARCHAR(255) DEFAULT NULL, CHANGE name name VARCHAR(150) DEFAULT NULL');
-        $this->addSql('ALTER TABLE invoice_shop ADD data JSON NOT NULL, CHANGE created_at created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL');
+        $this->addSql('ALTER TABLE invoice_shop CHANGE data data JSON NOT NULL');
         $this->addSql('ALTER TABLE member CHANGE profile profile JSON DEFAULT NULL');
         $this->addSql('ALTER TABLE networks_social_link CHANGE association_id association_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE planning CHANGE association_id association_id INT DEFAULT NULL, CHANGE category_id category_id INT DEFAULT NULL, CHANGE color color VARCHAR(255) DEFAULT NULL');
@@ -47,10 +48,11 @@ final class Version20200608112242 extends AbstractMigration
 
         $this->addSql('ALTER TABLE address CHANGE user_id user_id INT DEFAULT NULL, CHANGE association_id association_id INT DEFAULT NULL, CHANGE invoice_shop_id invoice_shop_id INT DEFAULT NULL, CHANGE invoice_donation_id invoice_donation_id INT DEFAULT NULL, CHANGE address_line1 address_line1 VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE address_line2 address_line2 VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE postal_code postal_code VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE city city VARCHAR(45) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE country country VARCHAR(45) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE type type VARCHAR(45) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`');
         $this->addSql('ALTER TABLE announce CHANGE file_manager_id file_manager_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE association CHANGE association_profile_id association_profile_id INT DEFAULT NULL, CHANGE data_usage_agreement data_usage_agreement TINYINT(1) DEFAULT \'NULL\', CHANGE association_type association_type VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE phone_number phone_number VARCHAR(15) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE mobile mobile VARCHAR(15) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE website website VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE founded_at founded_at DATETIME DEFAULT \'NULL\', CHANGE created_at created_at DATETIME NOT NULL');
+        $this->addSql('ALTER TABLE association DROP INDEX IDX_FD8521CCB03A8386, ADD UNIQUE INDEX UNIQ_FD8521CCB03A8386 (created_by_id)');
+        $this->addSql('ALTER TABLE association CHANGE association_profile_id association_profile_id INT DEFAULT NULL, CHANGE association_type association_type VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE phone_number phone_number VARCHAR(15) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE mobile mobile VARCHAR(15) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE website website VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE founded_at founded_at DATETIME DEFAULT \'NULL\', CHANGE created_at created_at DATETIME DEFAULT \'current_timestamp()\' NOT NULL');
         $this->addSql('ALTER TABLE donation CHANGE member_id member_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE file_manager CHANGE created_by_id created_by_id INT DEFAULT NULL, CHANGE association_id association_id INT DEFAULT NULL, CHANGE status status SMALLINT DEFAULT NULL, CHANGE s3key s3key VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`, CHANGE name name VARCHAR(150) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`');
-        $this->addSql('ALTER TABLE invoice_shop DROP data, CHANGE created_at created_at DATETIME NOT NULL');
+        $this->addSql('ALTER TABLE invoice_shop CHANGE data data LONGTEXT CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_bin`');
         $this->addSql('ALTER TABLE member CHANGE profile profile LONGTEXT CHARACTER SET utf8mb4 DEFAULT NULL COLLATE `utf8mb4_bin`');
         $this->addSql('ALTER TABLE networks_social_link CHANGE association_id association_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE planning CHANGE association_id association_id INT DEFAULT NULL, CHANGE category_id category_id INT DEFAULT NULL, CHANGE color color VARCHAR(255) CHARACTER SET utf8mb4 DEFAULT \'NULL\' COLLATE `utf8mb4_unicode_ci`');
