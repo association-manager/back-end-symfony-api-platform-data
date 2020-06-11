@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProjectRepository")
@@ -29,7 +30,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "groups"={
  *              "project_read"
  *          }
- *      }
+ *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
  * )
  */
 class Project
@@ -67,6 +69,14 @@ class Project
      *      "task_read",
      *      "projects_subresource"
      * })
+     * @Assert\Type("string", message="Le nom du projet n'est pas conforme")
+     * 
+     * @Assert\Length(
+     *      min=3, 
+     *      minMessage="Le nom du projet doit faire au minimum 3 caractères", 
+     *      max=255, 
+     *      maxMessage="Le nom du projet doit faire au maximum 255 caractères"
+     * )
      */
     private $name;
 
@@ -82,6 +92,9 @@ class Project
      *      "task_read",
      *      "projects_subresource"
      * })
+     * @Assert\NotBlank(message="La date de début du projet est obligatoire")
+     * @Assert\Type("\DateTimeInterface", message="Le format de la date de début n'est pas correcte.")
+     * @Assert\GreaterThan("today UTC", message="La date de début doit être ultérieure à la date d'aujourd'hui !")
      */
     private $startAt;
 
@@ -97,6 +110,9 @@ class Project
      *      "task_read",
      *      "projects_subresource"
      * })
+     * @Assert\NotBlank(message="La date de fin du projet est obligatoire")
+     * @Assert\Type("\DateTimeInterface", message="Le format de la date de fin n'est pas correcte.")
+     * @Assert\GreaterThan(propertyPath="startAt", message="La date de fin doit être plus éloignée que la date de début !")
      */
     private $endAt;
 
@@ -112,6 +128,10 @@ class Project
      *      "task_read",
      *      "projects_subresource"
      * })
+     * @Assert\Type(
+     *     type="bool",
+     *     message="La valeur {{ value }} n'est pas un {{ type }} valid."
+     * )
      */
     private $status;
 
@@ -127,6 +147,7 @@ class Project
      *      "task_read",
      *      "projects_subresource"
      * })
+     * @Assert\Type("string", message="Le type du projet n'est pas conforme")
      */
     private $projectType;
 
@@ -142,6 +163,7 @@ class Project
      *      "task_read",
      *      "projects_subresource"
      * })
+     * @Assert\Type("string", message="La description du projet n'est pas conforme")
      */
     private $description;
 
@@ -156,6 +178,7 @@ class Project
      *      "task_read",
      *      "projects_subresource"
      * })
+     * @Assert\Valid
      */
     private $planning;
 
@@ -173,6 +196,7 @@ class Project
 
     /**
      * @ORM\ManyToOne(targetEntity=WorkGroup::class, inversedBy="projects")
+     * @Assert\Valid
      */
     private $workGroup;
 
@@ -191,7 +215,7 @@ class Project
         return $this->name;
     }
 
-    public function setName(?string $name): self
+    public function setName($name): self
     {
         $this->name = $name;
 
@@ -203,7 +227,7 @@ class Project
         return $this->startAt;
     }
 
-    public function setStartAt(\DateTimeInterface $startAt): self
+    public function setStartAt($startAt): self
     {
         $this->startAt = $startAt;
 
@@ -215,7 +239,7 @@ class Project
         return $this->endAt;
     }
 
-    public function setEndAt(\DateTimeInterface $endAt): self
+    public function setEndAt($endAt): self
     {
         $this->endAt = $endAt;
 
@@ -227,7 +251,7 @@ class Project
         return $this->status;
     }
 
-    public function setStatus(?bool $status): self
+    public function setStatus($status): self
     {
         $this->status = $status;
 
@@ -239,7 +263,7 @@ class Project
         return $this->projectType;
     }
 
-    public function setProjectType(?string $projectType): self
+    public function setProjectType($projectType): self
     {
         $this->projectType = $projectType;
 
@@ -251,7 +275,7 @@ class Project
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription($description): self
     {
         $this->description = $description;
 
