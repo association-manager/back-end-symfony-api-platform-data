@@ -333,6 +333,13 @@ class APIFixtures extends BaseFixture
                 3,
             ];
 
+            // $associationTypes = [
+            //     "Association loi de 1901", 
+            //     "Association avec agrément", 
+            //     "Association d\'utilité publique"
+            // ];
+            
+
                 // Association
             $associationCustomPhone = (87985471 + $count);
             $name = $this->faker->company;
@@ -340,7 +347,7 @@ class APIFixtures extends BaseFixture
 
 
             $association->setName($name)
-                ->setDataUsageAgreement($this->faker->randomElement([1, 0]))
+                ->setDataUsageAgreement($this->faker->randomElement([0, 1]))
                 ->setAssociationType($this->faker->randomElement($associationTypes))
                 ->setPhoneNumber($count != 0 ? '+331' . strval($associationCustomPhone) : '+33187985470')
                 ->setMobile($count != 0 ? '+336' . strval($associationCustomPhone) : '+33687985470')
@@ -350,7 +357,7 @@ class APIFixtures extends BaseFixture
                 ->setLastName($this->faker->lastName)
                 ->setAssemblyConstituveDate($this->faker->dateTimeBetween('-6 months'))
                 ->setFoundedAt($this->faker->dateTimeBetween('-6 months'))
-                ->setCreatedAt($this->faker->dateTimeBetween('-3 months'))
+                // ->setCreatedAt($this->faker->dateTimeBetween('-3 months'))
                 ->setCreatedBy($user)
                 ->addAddress($associationAddress)
                 ->setAssociationProfile($associationProfile);
@@ -651,10 +658,12 @@ class APIFixtures extends BaseFixture
 
             $invoiceShop = new InvoiceShop();
             
-            $invoiceShop->setCreatedAt($this->faker->dateTimeBetween('-20 days'))
+            $invoiceShop
+                        // ->setCreatedAt($this->faker->dateTimeBetween('-20 days'))
                         ->setAmount($this->faker->randomElement($amounts))
                         ->setVat($this->faker->randomElement($invoiceTva))
-                        ->setData($a);
+                        ->setData($a)
+                        ;
 
             $this->manager->persist($invoiceShop);
 
