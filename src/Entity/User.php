@@ -139,10 +139,9 @@ class User implements UserInterface
     private $address;
 
     /**
-     * @ORM\OneToOne(targetEntity=Association::class, mappedBy="createdBy", cascade={"persist", "remove"})
-     * @ApiSubresource
+     * @ORM\OneToMany(targetEntity=Association::class, mappedBy="createdBy", cascade={"persist", "remove"})
      */
-    private $association;
+    private $associations;
 
     public function __construct()
     {
@@ -151,6 +150,7 @@ class User implements UserInterface
         $this->members = new ArrayCollection();
         $this->fileManagers = new ArrayCollection();
         $this->address = new ArrayCollection();
+        $this->associations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -457,18 +457,32 @@ class User implements UserInterface
         }
     }
 
-    public function getAssociation(): ?Association
+    /**
+     * @return Collection|Association[]
+     */
+    public function getAssociations(): Collection
     {
-        return $this->association;
+        return $this->associations;
     }
 
-    public function setAssociation(Association $association): self
+    public function addAssociation(Association $association): self
     {
-        $this->association = $association;
-
-        // set the owning side of the relation if necessary
-        if ($association->getCreatedBy() !== $this) {
+        if (!$this->associations->contains($association)) {
+            $this->associations[] = $association;
             $association->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssociation(Association $association): self
+    {
+        if ($this->associations->contains($association)) {
+            $this->associations->removeElement($association);
+            // set the owning side to null (unless already changed)
+            if ($association->getCreatedBy() === $this) {
+                $association->setCreatedBy(null);
+            }
         }
 
         return $this;
