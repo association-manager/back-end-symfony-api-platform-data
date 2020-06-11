@@ -1,10 +1,6 @@
 name: PHP Composer
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [pull_request]
 
 jobs:
   build:
@@ -35,3 +31,30 @@ jobs:
 
     # - name: Run test suite
     #   run: composer run-script test
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Start Mysql # Add this step
+        run: sudo /etc/init.d/mysql start
+      - uses: actions/checkout@v1
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+      - name: Create Database
+        run: |
+          php bin/console doctrine:database:create --env=test -vvv
+          php bin/console doctrine:schema:create --env=test -vvv
+      - name: Load Fixture
+        run: php bin/console doctrine:fixtures:load --append --no-interaction --env=test -vvv
+      - name: Run Test
+        run: phpdbg -d memory_limit=-1 -qrr vendor/bin/phpunit --coverage-text
