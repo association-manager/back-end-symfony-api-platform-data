@@ -35,15 +35,20 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "groups"={
  *              "association_read"
  *          }
- *      }
+ *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
  * )
  * @UniqueEntity(
  *     fields={"email"},
  *     message="Cette adresse email {{ value }} est déjà utilisée."
  * )
+ * @ORM\HasLifecycleCallbacks()
  */
 class Association
 {
+
+    const ASSOTYPES = ['Association loi de 1901', 'Association avec agrément', 'Association d\'utilité publique'];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -85,19 +90,29 @@ class Association
      *      "work_group_read",
      *      "members_subresource"
      * })
-     * @Assert\NotBlank(message="Le prénom de l'association est obligatoire")
-     * @Assert\Length(min=3, minMessage="Le nom de l'association doit faire entre 3 et 255 caractères", max=255, maxMessage="Le nom de l'association doit faire entre 3 et 255 caractères")
+     * @Assert\NotBlank(message="Le nom de l'association est obligatoire")
+     * @Assert\Type("string", message="Le nom n'est pas conforme")
+     * @Assert\Length(
+     *      min=3, 
+     *      minMessage="Le nom de l'association doit faire au minimum 3 caractères", 
+     *      max=255, 
+     *      maxMessage="Le nom de l'association doit faire au maximum 255 caractères"
+     * )
      */
     private $name;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true, options={"default":false})
      * @Groups({
      *      "association_read"
      * })
+     * @Assert\Type(
+     *     type="bool",
+     *     message="La valeur {{ value }} n'est pas un {{ type }} valid."
+     * )
      */
-    private $dataUsageAgreement;
-
+    private $dataUsageAgreement = false;
+        
     /**
      * @ORM\Column(type="string", length=45, nullable=true, columnDefinition="enum('Association loi de 1901', 'Association avec agrément', 'Association d\'utilité publique')")
      * @Groups({
@@ -106,6 +121,7 @@ class Association
      *      "staff_read", 
      *      "association_profile_read"
      * })
+     * @Assert\Choice(choices=Association::ASSOTYPES, message="Cette valeur n'est pas proposée, choissez une valeur dans la liste.")
      */
     private $associationType;
 
@@ -118,6 +134,11 @@ class Association
      *      "address_read", 
      *      "association_profile_read"
      * })
+     * @Assert\Type("string", message="Le téléphone n'est pas conforme")
+     * @Assert\Regex(
+     *      pattern="/^(0|\+33)[1-9]([-. ]?[0-9]{2}){4}$/",
+     *      message="Ce numéro de téléphone n'est pas valide."
+     * )
      */
     private $phoneNumber;
 
@@ -130,6 +151,11 @@ class Association
      *      "address_read", 
      *      "association_profile_read"
      * })
+     * @Assert\Type("string", message="Le mobile n'est pas conforme")
+     * @Assert\Regex(
+     *      pattern="/^(0|\+33)[6-7]([-. ]?[0-9]{2}){4}$/",
+     *      message="Ce numéro de mobile n'est pas valide."
+     * )
      */
     private $mobile;
 
@@ -142,6 +168,11 @@ class Association
      *      "address_read", 
      *      "association_profile_read"
      * })
+     * @Assert\Url(
+     *    relativeProtocol = true,
+     *    protocols = {"http", "https"},
+     *    message = "Cette url '{{ value }}' n'est pas valide"
+     * )
      */
     private $website;
 
@@ -168,6 +199,17 @@ class Association
      *      "association_profile_read"
      * })
      * @Assert\NotBlank(message="Le prénom est obligatoire")
+     * @Assert\Type("string", message="Le prénom n'est pas conforme")
+     * @Assert\Regex(
+     *     pattern="/\d/",
+     *     match=false,
+     *     message="Un chiffre est présent dans votre prénom"
+     * )
+     * @Assert\Regex(
+     *     pattern="/^\w+/",
+     *     match=true,
+     *     message="Des caractères non autorisée dans le prénom"
+     * )
      */
     private $firstName;
 
@@ -178,6 +220,17 @@ class Association
      *      "association_profile_read"
      * })
      * @Assert\NotBlank(message="Le nom est obligatoire")
+     * @Assert\Type("string", message="Le nom n'est pas conforme")
+     * @Assert\Regex(
+     *     pattern="/\d/",
+     *     match=false,
+     *     message="Un chiffre est présent dans votre prénom"
+     * )
+     * @Assert\Regex(
+     *     pattern="/^\w+/",
+     *     match=true,
+     *     message="Des caractères non autorisée dans le nom"
+     * )
      */
     private $lastName;
 
@@ -187,6 +240,7 @@ class Association
      *      "association_read", 
      *      "association_profile_read"
      * })
+     * @Assert\Type("\DateTimeInterface", message="Le format de la date de l'assemblée n'est pas correcte.")
      * @Assert\NotBlank(message="La date de constitution de l'assemblée est obligatoire")
      */
     private $assemblyConstituveDate;
@@ -197,11 +251,12 @@ class Association
      *      "association_read", 
      *      "association_profile_read"
      * })
+     * @Assert\Type("\DateTimeInterface", message="Le format de la date de fondation n'est pas correcte.")
      */
     private $foundedAt;
 
     /**
-     * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime", options={"default"="CURRENT_TIMESTAMP"})
      * @Groups({
      *      "association_read", 
      *      "association_profile_read"
@@ -269,12 +324,7 @@ class Association
      * @ApiSubresource
      */
     private $plannings;
-
-    /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="association", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $createdBy;
+    
 
     /**
      * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="association")
@@ -294,6 +344,12 @@ class Association
      */
     private $fileManagers;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="associations", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $createdBy;
+
     public function __construct()
     {
         $this->workGroups = new ArrayCollection();
@@ -303,12 +359,20 @@ class Association
         $this->plannings = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->fileManagers = new ArrayCollection();
+    }
 
-        // Set auto createdAt
-        // if(null !== $this->name){
-        //     $this->createdAt = new \DateTimeImmutable();
-        // }
-
+    /**
+     * Automatically assign the current date
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function prePersist() {
+        if(empty($this->createdAt)) {
+            $this->createdAt = new \DateTime();
+        }
     }
 
     public function getId(): ?int
@@ -321,7 +385,7 @@ class Association
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName($name): self
     {
         $this->name = $name;
 
@@ -333,7 +397,7 @@ class Association
         return $this->dataUsageAgreement;
     }
 
-    public function setDataUsageAgreement(?bool $dataUsageAgreement): self
+    public function setDataUsageAgreement($dataUsageAgreement): self
     {
         $this->dataUsageAgreement = $dataUsageAgreement;
 
@@ -345,7 +409,7 @@ class Association
         return $this->associationType;
     }
 
-    public function setAssociationType(string $associationType): self
+    public function setAssociationType($associationType): self
     {
         $this->associationType = $associationType;
 
@@ -357,7 +421,7 @@ class Association
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(?string $phoneNumber): self
+    public function setPhoneNumber($phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
 
@@ -369,7 +433,7 @@ class Association
         return $this->mobile;
     }
 
-    public function setMobile(?string $mobile): self
+    public function setMobile($mobile): self
     {
         $this->mobile = $mobile;
 
@@ -381,7 +445,7 @@ class Association
         return $this->website;
     }
 
-    public function setWebsite(?string $website): self
+    public function setWebsite($website): self
     {
         $this->website = $website;
 
@@ -393,7 +457,7 @@ class Association
         return $this->email;
     }
 
-    public function setEmail(?string $email): self
+    public function setEmail($email): self
     {
         $this->email = $email;
 
@@ -405,7 +469,7 @@ class Association
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): self
+    public function setFirstName($firstName): self
     {
         $this->firstName = $firstName;
 
@@ -417,7 +481,7 @@ class Association
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): self
+    public function setLastName($lastName): self
     {
         $this->lastName = $lastName;
 
@@ -429,7 +493,7 @@ class Association
         return $this->assemblyConstituveDate;
     }
 
-    public function setAssemblyConstituveDate(\DateTimeInterface $assemblyConstituveDate): self
+    public function setAssemblyConstituveDate($assemblyConstituveDate): self
     {
         $this->assemblyConstituveDate = $assemblyConstituveDate;
 
@@ -441,7 +505,7 @@ class Association
         return $this->foundedAt;
     }
 
-    public function setFoundedAt(?\DateTimeInterface $foundedAt): self
+    public function setFoundedAt($foundedAt): self
     {
         $this->foundedAt = $foundedAt;
 
@@ -453,7 +517,7 @@ class Association
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt($createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -588,18 +652,6 @@ class Association
         return $this;
     }
 
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(User $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Transaction[]
      */
@@ -689,6 +741,18 @@ class Association
                 $address->setAssociation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }
