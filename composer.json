@@ -1,6 +1,6 @@
 {
-    "name" : "association_manager_back_end_symfony",
-    "description" : "This is main api of association manager application",
+    "name" : "association-manager/back-end-symfony-api-platform-data",
+    "description" : "association_manager_back_end_symfony",
     "type": "project",
     "license": "proprietary",
     "require": {
