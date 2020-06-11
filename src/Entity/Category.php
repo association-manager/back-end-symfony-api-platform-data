@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
@@ -24,8 +26,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "groups"={
  *              "category_read"
  *          }
- *      }
+ *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
  * 
+ * )
+ * @UniqueEntity(
+ *     fields={"name", "type"},
+ *     errorPath="type",
+ *     message="Aucune modification, ce type existe déjà pour cette cétagorie."
  * )
  */
 class Category
@@ -57,6 +65,8 @@ class Category
      *      "transaction_read",
      *      "projects_subresource"
      * })
+     * @Assert\NotBlank(message="Le nom est obligatoire")
+     * @Assert\Type("string", message="Le nom de la catégorie n'est pas conforme")
      */
     private $name;
 
@@ -71,6 +81,8 @@ class Category
      *      "transaction_read",
      *      "projects_subresource"
      * })
+     * @Assert\NotBlank(message="Le type est obligatoire")
+     * @Assert\Type("string", message="Le type catégorie n'est pas conforme")
      */
     private $type;
 
@@ -106,7 +118,7 @@ class Category
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName($name): self
     {
         $this->name = $name;
 
@@ -118,7 +130,7 @@ class Category
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType($type): self
     {
         $this->type = $type;
 
