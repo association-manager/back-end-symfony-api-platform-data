@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+// CustomAsset
+// use App\Validator\Constraints as DateTimeAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProjectPlanningRepository")
@@ -24,7 +27,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "groups"={
  *              "project_planning_read"
  *          }
- *      }
+ *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
  * )
  */
 class ProjectPlanning
@@ -58,6 +62,7 @@ class ProjectPlanning
      *      "task_read",
      *      "projects_subresource"
      * })
+     * @Assert\Type("string", message="Le nom n'est pas conforme")
      */
     private $name;
 
@@ -73,8 +78,11 @@ class ProjectPlanning
      *      "task_read",
      *      "projects_subresource"
      * })
+     * @Assert\Type("\DateTimeInterface", message="Le format de la date de début n'est pas correcte.")
+     * @Assert\GreaterThan("today UTC", message="La date de début doit être ultérieure à la date d'aujourd'hui !")
      */
     private $startAt;
+    // @DateTimeAssert\AssoManagerDateTime()
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -88,6 +96,8 @@ class ProjectPlanning
      *      "task_read",
      *      "projects_subresource"
      * })
+     * @Assert\Type("\DateTimeInterface", message="Le format de la date de fin n'est pas correcte.")
+     * @Assert\GreaterThan(propertyPath="startAt", message="La date de fin doit être plus éloignée que la date de début !")
      */
     private $endAt;
 
@@ -129,7 +139,7 @@ class ProjectPlanning
         return $this->name;
     }
 
-    public function setName(?string $name): self
+    public function setName($name): self
     {
         $this->name = $name;
 
@@ -141,7 +151,7 @@ class ProjectPlanning
         return $this->startAt;
     }
 
-    public function setStartAt(?\DateTimeInterface $startAt): self
+    public function setStartAt($startAt): self
     {
         $this->startAt = $startAt;
 
@@ -153,7 +163,7 @@ class ProjectPlanning
         return $this->endAt;
     }
 
-    public function setEndAt(?\DateTimeInterface $endAt): self
+    public function setEndAt($endAt): self
     {
         $this->endAt = $endAt;
 
@@ -165,7 +175,7 @@ class ProjectPlanning
         return $this->project;
     }
 
-    public function setProject(?Project $project): self
+    public function setProject($project): self
     {
         $this->project = $project;
 
