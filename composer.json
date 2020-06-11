@@ -70,7 +70,7 @@
             "createDataBase": "php bin/console doctrine:database:create --env=test",
             "migration": "php bin/console doctrine:migrations:migrate --env=test",
             "loadFixture": "php bin/console doctrine:fixtures:load --append --no-interaction --env=test",
-            "runTest":"phpdbg -d memory_limit=-1 -qrr vendor/bin/phpunit --coverage-html var/log"
+            "runTest":"phpdbg -d memory_limit=-1 -qrr bin/phpunit --coverage-html var/log"
         }
     },
     "conflict": {
