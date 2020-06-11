@@ -1,4 +1,6 @@
 {
+    "name" : "Association Manager back end symfony",
+    "description" : "This is main api of association manager application",
     "type": "project",
     "license": "proprietary",
     "require": {
