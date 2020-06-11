@@ -1,5 +1,5 @@
 {
-    "name" : "Association Manager back end symfony",
+    "name" : "association_manager_back_end_symfony",
     "description" : "This is main api of association manager application",
     "type": "project",
     "license": "proprietary",
