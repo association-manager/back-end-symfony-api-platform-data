@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TaskRepository")
@@ -24,7 +25,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "groups"={
  *              "task_read"
  *          }
- *      }
+ *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
  * )
  */
 class Task
@@ -58,6 +60,7 @@ class Task
      *      "member_read",
      *      "projects_subresource"
      * })
+     * @Assert\Type("string", message="Le format du titre n'est pas conforme")
      */
     private $title;
 
@@ -73,6 +76,8 @@ class Task
      *      "member_read",
      *      "projects_subresource"
      * })
+     * @Assert\Type("\DateTimeInterface", message="Le format de la date de début n'est pas correcte.")
+     * @Assert\GreaterThan("today UTC", message="La date de début doit être ultérieure à la date d'aujourd'hui !")
      */
     private $startDate;
 
@@ -88,6 +93,8 @@ class Task
      *      "member_read",
      *      "projects_subresource"
      * })
+     * @Assert\Type("\DateTimeInterface", message="Le format de la date de fin n'est pas correcte.")
+     * @Assert\GreaterThan(propertyPath="startDate", message="La date de fin doit être plus éloignée que la date de début !")
      */
     private $endDate;
 
@@ -103,6 +110,7 @@ class Task
      *      "member_read",
      *      "projects_subresource"
      * })
+     * @Assert\Type("string", message="Le format du type de tâche n'est pas conforme")
      */
     private $type;
 
@@ -118,6 +126,7 @@ class Task
      *      "member_read",
      *      "projects_subresource"
      * })
+     * @Assert\Type("string", message="La description n'est pas au bon format")
      */
     private $description;
 
@@ -158,7 +167,7 @@ class Task
         return $this->title;
     }
 
-    public function setTitle(?string $title): self
+    public function setTitle($title): self
     {
         $this->title = $title;
 
@@ -170,7 +179,7 @@ class Task
         return $this->startDate;
     }
 
-    public function setStartDate(?\DateTimeInterface $startDate): self
+    public function setStartDate($startDate): self
     {
         $this->startDate = $startDate;
 
@@ -182,7 +191,7 @@ class Task
         return $this->endDate;
     }
 
-    public function setEndDate(?\DateTimeInterface $endDate): self
+    public function setEndDate($endDate): self
     {
         $this->endDate = $endDate;
 
@@ -194,7 +203,7 @@ class Task
         return $this->type;
     }
 
-    public function setType(?string $type): self
+    public function setType($type): self
     {
         $this->type = $type;
 
@@ -206,7 +215,7 @@ class Task
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription($description): self
     {
         $this->description = $description;
 

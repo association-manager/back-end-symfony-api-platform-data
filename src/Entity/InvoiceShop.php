@@ -27,6 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          }
  *      }
  * )
+ * @ORM\HasLifecycleCallbacks()
  */
 class InvoiceShop
 {
@@ -40,7 +41,7 @@ class InvoiceShop
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"invoice_shop_read"})
+     * @Groups({"invoice_shop_read"}, options={"default"="CURRENT_TIMESTAMP"})
      */
     private $createdAt;
 
@@ -62,9 +63,28 @@ class InvoiceShop
      */
     private $addresses;
 
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $data = [];
+
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
+    }
+
+    /**
+     * Automatically assign the current date
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function prePersist() {
+        if(empty($this->createdAt)) {
+            $this->createdAt = new \DateTime();
+        }
     }
 
     public function getId(): ?int
@@ -135,6 +155,18 @@ class InvoiceShop
                 $address->setInvoiceShop(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getData(): ?array
+    {
+        return $this->data;
+    }
+
+    public function setData(array $data): self
+    {
+        $this->data = $data;
 
         return $this;
     }
