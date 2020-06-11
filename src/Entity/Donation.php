@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DonationRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=DonationRepository::class)
  * @ApiResource(
@@ -25,6 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          }
  *      }
  * )
+ * @ORM\HasLifecycleCallbacks()
  */
 class Donation
 {
@@ -44,7 +45,7 @@ class Donation
     private $id;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=4)
+     * @ORM\Column(type="float", precision=10, scale=4)
      * @Groups({
      *      "donation_read", 
      *      "member_read", 
@@ -53,10 +54,10 @@ class Donation
      *      "members_subresource",
      *      "associations_members_subresource"
      * })
-     * 
-     * @Assert\Type(
-     *   type="decimal",
-     *   message="la valeur {{ value }} n'est pas de type {{decimal}}."
+     * @Assert\Regex(
+     *      pattern="/^(\d{1,6}.\d{4})$/",
+     *      match=false,
+     *      message="la valeur ne respecte pas le type *.0000" 
      * )
      */
     private $amount;
@@ -75,7 +76,7 @@ class Donation
     private $mensuality;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=4)
+     * @ORM\Column(type="float", precision=10, scale=4)
      * @Groups({
      *      "donation_read", 
      *      "member_read", 
@@ -111,13 +112,25 @@ class Donation
     {
         return $this->id;
     }
-
-    public function getAmount(): ?string
+    /**
+     * Automatically assign the current date
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function prePersist() {
+        if(empty($this->createdAt)) {
+            $this->createdAt = new \DateTime();
+        }
+    }
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
 
-    public function setAmount(string $amount): self
+    public function setAmount(float $amount): self
     {
         $this->amount = $amount;
 
@@ -136,12 +149,12 @@ class Donation
         return $this;
     }
 
-    public function getTaxDeductionPercentage(): ?string
+    public function getTaxDeductionPercentage(): ?float
     {
         return $this->taxDeductionPercentage;
     }
 
-    public function setTaxDeductionPercentage(string $taxDeductionPercentage): self
+    public function setTaxDeductionPercentage(float $taxDeductionPercentage): self
     {
         $this->taxDeductionPercentage = $taxDeductionPercentage;
 
