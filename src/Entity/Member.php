@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MemberRepository")
@@ -32,7 +33,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "groups"={
  *              "member_read"
  *          }
- *      }
+ *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
  * )
  */
 class Member
@@ -71,11 +73,15 @@ class Member
      *      "members_subresource",
      *      "associations_members_subresource"
      * })
+     * @Assert\Type(
+     *     type="array",
+     *     message="La valeur  {{ value }} ne respecte pas le format du type attendu {{ type }}."
+     * )
      */
     private $profile = [];
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="json")
      * @Groups({
      *      "member_read", 
      *      "association_read", 
@@ -89,6 +95,11 @@ class Member
      *      "members_subresource",
      *      "associations_members_subresource"
      * })
+     * @Assert\Type(
+     *     type="array",
+     *     message="La valeur  {{ value }} ne respecte pas le format du type attendu {{ type }}."
+     * )
+     * @Assert\NotBlank(message="Ce champ est obligatoire")
      */
     private $roles = [];
 
@@ -159,7 +170,7 @@ class Member
         return $this->profile;
     }
 
-    public function setProfile(?array $profile): self
+    public function setProfile($profile): self
     {
         $this->profile = $profile;
 
@@ -171,7 +182,7 @@ class Member
         return $this->roles;
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles($roles): self
     {
         $this->roles = $roles;
 
