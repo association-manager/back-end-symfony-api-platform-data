@@ -341,6 +341,7 @@ class Association
      *      "association_read", 
      *      "association_profile_read"
      * })
+     * @Assert\Valid
      */
     private $fileManagers;
 
