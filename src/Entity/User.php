@@ -10,6 +10,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -31,8 +32,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *          "groups"={
  *              "user_read"
  *          }
- *      }
+ *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
  * )
+ * @ORM\HasLifecycleCallbacks()
  */
 class User implements UserInterface
 {
@@ -47,12 +50,20 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"user_read", "member_read"})
+     * @Assert\Email(
+     *     message = "L'adresse email '{{ value }}' n'est pas valide."
+     * )
+     * @Assert\NotBlank(message="L'email est obligatoire")
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
      * @Groups({"user_read", "member_read"})
+     * @Assert\Type(
+     *     type="array",
+     *     message="La valeur  {{ value }} ne respecte pas le format du type attendu {{ type }}."
+     * )
      */
     private $roles = [];
 
@@ -65,12 +76,26 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"user_read", "member_read"})
+     * @Assert\Type("string", message="Le format du prénom n'est pas valide")
+     * @Assert\Length(
+     *      max=255, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
+     * )
+     * @Assert\NotBlank(message="Le prénom est obligatoire")
+     * @Assert\NotBlank(message="Le prénom est obligatoire")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"user_read", "member_read"})
+     * @Assert\Type("string", message="Le format du nom n'est pas valide")
+     * @Assert\Length(
+     *      max=255, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
+     * )
+     * @Assert\NotBlank(message="Le nom est obligatoire")
+     * @Assert\NotBlank(message="Le nom est obligatoire")
      */
     private $lastName;
 
@@ -81,13 +106,22 @@ class User implements UserInterface
     private $createdAt;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default":false})
+     * @Assert\Type(
+     *     type="bool",
+     *     message="La valeur {{ value }} n'est pas un {{ type }} valid."
+     * )
      */
-    private $dataUsageAgreement;
+    private $dataUsageAgreement = false;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Groups({"user_read", "member_read"})
+     * @Assert\Type("string", message="Le mobile n'est pas conforme")
+     * @Assert\Regex(
+     *      pattern="/^(0|\+33)[6-7]([-. ]?[0-9]{2}){4}$/",
+     *      message="Ce numéro de mobile n'est pas valide."
+     * )
      */
     private $mobile;
 
@@ -109,25 +143,39 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
      * @Groups({"user_read", "member_read"})
+     * @Assert\Type("string", message="Le sexe n'est pas conforme")
+     * @Assert\Length(
+     *      max=10, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 10 caractères"
+     * )
      */
     private $sex;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Assert\Type("\DateTimeInterface", message="Le format de la date de naissance n'est pas correcte.")
      */
     private $dob;
 
+    /**
+     * Getting and setting user password befor enconding by password property
+     *
+     * @var string
+     * @Assert\NotBlank(message="Le mot de passe est obligatoire")
+     */
     private $plainPassword;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Member", mappedBy="userId", orphanRemoval=true)
      * @ApiSubresource
+     * @Assert\Valid
      */
     private $members;
 
     /**
      * @ORM\OneToMany(targetEntity=FileManager::class, mappedBy="createdBy")
      * @Groups({"user_read", "member_read"})
+     * @Assert\Valid
      */
     private $fileManagers;
 
@@ -135,6 +183,7 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user", cascade={"persist"})
      * @Groups({"user_read", "member_read"})
      * @ApiSubresource
+     * @Assert\Valid
      */
     private $address;
 
@@ -151,6 +200,20 @@ class User implements UserInterface
         $this->fileManagers = new ArrayCollection();
         $this->address = new ArrayCollection();
         $this->associations = new ArrayCollection();
+    }
+
+    /**
+     * Automatically assign the current date
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function prePersist() {
+        if(empty($this->createdAt)) {
+            $this->createdAt = new \DateTime();
+        }
     }
 
     public function getId(): ?int
