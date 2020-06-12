@@ -9,6 +9,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=WorkGroupRepository::class)
@@ -30,7 +31,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "groups"={
  *              "work_group_read"
  *          }
- *      }
+ *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
  * )
  */
 class WorkGroup
@@ -62,6 +64,12 @@ class WorkGroup
      *      "project_planning_read", 
      *      "task_read"
      * })
+     * @Assert\Type("string", message="Le format du nom de groupe n'est pas valide")
+     *  @Assert\Length(
+     *      max=80, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 80 caractères"
+     * )
+     * @Assert\NotBlank(message="Le nom du groupe est obligatoire")
      */
     private $name;
 
@@ -121,7 +129,7 @@ class WorkGroup
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName($name): self
     {
         $this->name = $name;
 
