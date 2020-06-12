@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=StaffRepository::class)
@@ -25,7 +26,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "groups"={
  *              "staff_read"
  *          }
- *      }
+ *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
  * )
  */
 class Staff
@@ -51,6 +53,11 @@ class Staff
      *      "association_read",
      *      "members_subresource"
      * })
+     * @Assert\Type("string", message="Le format du nom n'est pas valide")
+     * @Assert\Length(
+     *      max=255, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
+     * )
      */
     private $name;
 
@@ -62,12 +69,18 @@ class Staff
      *      "association_read",
      *      "members_subresource"
      * })
+     * @Assert\Type("string", message="Le format de la description n'est pas valide")
      */
     private $description;
 
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Assert\Type("integer", message="Format non valide")
+     * @Assert\Length(
+     *      max=1, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 1 caractère"
+     * )
      */
     private $dataUsageAgreement;
 
@@ -78,6 +91,12 @@ class Staff
      *      "association_read",
      *      "members_subresource"
      * })
+     * @Assert\Type("string", message="Le format du type d'association n'est pas valide")
+     * @Assert\Length(
+     *      max=45, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 45 caractères"
+     * )
+     * @Assert\NotBlank(message="Le type d'association est obligatoire")
      */
     private $associationType;
 
@@ -89,6 +108,15 @@ class Staff
      *      "association_read",
      *      "members_subresource"
      * })
+     * @Assert\Type("string", message="Le format du téléphone n'est pas valide")
+     * @Assert\Regex(
+     *      pattern="/^(0|\+33)[1-9]([-. ]?[0-9]{2}){4}$/",
+     *      message="Ce numéro de téléphone n'est pas valide."
+     * )
+     * @Assert\Length(
+     *      max=20, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 20 caractères"
+     * )
      */
     private $phoneNumber;
 
@@ -115,7 +143,7 @@ class Staff
         return $this->name;
     }
 
-    public function setName(?string $name): self
+    public function setName($name): self
     {
         $this->name = $name;
 
@@ -127,7 +155,7 @@ class Staff
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription($description): self
     {
         $this->description = $description;
 
@@ -139,7 +167,7 @@ class Staff
         return $this->dataUsageAgreement;
     }
 
-    public function setDataUsageAgreement(?int $dataUsageAgreement): self
+    public function setDataUsageAgreement($dataUsageAgreement): self
     {
         $this->dataUsageAgreement = $dataUsageAgreement;
 
@@ -151,7 +179,7 @@ class Staff
         return $this->associationType;
     }
 
-    public function setAssociationType(string $associationType): self
+    public function setAssociationType($associationType): self
     {
         $this->associationType = $associationType;
 
@@ -163,7 +191,7 @@ class Staff
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(?string $phoneNumber): self
+    public function setPhoneNumber($phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
 

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AddressRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AddressRepository::class)
@@ -32,6 +33,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "address_read"
  *          }
  *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
  * )
  */
 class Address
@@ -65,6 +67,11 @@ class Address
      *      "addresses_subresource",
      *      "associations_addresses_subresource"
      * })
+     * @Assert\Type("string", message="Cette entrée ne correspond pas au format attendu")
+     * @Assert\Length(
+     *      max=255, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
+     * )
      */
     private $addressLine1;
 
@@ -80,6 +87,11 @@ class Address
      *      "addresses_subresource",
      *      "associations_addresses_subresource"
      * })
+     * @Assert\Type("string", message="Cette entrée ne correspond pas au format attendu")
+     * @Assert\Length(
+     *      max=255, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
+     * )
      */
     private $addressLine2;
 
@@ -95,6 +107,16 @@ class Address
      *      "addresses_subresource",
      *      "associations_addresses_subresource"
      * })
+     * @Assert\Type("string", message="Cette entrée ne correspond pas au format attendu")
+     * @Assert\Length(
+     *      max=5, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 5 caractères"
+     * )
+     * @Assert\Regex(
+     *     pattern="#[0-9]{5}#",
+     *     match=true,
+     *     message="Des caractères non autorisée dans le code postal"
+     * )
      */
     private $postalCode;
 
@@ -110,6 +132,11 @@ class Address
      *      "addresses_subresource",
      *      "associations_addresses_subresource"
      * })
+     * @Assert\Type("string", message="Cette entrée ne correspond pas au format attendu")
+     * @Assert\Length(
+     *      max=45, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 45 caractères"
+     * )
      */
     private $city;
 
@@ -125,6 +152,11 @@ class Address
      *      "addresses_subresource",
      *      "associations_addresses_subresource"
      * })
+     * @Assert\Type("string", message="Cette entrée ne correspond pas au format attendu")
+     * @Assert\Length(
+     *      max=45, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 45 caractères"
+     * )
      */
     private $country;
 
@@ -140,6 +172,11 @@ class Address
      *      "addresses_subresource",
      *      "associations_addresses_subresource"
      * })
+     * @Assert\Type("string", message="Cette entrée ne correspond pas au format attendu")
+     * @Assert\Length(
+     *      max=45, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 45 caractères"
+     * )
      */
     private $type;
 
@@ -192,7 +229,7 @@ class Address
         return $this->addressLine1;
     }
 
-    public function setAddressLine1(?string $addressLine1): self
+    public function setAddressLine1($addressLine1): self
     {
         $this->addressLine1 = $addressLine1;
 
@@ -204,7 +241,7 @@ class Address
         return $this->addressLine2;
     }
 
-    public function setAddressLine2(?string $addressLine2): self
+    public function setAddressLine2($addressLine2): self
     {
         $this->addressLine2 = $addressLine2;
 
@@ -216,7 +253,7 @@ class Address
         return $this->postalCode;
     }
 
-    public function setPostalCode(?string $postalCode): self
+    public function setPostalCode($postalCode): self
     {
         $this->postalCode = $postalCode;
 
@@ -228,7 +265,7 @@ class Address
         return $this->city;
     }
 
-    public function setCity(?string $city): self
+    public function setCity($city): self
     {
         $this->city = $city;
 
@@ -240,7 +277,7 @@ class Address
         return $this->country;
     }
 
-    public function setCountry(?string $country): self
+    public function setCountry($country): self
     {
         $this->country = $country;
 
@@ -252,7 +289,7 @@ class Address
         return $this->type;
     }
 
-    public function setType(?string $type): self
+    public function setType($type): self
     {
         $this->type = $type;
 
