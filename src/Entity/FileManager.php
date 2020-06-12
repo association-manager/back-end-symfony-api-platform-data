@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=FileManagerRepository::class)
@@ -26,7 +27,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "file_manager_read"
  *          }
  *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
  * )
+ * @ORM\HasLifecycleCallbacks()
  */
 class FileManager
 {
@@ -53,6 +56,12 @@ class FileManager
      *      "association_profile_read", 
      *      "user_read"
      * })
+     * @Assert\Type("string", message="Le format du type n'est pas valide")
+     * @Assert\Length(
+     *      max=45, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 45 caractères"
+     * )
+     * @Assert\NotBlank(message="Le type est obligatoire")
      */
     private $type;
 
@@ -65,6 +74,12 @@ class FileManager
      *      "association_profile_read", 
      *      "user_read"
      * })
+     * @Assert\Type("string", message="Le format du texte n'est pas valide")
+     * @Assert\Length(
+     *      max=255, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
+     * )
+     * @Assert\NotBlank(message="Le texte est obligatoire")
      */
     private $text;
 
@@ -77,16 +92,32 @@ class FileManager
      *      "association_profile_read", 
      *      "user_read"
      * })
+     * @Assert\Type("string", message="Le format de l'url n'est pas valide")
+     * @Assert\Url(
+     *    relativeProtocol = true,
+     *    protocols = {"http", "https"},
+     *    message = "Cette url '{{ value }}' n'est pas valide"
+     * )
      */
     private $url;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Assert\Type("integer", message="Le format du statut n'est pas valide")
+     * @Assert\Length(
+     *      max=6, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 6 caractères"
+     * )
      */
     private $status;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Type("string", message="Le format n'est pas valide")
+     * @Assert\Length(
+     *      max=255, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
+     * )
      */
     private $s3key;
 
@@ -109,11 +140,21 @@ class FileManager
      *      "association_profile_read", 
      *      "user_read"
      * })
+     * @Assert\Type("string", message="Le format du nom n'est pas valide")
+     * @Assert\Length(
+     *      max=150, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 150 caractères"
+     * )
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Assert\Type("string", message="Le format de la taille n'est pas valide")
+     * @Assert\Length(
+     *      max=150, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 150 caractères"
+     * )
      */
     private $size;
 
@@ -126,10 +167,6 @@ class FileManager
      */
     private $announces;
 
-    public function __construct()
-    {
-        $this->announces = new ArrayCollection();
-    }
     /**
      * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="fileManagers")
      * @Groups({
@@ -137,6 +174,26 @@ class FileManager
      * })
      */
     private $association;
+
+    
+    public function __construct()
+    {
+        $this->announces = new ArrayCollection();
+    }
+
+    /**
+     * Automatically assign the current date
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function prePersist() {
+        if(empty($this->createdAt)) {
+            $this->createdAt = new \DateTime();
+        }
+    }
 
     public function getId(): ?int
     {
@@ -148,7 +205,7 @@ class FileManager
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType($type): self
     {
         $this->type = $type;
 
@@ -160,7 +217,7 @@ class FileManager
         return $this->text;
     }
 
-    public function setText(string $text): self
+    public function setText($text): self
     {
         $this->text = $text;
 
@@ -172,7 +229,7 @@ class FileManager
         return $this->url;
     }
 
-    public function setUrl(?string $url): self
+    public function setUrl($url): self
     {
         $this->url = $url;
 
@@ -184,7 +241,7 @@ class FileManager
         return $this->status;
     }
 
-    public function setStatus(?int $status): self
+    public function setStatus($status): self
     {
         $this->status = $status;
 
@@ -196,7 +253,7 @@ class FileManager
         return $this->s3key;
     }
 
-    public function setS3key(?string $s3key): self
+    public function setS3key($s3key): self
     {
         $this->s3key = $s3key;
 
@@ -220,7 +277,7 @@ class FileManager
         return $this->createdBy;
     }
 
-    public function setCreatedBy(?User $createdBy): self
+    public function setCreatedBy($createdBy): self
     {
         $this->createdBy = $createdBy;
 
@@ -232,7 +289,7 @@ class FileManager
         return $this->name;
     }
 
-    public function setName(?string $name): self
+    public function setName($name): self
     {
         $this->name = $name;
 
@@ -244,7 +301,7 @@ class FileManager
         return $this->size;
     }
 
-    public function setSize(string $size): self
+    public function setSize($size): self
     {
         $this->size = $size;
 
