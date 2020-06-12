@@ -54,7 +54,7 @@ class APIFixtures extends BaseFixture
                 "Autre"
             ];
 
-            // User Address 
+            // User Address
             $userAddress = new Address();
             $userAddress->setAddressLine1($this->faker->streetAddress)
                     ->setPostalCode($this->faker->postcode)
@@ -62,7 +62,7 @@ class APIFixtures extends BaseFixture
                     ->setCountry($this->faker->country)
                     ->setType($this->faker->randomElement($userAddressTypes));
 
-            // Association User Custom Phone 
+            // Association User Custom Phone
             $userCustomPhone = (6023156326 + $count);
             // Association User
             $user = new User();
@@ -77,11 +77,11 @@ class APIFixtures extends BaseFixture
                 ->setPassword($hash)
                 ->setDataUsageAgreement($this->faker->randomElement([1, 0]))
                 ->addAddress($userAddress);
-            // En User - fictures 
+            // En User - fictures
 
             // Others Users
             $otherUserCustomPhone = (6013150011 + $count);
-            
+
             $otherUser = new User();
             $otherHash = $this->encoder->encodePassword($otherUser, "password");
             $otherUser->setFirstName($this->faker->firstName())
@@ -170,8 +170,8 @@ class APIFixtures extends BaseFixture
 
 
 
-            // Start WorkGroup - fixtures 
-            
+            // Start WorkGroup - fixtures
+
                 // Association WorkGroup
             $associationWorkGroups = [];
 
@@ -210,10 +210,10 @@ class APIFixtures extends BaseFixture
                     'Project Type 6',
                     'Project Type 7',
                 ];
-                
+
                 for ($p = 1; $p < 2; $p++) {
                     // linked planning
-                    // Start Planning - fixtures 
+                    // Start Planning - fixtures
 
                     $associationPlanningProjectColor = [
                         "red",
@@ -242,10 +242,10 @@ class APIFixtures extends BaseFixture
                             ->setEndAt($this->faker->dateTimeBetween('now'))
                             ->setStatus($this->faker->randomElement($projectStatus))
                             ->setProjectType($this->faker->randomElement($projectTypes))
-                            ->setDescription('<p>' . join('</p><p>', $this->faker->paragraphs(3)) . '</p>')
+                            ->setDescription('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
                             ->setWorkGroup($associationWorkGroup)
                             ->setPlanning($associationPlanningProject);
-                    
+
                     $this->manager->persist($project);
 
                         // Project Planning
@@ -277,7 +277,7 @@ class APIFixtures extends BaseFixture
                                 ->setStartDate($this->faker->dateTimeBetween('-2 months'))
                                 ->setEndDate($this->faker->dateTimeBetween('now'))
                                 ->setType($this->faker->randomElement($taskType))
-                                ->setDescription('<p>' . join('</p><p>', $this->faker->paragraphs(3)) . '</p>')
+                                ->setDescription('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
                                 ->setProjectPlanning($projectPlanning);
 
                             $this->manager->persist($task);
@@ -287,7 +287,7 @@ class APIFixtures extends BaseFixture
 
                     // Start Member Task Work Group - fixtures
                     $memberTaskWorkGroup = new MemberTaskWorkGroupRelation();
-                    
+
                     $memberTaskWorkGroup->setMember($member)
                                         ->setTask($task)
                                         ->setWorkGroup($associationWorkGroup);
@@ -299,15 +299,15 @@ class APIFixtures extends BaseFixture
             }
 
             // End WorkGroup - fixtures
-            
+
             // Start Association - fixtures
-            
+
                 // Association Profile
 
             $associationProfile = new AssociationProfile();
 
             $associationProfile->setTitle("Profile".$count)
-                                ->setDescription('<p>' . join('</p><p>', $this->faker->paragraphs(3)) . '</p>')
+                                ->setDescription('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
                                 ->setDescriptionTitle("Description par défaut".$count);
 
 
@@ -318,7 +318,7 @@ class APIFixtures extends BaseFixture
                 "Lyon"
             ];
 
-                // Association Address 
+                // Association Address
             $associationAddress = new Address();
             $associationAddress->setAddressLine1($this->faker->streetAddress)
                 ->setPostalCode($this->faker->postcode)
@@ -334,11 +334,11 @@ class APIFixtures extends BaseFixture
             ];
 
             // $associationTypes = [
-            //     "Association loi de 1901", 
-            //     "Association avec agrément", 
+            //     "Association loi de 1901",
+            //     "Association avec agrément",
             //     "Association d\'utilité publique"
             // ];
-            
+
 
                 // Association
             $associationCustomPhone = (87985471 + $count);
@@ -368,7 +368,7 @@ class APIFixtures extends BaseFixture
 
             $staff = new Staff();
             $staff->setName("Staff ".$count)
-                ->setDescription('<p>' . join('</p><p>', $this->faker->paragraphs(3)) . '</p>')
+                ->setDescription('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
                 ->setDataUsageAgreement(mt_rand(0,1))
                 ->setAssociationType($association->getAssociationType())
                 ->setPhoneNumber($association->getPhoneNumber())
@@ -385,11 +385,11 @@ class APIFixtures extends BaseFixture
                 "https://www.facebook.com/",
                 "https://twitter.com/",
             ];
-            
+
             $website = $this->faker->randomElement($netWorkSocialLinkWebsite);
 
             $networkSocialLink = new NetworksSocialLink();
-            
+
             $networkSocialLink->setWebsite($website.trim(strtolower(str_replace(".", "", str_replace(" ", "", $association->getName())))))
                                 ->setName($website != 'https://www.facebook.com/' ? 'Twitter' : 'Facebook')
                                 ->setIcon($website != 'https://www.facebook.com/' ? 'twitter.png' : 'facebook.png')
@@ -416,7 +416,7 @@ class APIFixtures extends BaseFixture
             ];
 
                 //Status
-            
+
             $transactionStatus = [
                 // "Terminée",
                 // "En cours",
@@ -455,7 +455,7 @@ class APIFixtures extends BaseFixture
 
             $transaction->setType($this->faker->randomElement($transactionType))
                         ->setDate($this->faker->randomElement($transactionCreatedAt))
-                        ->setDetails('<p>' . join('</p><p>', $this->faker->paragraphs(3)) . '</p>')
+                        ->setDetails('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
                         ->setAmount($this->faker->randomElement($transactionAmount))
                         ->setStatus(mt_rand(0,1))
                         ->setAssociation($association)
@@ -488,7 +488,7 @@ class APIFixtures extends BaseFixture
             $fileManager->setCreatedBy($user)
                         ->setAssociation($association)
                         ->setType($this->faker->randomElement($fileManagerTypes))
-                        ->setText('<p>' . join('</p><p>', $this->faker->paragraphs(1)) . '</p>')
+                        ->setText('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
                         ->setUrl($this->faker->randomElement($fileManagerUrl))
                         ->setStatus(mt_rand(0,1))
                         ->setS3key($fileManager->getType() != 'pdf' ? $fileManagerS3Key[1] : $fileManagerS3Key[0])
@@ -534,7 +534,7 @@ class APIFixtures extends BaseFixture
             $fileManager1->setCreatedBy($user)
                         ->addAnnounce($announce)
                         ->setType($this->faker->randomElement($fileManagerTypes1))
-                        ->setText('<p>' . join('</p><p>', $this->faker->paragraphs(1)) . '</p>')
+                        ->setText('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
                         ->setUrl($this->faker->randomElement($fileManagerUrl1))
                         ->setStatus(mt_rand(0,1))
                         ->setS3key($fileManager1->getType() != 'pdf' ? $fileManagerS3Key1[1] : $fileManagerS3Key1[0])
@@ -580,7 +580,7 @@ class APIFixtures extends BaseFixture
                             ->addPlanning($assoManagerEventPlanning);
 
             $this->manager->persist($assoManagerEvent);
-            // End AssoManagerEvent - fixtures 
+            // End AssoManagerEvent - fixtures
 
             // INVOICIES
             $amounts = [
@@ -601,7 +601,7 @@ class APIFixtures extends BaseFixture
 
             // Start InvoiceDonation -- fixtures
             $invoiceDonation = new InvoiceDonation();
-            
+
             $invoiceDonation->setCreatedAt($this->faker->dateTimeBetween('-20 days'))
                             ->setTotalAmount(floatval($totalAmount))
                             ->setTotalAfterDeduction(floatval($totalAmount - $totalAfterDeduction));
@@ -617,39 +617,39 @@ class APIFixtures extends BaseFixture
 
             $a = [
                 "user" => [
-                    "id" => 20, 
-                    "email" => "test@test.com", 
-                    "mobile" => 123456789, 
-                    "last_name" => "last_name", 
-                    "first_name" => "first_name"], 
+                    "id" => 20,
+                    "email" => "test@test.com",
+                    "mobile" => 123456789,
+                    "last_name" => "last_name",
+                    "first_name" => "first_name"],
                 "address" => [
-                    "city" => "city", 
-                    "postalCode" => 91080, 
-                    "addressLine1" => "addressLine1", 
-                    "addressLine2" => "addressLine2"], 
+                    "city" => "city",
+                    "postalCode" => 91080,
+                    "addressLine1" => "addressLine1",
+                    "addressLine2" => "addressLine2"],
                 "products" => [
                     [
-                        "id" => "15", 
-                        "url" => "url", 
-                        "vat" => 5, 
-                        "name" => "test", 
-                        "price" => 15.5, 
-                        "quantity" => 15, 
-                        "description" => "test", 
+                        "id" => "15",
+                        "url" => "url",
+                        "vat" => 5,
+                        "name" => "test",
+                        "price" => 15.5,
+                        "quantity" => 15,
+                        "description" => "test",
                         "associationId" => 15
-                    ], 
+                    ],
                     [
-                        "id" => "15", 
-                        "url" => "url", 
-                        "vat" => 5, 
-                        "name" => "test", 
-                        "price" => 15.5, 
-                        "quantity" => 15, 
-                        "description" => "test", 
+                        "id" => "15",
+                        "url" => "url",
+                        "vat" => 5,
+                        "name" => "test",
+                        "price" => 15.5,
+                        "quantity" => 15,
+                        "description" => "test",
                         "associationId" => 15
                     ]
-                ], 
-                "totalVat" => 15, 
+                ],
+                "totalVat" => 15,
                 "totalAmount" => 31
             ];
 
@@ -657,7 +657,7 @@ class APIFixtures extends BaseFixture
 
 
             $invoiceShop = new InvoiceShop();
-            
+
             $invoiceShop
                         // ->setCreatedAt($this->faker->dateTimeBetween('-20 days'))
                         ->setAmount($this->faker->randomElement($amounts))
@@ -679,9 +679,9 @@ class APIFixtures extends BaseFixture
 
             // Start ProductWebsite -- fixtures
             $productWebsite = new ProductWebsite();
-            
+
             $productWebsite->setTitle($this->faker->randomElement($productWs))
-                            ->setDescription('<p>' . join('</p><p>', $this->faker->paragraphs(1)) . '</p>')
+                            ->setDescription('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
                             ->setLogo($this->productWbS($productWebsite->getTitle(), $productWs));
 
             $this->manager->persist($productWebsite);
