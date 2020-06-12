@@ -460,6 +460,7 @@ class User implements UserInterface
                 $address->setUser(null);
             }
         }
+        return $this;
     }
 
     /**
