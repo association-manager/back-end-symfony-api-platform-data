@@ -64,6 +64,9 @@ class UserTest extends TestCase
             ->removeAssociation($association)
             ->removeAddress($userAddress);
 
+        $this->getResultOfPrivateProperty( User::class, 'id', $user, 1);
+
+        $this->assertEquals(1, $user->getId());
         $this->assertEquals('firstName', $user->getFirstName());
         $this->assertEquals('test@test.com', $user->getEmail());
         $this->assertEquals('test@test.com', $user->getUsername());
@@ -85,6 +88,27 @@ class UserTest extends TestCase
         $this->assertEquals(gettype(new FileManager()), gettype($user->getFileManagers()));
         $this->assertEquals('123456', $user->getPasswordResetToken());
         $this->assertEquals(gettype(new Address()), gettype($user->getAddress()));
+    }
+
+    /**
+     * @param string $class
+     * @param string $propertyName
+     * @param object $newClass
+     * @param int|null $value
+     * @return \ReflectionProperty
+     * @throws \ReflectionException
+     */
+    protected function getResultOfPrivateProperty(
+        string $class,
+        string $propertyName,
+        object $newClass,
+        ?int $value
+    ): \ReflectionProperty {
+        $reflection = new \ReflectionClass($class);
+        $method = $reflection->getProperty($propertyName);
+        $method->setAccessible(true);
+        $method->setValue($newClass, $value);
+        return $method;
     }
 
 }
