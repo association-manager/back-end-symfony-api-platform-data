@@ -3,23 +3,9 @@
 namespace App\Tests\Repository;
 
 use App\Entity\User;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-class UserRepoTest extends KernelTestCase
+
+class UserRepoTest extends BaseKernelTestCase
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    protected function setUp(): void
-    {
-        $kernel = self::bootKernel();
-
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-    }
     public function testUserByEmail(): void
     {
         $user = $this->entityManager
