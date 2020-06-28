@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductWebsiteRepository;
@@ -15,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "POST"={"path"="/produits/site/vitrine/creer"}
  *           },
  *      itemOperations={
- *          "GET"={"path"="/produit/site/vitrine/{id}/afficher"}, 
+ *          "GET"={"path"="/produit/site/vitrine/{id}/afficher"},
  *          "PUT"={"path"="/produit/site/vitrine/{id}/modifier"},
  *          "DELETE"={"path"="/produit/site/vitrine/{id}/supprimer"}
  *          },
@@ -55,12 +57,34 @@ class ProductWebsite
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\OneToOne(targetEntity=FileManager::class, inversedBy="mainImage", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
      * @Groups({
      *      "product_read"
      * })
      */
-    private $logo;
+    private $mainImage;
+
+    /**
+     * @ORM\OneToOne(targetEntity=FileManager::class, inversedBy="mainImageThumbnail", cascade={"persist", "remove"})
+     * @Groups({
+     *      "product_read"
+     * })
+     */
+    private $mainImageThumbnail;
+
+    /**
+     * @ORM\OneToMany(targetEntity=FileManager::class, mappedBy="productImages")
+     * @Groups({
+     *      "product_read"
+     * })
+     */
+    private $images;
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -91,14 +115,57 @@ class ProductWebsite
         return $this;
     }
 
-    public function getLogo(): ?string
+    public function getMainImage(): ?FileManager
     {
-        return $this->logo;
+        return $this->mainImage;
     }
 
-    public function setLogo(string $logo): self
+    public function setMainImage(FileManager $mainImage): self
     {
-        $this->logo = $logo;
+        $this->mainImage = $mainImage;
+
+        return $this;
+    }
+
+    public function getMainImageThumbnail(): ?FileManager
+    {
+        return $this->mainImageThumbnail;
+    }
+
+    public function setMainImageThumbnail(?FileManager $mainImageThumbnail): self
+    {
+        $this->mainImageThumbnail = $mainImageThumbnail;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FileManager[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(FileManager $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setProductImages($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(FileManager $image): self
+    {
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
+            // set the owning side to null (unless already changed)
+            if ($image->getProductImages() === $this) {
+                $image->setProductImages(null);
+            }
+        }
 
         return $this;
     }

@@ -472,16 +472,6 @@ class APIFixtures extends BaseFixture
                 "jpg"
             ];
 
-            $fileManagerS3Key = [
-                "s3-file".$count.".pdf",
-                "s3-file".$count.".jpg"
-            ];
-
-            $fileManagerUrl = [
-                "association/manager/pdf/file".$count.".pdf",
-                "association/manager/images/file".$count.".jpg"
-            ];
-
 
             $fileManager = new FileManager();
 
@@ -489,12 +479,11 @@ class APIFixtures extends BaseFixture
                         ->setAssociation($association)
                         ->setType($this->faker->randomElement($fileManagerTypes))
                         ->setText('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
-                        ->setUrl($this->faker->randomElement($fileManagerUrl))
+                        ->setUrl($this->faker->url)
                         ->setStatus(mt_rand(0,1))
-                        ->setS3key($fileManager->getType() != 'pdf' ? $fileManagerS3Key[1] : $fileManagerS3Key[0])
                         ->setCreatedAt($this->faker->dateTimeBetween("-2 months"))
-                        ->setName($fileManager->getType() != 'pdf' ? $fileManagerS3Key[1] : $fileManagerS3Key[0])
-                        ->setSize(mt_rand(100,512)."ko");
+                        ->setName($this->faker->text(10))
+                        ->setSize(mt_rand(100,512));
 
             $this->manager->persist($fileManager);
             // End FileManager - fixtures for Association
@@ -517,30 +506,18 @@ class APIFixtures extends BaseFixture
                 "pdf",
                 "jpg"
             ];
-
-            $fileManagerS3Key1 = [
-                "s3-file".$count.".pdf",
-                "s3-file".$count.".jpg"
-            ];
-
-            $fileManagerUrl1 = [
-                "association/manager/pdf/file".$count.".pdf",
-                "association/manager/images/file".$count.".jpg"
-            ];
-
-
             $fileManager1 = new FileManager();
 
             $fileManager1->setCreatedBy($user)
                         ->addAnnounce($announce)
                         ->setType($this->faker->randomElement($fileManagerTypes1))
                         ->setText('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
-                        ->setUrl($this->faker->randomElement($fileManagerUrl1))
+                        ->setUrl($this->faker->url)
                         ->setStatus(mt_rand(0,1))
-                        ->setS3key($fileManager1->getType() != 'pdf' ? $fileManagerS3Key1[1] : $fileManagerS3Key1[0])
+
                         ->setCreatedAt($this->faker->dateTimeBetween("-2 months"))
-                        ->setName($fileManager1->getType() != 'pdf' ? $fileManagerS3Key1[1] : $fileManagerS3Key1[0])
-                        ->setSize(mt_rand(100,512)."ko");
+                        ->setName($this->faker->sentence(7, true))
+                        ->setSize(mt_rand(100,512));
 
             $this->manager->persist($fileManager1);
                 // End FileManager - fixtures for Announce
@@ -682,7 +659,9 @@ class APIFixtures extends BaseFixture
 
             $productWebsite->setTitle($this->faker->randomElement($productWs))
                             ->setDescription('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
-                            ->setLogo($this->productWbS($productWebsite->getTitle(), $productWs));
+                            ->setMainImage($fileManager)
+                            ->setMainImageThumbnail($fileManager)
+                            ->addImage($fileManager);
 
             $this->manager->persist($productWebsite);
 
