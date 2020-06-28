@@ -66,7 +66,7 @@ class APIFixtures extends BaseFixture
             $userCustomPhone = (6023156326 + $count);
             // Association User
             $user = new User();
-            $hash = $this->encoder->encodePassword($user, "password");
+            $hash = $this->encoder->encodePassword($user, "Pa5sword");
             $user->setFirstName($this->faker->firstName())
                 ->setLastName($this->faker->lastName)
                 ->setEmail('test1789'.$count.'@test.com')
@@ -414,17 +414,7 @@ class APIFixtures extends BaseFixture
                 "Paiement sortant",
                 "Paiement rentrant",
             ];
-
-                //Status
-
-            $transactionStatus = [
-                // "Terminée",
-                // "En cours",
-                // "A venir",
-                // "Annulée"
-            ];
-
-                // Transaction amount
+            // Transaction amount
             $transactionAmount = [
                 1500.38,
                 1789.05,
