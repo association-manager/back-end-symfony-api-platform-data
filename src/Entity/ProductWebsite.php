@@ -57,34 +57,12 @@ class ProductWebsite
     private $description;
 
     /**
-     * @ORM\OneToOne(targetEntity=FileManager::class, inversedBy="mainImage", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", length=45)
      * @Groups({
      *      "product_read"
      * })
      */
-    private $mainImage;
-
-    /**
-     * @ORM\OneToOne(targetEntity=FileManager::class, inversedBy="mainImageThumbnail", cascade={"persist", "remove"})
-     * @Groups({
-     *      "product_read"
-     * })
-     */
-    private $mainImageThumbnail;
-
-    /**
-     * @ORM\OneToMany(targetEntity=FileManager::class, mappedBy="productImages")
-     * @Groups({
-     *      "product_read"
-     * })
-     */
-    private $images;
-
-    public function __construct()
-    {
-        $this->images = new ArrayCollection();
-    }
+    private $logo;
 
     public function getId(): ?int
     {
@@ -115,57 +93,14 @@ class ProductWebsite
         return $this;
     }
 
-    public function getMainImage(): ?FileManager
+    public function getLogo(): ?string
     {
-        return $this->mainImage;
+        return $this->logo;
     }
 
-    public function setMainImage(FileManager $mainImage): self
+    public function setLogo(string $logo): self
     {
-        $this->mainImage = $mainImage;
-
-        return $this;
-    }
-
-    public function getMainImageThumbnail(): ?FileManager
-    {
-        return $this->mainImageThumbnail;
-    }
-
-    public function setMainImageThumbnail(?FileManager $mainImageThumbnail): self
-    {
-        $this->mainImageThumbnail = $mainImageThumbnail;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|FileManager[]
-     */
-    public function getImages(): Collection
-    {
-        return $this->images;
-    }
-
-    public function addImage(FileManager $image): self
-    {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
-            $image->setProductImages($this);
-        }
-
-        return $this;
-    }
-
-    public function removeImage(FileManager $image): self
-    {
-        if ($this->images->contains($image)) {
-            $this->images->removeElement($image);
-            // set the owning side to null (unless already changed)
-            if ($image->getProductImages() === $this) {
-                $image->setProductImages(null);
-            }
-        }
+        $this->logo = $logo;
 
         return $this;
     }

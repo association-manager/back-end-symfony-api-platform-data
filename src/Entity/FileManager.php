@@ -165,30 +165,6 @@ class FileManager
      */
     private $association;
 
-    /**
-     * @ORM\OneToOne(targetEntity=ProductWebsite::class, mappedBy="mainImage", cascade={"persist", "remove"})
-     * @Groups({
-     *      "file_manager_read"
-     * })
-     */
-    private $mainImage;
-
-    /**
-     * @ORM\OneToOne(targetEntity=ProductWebsite::class, mappedBy="mainImageThumbnail", cascade={"persist", "remove"})
-     * @Groups({
-     *      "file_manager_read"
-     * })
-     */
-    private $mainImageThumbnail;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=ProductWebsite::class, inversedBy="images")
-     * @Groups({
-     *      "file_manager_read"
-     * })
-     */
-    private $productImages;
-
 
     public function __construct()
     {
@@ -347,52 +323,6 @@ class FileManager
     public function setAssociation(?Association $association): self
     {
         $this->association = $association;
-
-        return $this;
-    }
-
-    public function getMainImage(): ?ProductWebsite
-    {
-        return $this->mainImage;
-    }
-
-    public function setMainImage(ProductWebsite $mainImage): self
-    {
-        $this->mainImage = $mainImage;
-
-        // set the owning side of the relation if necessary
-        if ($mainImage->getMainImageT() !== $this) {
-            $mainImage->setMainImage($this);
-        }
-
-        return $this;
-    }
-
-    public function getMainImageThumbnail(): ?ProductWebsite
-    {
-        return $this->mainImageThumbnail;
-    }
-
-    public function setMainImageThumbnail(ProductWebsite $mainImageThumbnail): self
-    {
-        $this->mainImageThumbnail = $mainImageThumbnail;
-
-        // set the owning side of the relation if necessary
-        if ($mainImageThumbnail->getMainImageThumbnail() !== $this) {
-            $mainImageThumbnail->setMainImageThumbnail($this);
-        }
-
-        return $this;
-    }
-
-    public function getProductImages(): ?ProductWebsite
-    {
-        return $this->productImages;
-    }
-
-    public function setProductImages(?ProductWebsite $productImages): self
-    {
-        $this->productImages = $productImages;
 
         return $this;
     }
