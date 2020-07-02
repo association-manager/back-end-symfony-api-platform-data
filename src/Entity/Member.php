@@ -106,6 +106,9 @@ class Member
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="members")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({
+     *      "member_read"
+     * })
      */
     private $userId;
 
