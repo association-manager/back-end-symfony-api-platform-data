@@ -1,4 +1,6 @@
 {
+    "name" : "association-manager/back-end-symfony-api-platform-data",
+    "description" : "association_manager_back_end_symfony",
     "type": "project",
     "license": "proprietary",
     "require": {
@@ -19,7 +21,7 @@
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "fzaninotto/faker": "^1.9",
         "symfony/maker-bundle": "^1.15",
-        "symfony/phpunit-bridge": "^5.0"
+        "symfony/phpunit-bridge": "^5.1"
     },
     "config": {
         "preferred-install": {
@@ -68,7 +70,7 @@
             "createDataBase": "php bin/console doctrine:database:create --env=test",
             "migration": "php bin/console doctrine:migrations:migrate --env=test",
             "loadFixture": "php bin/console doctrine:fixtures:load --append --no-interaction --env=test",
-            "runTest":"phpdbg -qrr bin/phpunit --coverage-html var/log"
+            "runTest":"phpdbg -d memory_limit=-1 -qrr bin/phpunit --coverage-html var/log"
         }
     },
     "conflict": {

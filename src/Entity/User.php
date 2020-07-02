@@ -20,13 +20,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "POST"={"path"="/utilisateurs/creer"}
  *           },
  *      itemOperations={
- *          "GET"={"path"="/utilisateur/{id}/afficher"}, 
+ *          "GET"={"path"="/utilisateur/{id}/afficher"},
  *          "PUT"={"path"="/utilisateur/{id}/modifier"},
  *          "DELETE"={"path"="/utilisateur/{id}/supprimer"}
  *          },
  *      subresourceOperations={
  *          "addresses_get_subresource"={"path"="/utilisateurs/{id}/adresses"} ,
- *          "members_get_subresource"={"path"="/utilisateurs/{id}/membres"}  
+ *          "members_get_subresource"={"path"="/utilisateurs/{id}/membres"}
  *      },
  *      normalizationContext={
  *          "groups"={
@@ -191,6 +191,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Association::class, mappedBy="createdBy", cascade={"persist", "remove"})
      */
     private $associations;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $passwordResetToken;
 
     public function __construct()
     {
@@ -518,6 +523,7 @@ class User implements UserInterface
                 $address->setUser(null);
             }
         }
+        return $this;
     }
 
     /**
@@ -547,6 +553,18 @@ class User implements UserInterface
                 $association->setCreatedBy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function setPasswordResetToken(string $passwordResetToken): self
+    {
+        $this->passwordResetToken = $passwordResetToken;
 
         return $this;
     }

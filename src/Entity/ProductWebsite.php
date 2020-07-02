@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductWebsiteRepository;
@@ -15,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "POST"={"path"="/produits/site/vitrine/creer"}
  *           },
  *      itemOperations={
- *          "GET"={"path"="/produit/site/vitrine/{id}/afficher"}, 
+ *          "GET"={"path"="/produit/site/vitrine/{id}/afficher"},
  *          "PUT"={"path"="/produit/site/vitrine/{id}/modifier"},
  *          "DELETE"={"path"="/produit/site/vitrine/{id}/supprimer"}
  *          },

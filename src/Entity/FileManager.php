@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "POST"={"path"="/fichiers/creer"}
  *           },
  *      itemOperations={
- *          "GET"={"path"="/fichier/{id}/afficher"}, 
+ *          "GET"={"path"="/fichier/{id}/afficher"},
  *          "PUT"={"path"="/fichier/{id}/modifier"},
  *          "DELETE"={"path"="/fichier/{id}/supprimer"}
  *          },
@@ -38,10 +38,10 @@ class FileManager
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * @Groups({
-     *      "file_manager_read", 
-     *      "association_read", 
-     *      "announce_read", 
-     *      "association_profile_read", 
+     *      "file_manager_read",
+     *      "association_read",
+     *      "announce_read",
+     *      "association_profile_read",
      *      "user_read"
      * })
      */
@@ -50,15 +50,15 @@ class FileManager
     /**
      * @ORM\Column(type="string", length=45)
      * @Groups({
-     *      "file_manager_read", 
-     *      "association_read", 
-     *      "announce_read", 
-     *      "association_profile_read", 
+     *      "file_manager_read",
+     *      "association_read",
+     *      "announce_read",
+     *      "association_profile_read",
      *      "user_read"
      * })
      * @Assert\Type("string", message="Le format du type n'est pas valide")
      * @Assert\Length(
-     *      max=45, 
+     *      max=45,
      *      maxMessage="Vous ne pouvez pas saisir plus de 45 caractères"
      * )
      * @Assert\NotBlank(message="Le type est obligatoire")
@@ -68,15 +68,15 @@ class FileManager
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({
-     *      "file_manager_read", 
-     *      "association_read", 
-     *      "announce_read", 
-     *      "association_profile_read", 
+     *      "file_manager_read",
+     *      "association_read",
+     *      "announce_read",
+     *      "association_profile_read",
      *      "user_read"
      * })
      * @Assert\Type("string", message="Le format du texte n'est pas valide")
      * @Assert\Length(
-     *      max=255, 
+     *      max=255,
      *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
      * )
      * @Assert\NotBlank(message="Le texte est obligatoire")
@@ -86,10 +86,10 @@ class FileManager
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({
-     *      "file_manager_read", 
-     *      "association_read", 
-     *      "announce_read", 
-     *      "association_profile_read", 
+     *      "file_manager_read",
+     *      "association_read",
+     *      "announce_read",
+     *      "association_profile_read",
      *      "user_read"
      * })
      * @Assert\Type("string", message="Le format de l'url n'est pas valide")
@@ -105,21 +105,11 @@ class FileManager
      * @ORM\Column(type="smallint", nullable=true)
      * @Assert\Type("integer", message="Le format du statut n'est pas valide")
      * @Assert\Length(
-     *      max=6, 
+     *      max=6,
      *      maxMessage="Vous ne pouvez pas saisir plus de 6 caractères"
      * )
      */
     private $status;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Type("string", message="Le format n'est pas valide")
-     * @Assert\Length(
-     *      max=255, 
-     *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
-     * )
-     */
-    private $s3key;
 
     /**
      * @ORM\Column(type="datetime")
@@ -134,15 +124,15 @@ class FileManager
     /**
      * @ORM\Column(type="string", length=150, nullable=true)
      * @Groups({
-     *      "file_manager_read", 
-     *      "association_read", 
-     *      "announce_read", 
-     *      "association_profile_read", 
+     *      "file_manager_read",
+     *      "association_read",
+     *      "announce_read",
+     *      "association_profile_read",
      *      "user_read"
      * })
      * @Assert\Type("string", message="Le format du nom n'est pas valide")
      * @Assert\Length(
-     *      max=150, 
+     *      max=150,
      *      maxMessage="Vous ne pouvez pas saisir plus de 150 caractères"
      * )
      */
@@ -152,7 +142,7 @@ class FileManager
      * @ORM\Column(type="string", length=150)
      * @Assert\Type("string", message="Le format de la taille n'est pas valide")
      * @Assert\Length(
-     *      max=150, 
+     *      max=150,
      *      maxMessage="Vous ne pouvez pas saisir plus de 150 caractères"
      * )
      */
@@ -161,7 +151,7 @@ class FileManager
     /**
      * @ORM\OneToMany(targetEntity=Announce::class, mappedBy="fileManager")
      * @Groups({
-     *      "file_manager_read", 
+     *      "file_manager_read",
      *      "association_read"
      * })
      */
@@ -175,7 +165,7 @@ class FileManager
      */
     private $association;
 
-    
+
     public function __construct()
     {
         $this->announces = new ArrayCollection();
@@ -186,7 +176,7 @@ class FileManager
      *
      * @ORM\PrePersist
      * @ORM\PreUpdate
-     * 
+     *
      * @return void
      */
     public function prePersist() {
@@ -244,18 +234,6 @@ class FileManager
     public function setStatus($status): self
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    public function getS3key(): ?string
-    {
-        return $this->s3key;
-    }
-
-    public function setS3key($s3key): self
-    {
-        $this->s3key = $s3key;
 
         return $this;
     }
