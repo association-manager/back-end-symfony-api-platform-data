@@ -649,10 +649,10 @@ class APIFixtures extends BaseFixture
 
             $productWebsite->setTitle($this->faker->randomElement($productWs))
                             ->setDescription('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
-                            ->setMainImage($fileManager)
-                            ->setMainImageThumbnail($fileManager)
-                            ->addImage($fileManager);
-
+                            // ->setMainImage($fileManager)
+                            // ->setMainImageThumbnail($fileManager)
+                            // ->addImage($fileManager);
+                            ->setLogo('abc');
             $this->manager->persist($productWebsite);
 
             // End ProductWebsite -- fixtures
