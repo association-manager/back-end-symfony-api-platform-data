@@ -2,17 +2,9 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\Address;
 use App\Entity\Announce;
-use App\Entity\Association;
-use App\Entity\Donation;
 use App\Entity\FileManager;
-use App\Entity\InvoiceDonation;
-use App\Entity\InvoiceShop;
-use App\Entity\Member;
-use App\Entity\User;
 use PHPUnit\Framework\TestCase;
-use DateTime;
 
 class AnnounceTest extends TestCase
 {
