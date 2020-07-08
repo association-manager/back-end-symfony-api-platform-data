@@ -30,20 +30,20 @@ openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_
 openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
 ````
 
-### Add the Google DNS to use gmail same as .env in your .env.local:
-###> symfony/mailer ###
+### Google DNS for gmail service :
+````Add the Google DNS to use gmail same as .env in your .env.local
 MAILER_DSN=gmail://asso.manage@gmail.com:dslmkubjzqnqkyoj@localhost
-###< symfony/mailer ###
+````
 
-### Look at the Controller folder to see our different possible routes for connection with the session for the Advertisement Management only :
-###> symfony/controller ###
+### Advertisement Manager API Routes :
+````Look at the Controller folder to see our different possible routes for connection with the session for the Advertisement Management only
 src/Controller/xxx...Controllers.php
-###> symfony/controller ###
+````
 
-### You need to have the webpack bundle in your local repo/branch, for that run the following command :
-###> webpack/encore ###
+### Webpack bundle installation :
+````You need to have the webpack bundle in your local repo/branch, for that run the following command
 yarn install
-###< webpack/encore ###
+````
 
 ### To seed the data for fist time in your system
 ````bash
