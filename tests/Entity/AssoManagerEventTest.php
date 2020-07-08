@@ -2,13 +2,8 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\Address;
-use App\Entity\Association;
 use App\Entity\AssoManagerEvent;
-use App\Entity\InvoiceDonation;
-use App\Entity\InvoiceShop;
 use App\Entity\Planning;
-use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 
 class AssoManagerEventTest extends TestCase
