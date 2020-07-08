@@ -40,6 +40,11 @@ MAILER_DSN=gmail://asso.manage@gmail.com:dslmkubjzqnqkyoj@localhost
 src/Controller/xxx...Controllers.php
 ###> symfony/controller ###
 
+### You need to have the webpack bundle in your local repo/branch, for that run the following command :
+###> webpack/encore ###
+yarn install
+###< webpack/encore ###
+
 ### To seed the data for fist time in your system
 ````bash
 composer run load-data
