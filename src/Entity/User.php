@@ -89,7 +89,6 @@ class User implements UserInterface
      *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
      * )
      * @Assert\NotBlank(message="Le prénom est obligatoire")
-     * @Assert\NotBlank(message="Le prénom est obligatoire")
      */
     private $firstName;
 
@@ -101,7 +100,6 @@ class User implements UserInterface
      *      max=255, 
      *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
      * )
-     * @Assert\NotBlank(message="Le nom est obligatoire")
      * @Assert\NotBlank(message="Le nom est obligatoire")
      */
     private $lastName;
@@ -169,6 +167,12 @@ class User implements UserInterface
      *
      * @var string
      * @Assert\NotBlank(message="Le mot de passe est obligatoire")
+     * @Assert\Length(
+     *      min=8, 
+     *      maxMessage="Vous ne pouvez pas saisir moins de 8 caractères",
+     *      max=255, 
+     *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
+     * )
      */
     private $plainPassword;
 
