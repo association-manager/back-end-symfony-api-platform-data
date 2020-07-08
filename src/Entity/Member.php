@@ -155,6 +155,16 @@ class Member
      */
     private $memberTaskWorkGroupRelations;
 
+    /**
+     * @ORM\Column(type="string", length=150, nullable=true)
+     */
+    private $responsibility;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateOfEntry;
+
     public function __construct()
     {
         $this->associations = new ArrayCollection();
@@ -316,6 +326,30 @@ class Member
                 $memberTaskWorkGroupRelation->setMember(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getResponsibility(): ?string
+    {
+        return $this->responsibility;
+    }
+
+    public function setResponsibility(?string $responsibility): self
+    {
+        $this->responsibility = $responsibility;
+
+        return $this;
+    }
+
+    public function getDateOfEntry(): ?\DateTimeInterface
+    {
+        return $this->dateOfEntry;
+    }
+
+    public function setDateOfEntry(?\DateTimeInterface $dateOfEntry): self
+    {
+        $this->dateOfEntry = $dateOfEntry;
 
         return $this;
     }

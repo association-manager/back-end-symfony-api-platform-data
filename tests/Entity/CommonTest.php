@@ -10,13 +10,14 @@ use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use DateTime;
 
-class UserTest extends TestCase
+class CommonTest extends TestCase
 {
     public function testUser(): void
     {
         $user = new User();
         $userAddress = new Address();
         $userAddress->setAddressLine1('AddressLine1')
+            ->setAddressLine2('AddressLine2')
             ->setPostalCode('PostalCode')
             ->setCity('City')
             ->setCountry('Country')
@@ -34,7 +35,6 @@ class UserTest extends TestCase
         ->setName('Name')
         ->setAssociation($association)
         ->setCreatedAt(new DateTime())
-        ->setS3key('123456')
         ->setSize('23')
         ->setStatus(1)
         ->setType('jpg');
