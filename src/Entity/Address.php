@@ -181,7 +181,7 @@ class Address
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="yes")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="addresses")
      * @Groups({
      *      "address_read"
      * })

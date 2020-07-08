@@ -9,8 +9,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -36,6 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      denormalizationContext={"disable_type_enforcement"=true}
  * )
  * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity(fields={"email"}, message="Un compte existe déjà pour cette adresse email")
  */
 class User implements UserInterface
 {
@@ -72,6 +74,11 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -185,7 +192,7 @@ class User implements UserInterface
      * @ApiSubresource
      * @Assert\Valid
      */
-    private $address;
+    private $addresses;
 
     /**
      * @ORM\OneToMany(targetEntity=Association::class, mappedBy="createdBy", cascade={"persist", "remove"})
@@ -203,7 +210,7 @@ class User implements UserInterface
         $this->dataUsageAgreement = true;
         $this->members = new ArrayCollection();
         $this->fileManagers = new ArrayCollection();
-        $this->address = new ArrayCollection();
+        $this->addresses = new ArrayCollection();
         $this->associations = new ArrayCollection();
     }
 
@@ -301,6 +308,18 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         $this->plainPassword = null;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
     }
 
     public function getFirstName(): ?string
@@ -499,15 +518,15 @@ class User implements UserInterface
     /**
      * @return Collection|Address[]
      */
-    public function getAddress(): Collection
+    public function getAddresses(): Collection
     {
-        return $this->address;
+        return $this->addresses;
     }
 
     public function addAddress(Address $address): self
     {
-        if (!$this->address->contains($address)) {
-            $this->address[] = $address;
+        if (!$this->addresses->contains($address)) {
+            $this->addresses[] = $address;
             $address->setUser($this);
         }
 
@@ -516,8 +535,8 @@ class User implements UserInterface
 
     public function removeAddress(Address $address): self
     {
-        if ($this->address->contains($address)) {
-            $this->address->removeElement($address);
+        if ($this->addresses->contains($address)) {
+            $this->addresses->removeElement($address);
             // set the owning side to null (unless already changed)
             if ($address->getUser() === $this) {
                 $address->setUser(null);

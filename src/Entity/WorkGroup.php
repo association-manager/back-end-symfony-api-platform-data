@@ -74,7 +74,7 @@ class WorkGroup
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Association::class, inversedBy="groups")
+     * @ORM\ManyToMany(targetEntity=Association::class, inversedBy="workGroups")
      * @Groups({
      *      "work_group_read", 
      *      "member_task_work_group_relation_read"
@@ -94,16 +94,6 @@ class WorkGroup
     private $projects;
 
     /**
-     * @ORM\ManyToOne(targetEntity=WorkGroup::class, inversedBy="workGroups")
-     */
-    private $workGroup;
-
-    /**
-     * @ORM\OneToMany(targetEntity=WorkGroup::class, mappedBy="workGroup")
-     */
-    private $workGroups;
-
-    /**
      * @ORM\OneToMany(targetEntity=MemberTaskWorkGroupRelation::class, mappedBy="workGroup")
      * @Groups({
      *      "work_group_read"
@@ -115,7 +105,6 @@ class WorkGroup
     {
         $this->association = new ArrayCollection();
         $this->projects = new ArrayCollection();
-        $this->workGroups = new ArrayCollection();
         $this->memberTaskWorkGroupRelations = new ArrayCollection();
     }
 
@@ -187,49 +176,6 @@ class WorkGroup
             // set the owning side to null (unless already changed)
             if ($project->getWorkGroup() === $this) {
                 $project->setWorkGroup(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getWorkGroup(): ?self
-    {
-        return $this->workGroup;
-    }
-
-    public function setWorkGroup(?self $workGroup): self
-    {
-        $this->workGroup = $workGroup;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|self[]
-     */
-    public function getWorkGroups(): Collection
-    {
-        return $this->workGroups;
-    }
-
-    public function addWorkGroup(self $workGroup): self
-    {
-        if (!$this->workGroups->contains($workGroup)) {
-            $this->workGroups[] = $workGroup;
-            $workGroup->setWorkGroup($this);
-        }
-
-        return $this;
-    }
-
-    public function removeWorkGroup(self $workGroup): self
-    {
-        if ($this->workGroups->contains($workGroup)) {
-            $this->workGroups->removeElement($workGroup);
-            // set the owning side to null (unless already changed)
-            if ($workGroup->getWorkGroup() === $this) {
-                $workGroup->setWorkGroup(null);
             }
         }
 
