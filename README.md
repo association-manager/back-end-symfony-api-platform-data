@@ -29,6 +29,17 @@ mkdir -p config/jwt
 openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
 openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
 ````
+
+### Add the Google DNS to use gmail same as .env in your .env.local:
+###> symfony/mailer ###
+MAILER_DSN=gmail://asso.manage@gmail.com:dslmkubjzqnqkyoj@localhost
+###< symfony/mailer ###
+
+### Look at the Controller folder to see our different possible routes for connection with the session for the Advertisement Management only :
+###> symfony/controller ###
+src/Controller/xxx...Controllers.php
+###> symfony/controller ###
+
 ### To seed the data for fist time in your system
 ````bash
 composer run load-data
