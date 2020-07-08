@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use App\Entity\Address;
-use App\Entity\Announce;
+//use App\Entity\Announce;
 use App\Entity\Association;
 use App\Entity\AssociationProfile;
 use App\Entity\AssoManagerEvent;
@@ -66,7 +66,7 @@ class APIFixtures extends BaseFixture
             $userCustomPhone = (6023156326 + $count);
             // Association User
             $user = new User();
-            $hash = $this->encoder->encodePassword($user, "Pa5sword");
+            $hash = $this->encoder->encodePassword($user, "password");
             $user->setFirstName($this->faker->firstName())
                 ->setLastName($this->faker->lastName)
                 ->setEmail('test1789'.$count.'@test.com')
@@ -179,8 +179,8 @@ class APIFixtures extends BaseFixture
                 $associationWorkGroup = new WorkGroup();
 
                 $associationWorkGroup->setName("Groupe".$count)
-                ->addAssociationId($association)
-                ->addWorkGroup($associationWorkGroup);
+                ->addAssociationId($association);
+                // ->addWorkGroup($associationWorkGroup);
                     // Can be completed
 
                 $this->manager->persist($associationWorkGroup);
@@ -480,7 +480,7 @@ class APIFixtures extends BaseFixture
 
 
             // Start Announce - fixtures
-
+            /*
             $announce = new Announce();
 
             $announce->setName($this->faker->firstName())
@@ -490,6 +490,7 @@ class APIFixtures extends BaseFixture
                     ->setAdUnitId($this->faker->uuid());
 
             $this->manager->persist($announce);
+            */
                 // Start FileManager - fixtures for Announce
 
             $fileManagerTypes1 = [
@@ -499,7 +500,7 @@ class APIFixtures extends BaseFixture
             $fileManager1 = new FileManager();
 
             $fileManager1->setCreatedBy($user)
-                        ->addAnnounce($announce)
+                        //->addAnnounce($announce)
                         ->setType($this->faker->randomElement($fileManagerTypes1))
                         ->setText('<p>' . join('</p><p>', $this->faker->sentences()) . '</p>')
                         ->setUrl($this->faker->url)
