@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\FileManagerRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -149,27 +148,12 @@ class FileManager
     private $size;
 
     /**
-     * @ORM\OneToMany(targetEntity=Announce::class, mappedBy="fileManager")
-     * @Groups({
-     *      "file_manager_read",
-     *      "association_read"
-     * })
-     */
-    private $announces;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="fileManagers")
      * @Groups({
      *      "file_manager_read"
      * })
      */
     private $association;
-
-
-    public function __construct()
-    {
-        $this->announces = new ArrayCollection();
-    }
 
     /**
      * Automatically assign the current date
@@ -284,35 +268,6 @@ class FileManager
         $this->size = $size;
 
         return $this;
-    }
-
-    /**
-     * @return Collection|Announce[]
-     */
-    public function getAnnounces(): Collection
-    {
-        return $this->announces;
-    }
-
-    public function addAnnounce(Announce $announce): self
-    {
-        if (!$this->announces->contains($announce)) {
-            $this->announces[] = $announce;
-            $announce->setFileManager($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAnnounce(Announce $announce): self
-    {
-        if ($this->announces->contains($announce)) {
-            $this->announces->removeElement($announce);
-            // set the owning side to null (unless already changed)
-            if ($announce->getFileManager() === $this) {
-                $announce->setFileManager(null);
-            }
-        }
     }
 
     public function getAssociation(): ?Association
