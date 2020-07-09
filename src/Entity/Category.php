@@ -87,6 +87,16 @@ class Category
     private $type;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $details;
+
+    /**
+     * @ORM\Column(type="string", length=45, nullable=true)
+     */
+    private $subType;
+    
+    /**
      * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="category")
      * @Groups({
      *      "category_read"
@@ -102,10 +112,16 @@ class Category
      */
     private $plannings;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Advertisement::class, mappedBy="categories")
+     */
+    private $advertisements;
+
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
         $this->plannings = new ArrayCollection();
+        $this->advertisements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -195,6 +211,58 @@ class Category
                 $planning->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDetails(): ?string
+    {
+        return $this->details;
+    }
+
+    public function setDetails(?string $details): self
+    {
+        $this->details = $details;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Advertisement[]
+     */
+    public function getAdvertisements(): Collection
+    {
+        return $this->advertisements;
+    }
+
+    public function addAdvertisement(Advertisement $advertisement): self
+    {
+        if (!$this->advertisements->contains($advertisement)) {
+            $this->advertisements[] = $advertisement;
+            $advertisement->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdvertisement(Advertisement $advertisement): self
+    {
+        if ($this->advertisements->contains($advertisement)) {
+            $this->advertisements->removeElement($advertisement);
+            $advertisement->removeCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function getSubType(): ?string
+    {
+        return $this->subType;
+    }
+
+    public function setSubType(?string $subType): self
+    {
+        $this->subType = $subType;
 
         return $this;
     }

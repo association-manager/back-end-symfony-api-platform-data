@@ -208,6 +208,16 @@ class User implements UserInterface
      */
     private $passwordResetToken;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Advertisement::class, mappedBy="user")
+     */
+    private $advertisements;
+
+    /**
+     * @ORM\OneToMany(targetEntity=AdManagementNotification::class, mappedBy="user")
+     */
+    private $adManagementNotifications;
+
     public function __construct()
     {
         $this->createdAt = new DateTime();
@@ -216,6 +226,8 @@ class User implements UserInterface
         $this->fileManagers = new ArrayCollection();
         $this->addresses = new ArrayCollection();
         $this->associations = new ArrayCollection();
+        $this->advertisements = new ArrayCollection();
+        $this->adManagementNotifications = new ArrayCollection();
     }
 
     /**
@@ -588,6 +600,68 @@ class User implements UserInterface
     public function setPasswordResetToken(string $passwordResetToken): self
     {
         $this->passwordResetToken = $passwordResetToken;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Advertisement[]
+     */
+    public function getAdvertisements(): Collection
+    {
+        return $this->advertisements;
+    }
+
+    public function addAdvertisement(Advertisement $advertisement): self
+    {
+        if (!$this->advertisements->contains($advertisement)) {
+            $this->advertisements[] = $advertisement;
+            $advertisement->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdvertisement(Advertisement $advertisement): self
+    {
+        if ($this->advertisements->contains($advertisement)) {
+            $this->advertisements->removeElement($advertisement);
+            // set the owning side to null (unless already changed)
+            if ($advertisement->getUser() === $this) {
+                $advertisement->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AdManagementNotification[]
+     */
+    public function getAdManagementNotifications(): Collection
+    {
+        return $this->adManagementNotifications;
+    }
+
+    public function addAdManagementNotification(AdManagementNotification $adManagementNotification): self
+    {
+        if (!$this->adManagementNotifications->contains($adManagementNotification)) {
+            $this->adManagementNotifications[] = $adManagementNotification;
+            $adManagementNotification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdManagementNotification(AdManagementNotification $adManagementNotification): self
+    {
+        if ($this->adManagementNotifications->contains($adManagementNotification)) {
+            $this->adManagementNotifications->removeElement($adManagementNotification);
+            // set the owning side to null (unless already changed)
+            if ($adManagementNotification->getUser() === $this) {
+                $adManagementNotification->setUser(null);
+            }
+        }
 
         return $this;
     }
