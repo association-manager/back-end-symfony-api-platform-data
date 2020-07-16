@@ -17,7 +17,6 @@ class CategoryType extends FormConfig
             ->add('type', TextType::class, $this->getFormConf(true, 'Type', 'Indiquez un type : "Annonce"'))
             ->add('details', TextType::class, $this->getFormConf(false, 'Détails', 'Détails de la catégorie'))
             ->add('subType', TextType::class, $this->getFormConf(false, 'Sous type', 'Sous type (Ex : Informative, Transformative) '))
-            // ->add('advertisements')
         ;
     }
 

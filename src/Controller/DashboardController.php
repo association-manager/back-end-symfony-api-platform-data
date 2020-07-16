@@ -15,6 +15,3 @@ class DashboardController extends AbstractController
         return $this->render('ad_admin/dashboard/home.html.twig');
     }
 }
-
-// "/admin/advertisement-management"
-//ad_admin/dashboard/home.html.twig
