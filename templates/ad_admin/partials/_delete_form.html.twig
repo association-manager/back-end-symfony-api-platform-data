@@ -1,0 +1,16 @@
+<form method="post" 
+{% if objectToDelete is defined %}
+    action="{{ objectToDelete }}"
+{% endif %}
+onsubmit="return confirm('Voulez-vous vraiment supprimer cet élément ?');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" 
+    {% if objectToDelete is defined %}
+        value="{{ objectToDeleteToken }}"
+    {% endif %}
+    >
+    <button class="btn btn-danger">
+        <i class="fas fa-trash-alt">
+        </i>
+    </button>
+</form>
