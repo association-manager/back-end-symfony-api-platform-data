@@ -1,0 +1,29 @@
+{% for appWebMobile in appWebMobilesByAd %}
+
+    {% set objectToDelete = path('app_web_mobile_advertiser_delete', {'id': appWebMobile.id}) %}
+    {% set objectToDeleteToken = csrf_token('delete' ~ appWebMobile.id) %}
+
+    <tr>
+        <td scope="row">{{ appWebMobile.id }}</td>
+        <td>{{ appWebMobile.webPageUrl }}</td>
+        <td>{{ appWebMobile.advertisement.title}}</td>
+        <td>{{ appWebMobile.status}}</td>
+        
+        <td>
+            {% if is_granted('ROLE_ADVERTISER') %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-info" onclick="location.href='{{ path('app_web_mobile_advertiser_show', {'id': appWebMobile.id}) }}'">
+                        <i class="fas fa-eye">
+                        </i>
+                    </button>
+                    <button type="button" class="btn btn-info" onclick="location.href='{{ path('app_web_mobile_advertiser_edit', {'id': appWebMobile.id}) }}'">
+                        <i class="fas fa-pencil-alt">
+                        </i>
+                    </button>
+                    {{ include('ad_admin/partials/_delete_form.html.twig') }}
+                </div>
+            {% endif %}
+        </td>
+    </tr>
+    </tr>
+{% endfor %}

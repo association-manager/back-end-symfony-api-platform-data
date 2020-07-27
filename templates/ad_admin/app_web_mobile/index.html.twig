@@ -1,0 +1,128 @@
+{% extends "base.html.twig" %}
+{% block title %}
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ADVERTISER') %}
+        {% if is_granted('ROLE_ADMIN') %}
+            {% if appWebMobiles is defined %}
+                    {% if appWebMobiles|length > 1 %}
+                    Applications
+
+                    {% else %}
+                        
+                        Application
+                {% endif %}
+            {% endif %}
+            {% elseif is_granted('ROLE_ADVERTISER') %}
+                Application
+        {% endif %} 
+    {% endif %}
+{% endblock %}
+
+
+{% block body %}
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+
+                    {# {% include "/ad_admin/partials/_alert.html.twig" %} #}
+
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ADVERTISER')%}
+                                    <!--[ year  sales section ] end-->
+                                    <!-- [ Hover-table ] start -->
+                                    <div class="col-xl-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                            <h5>
+                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ADVERTISER') %}
+                                                    {% if is_granted('ROLE_ADMIN') %}
+                                                        {% if appWebMobiles is defined %}
+                                                            {% if appWebMobiles|length > 1 %}
+                                                                Applications
+
+                                                                {% else %}
+                                                                    
+                                                                    Application
+                                                            {% endif %}
+                                                        {% endif %}
+                                                        {% elseif is_granted('ROLE_ADVERTISER') %}
+                                                            Application
+                                                    {% endif %} 
+                                                {% endif %}
+                                                </h5>
+                                            </div>
+                                            <div class="card-block table-border-style">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Lien page web</th>
+                                                                <th>Annonce</th>
+                                                                <th>Statut</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% if is_granted('ROLE_ADMIN') %}
+                                                                {% if appWebMobilesByAd is defined and appWebMobilesByAd|length > 0 %}
+                                                                    {% include "ad_admin/app_web_mobile/index.html.twig.filter/_app_filter_admin.html.twig" %}
+                                                                    {% else %}
+                                                                        <tr>
+                                                                            <td valign="top" colspan="9">
+                                                                                Aucune application ne correspond à votre demande.
+                                                                            </td>
+                                                                        <tr>
+                                                                {% endif %}
+                                                                    {% elseif is_granted('ROLE_ADVERTISER') %}
+                                                                        {% if appWebMobilesByAd is defined and appWebMobilesByAd|length > 0 %}
+                                                                            {% include "ad_admin/app_web_mobile/index.html.twig.filter/_app_filter_advertiser.html.twig" %}
+                                                                            {% else %}
+                                                                                <tr>
+                                                                                    <td valign="top" colspan="9">
+                                                                                        Aucune application ne correspond à votre demande.
+                                                                                    </td>
+                                                                                <tr>
+                                                                        {% endif %}
+                                                                {% else %}
+                                                                Vous n'êtes pas autorisé.
+                                                            {% endif %}
+                                                            
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Lien page web</th>
+                                                                <th>Annonce</th>
+                                                                <th>Statut</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- [ Hover-table ] end -->
+                                {% endif %}
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{# {% block javascripts %}
+    <script src="{{ asset('assets/js/_alert.js') }}"></script>
+{% endblock %} #}

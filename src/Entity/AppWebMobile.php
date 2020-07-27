@@ -6,9 +6,11 @@ use App\Repository\AppWebMobileRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AppWebMobileRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class AppWebMobile
 {
@@ -21,28 +23,39 @@ class AppWebMobile
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *      max=255, 
+     *      maxMessage="L'url de la page web ne peut pas contenir plus de 255 caractères"
+     * )
      */
     private $webPageUrl;
 
     /**
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @Assert\Length(
+     *      max=45, 
+     *      maxMessage="Le titre de la page web ne peut pas contenir plus de 45 caractères"
+     * )
      */
     private $webPageUrlTitle;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *      max=255, 
+     *      maxMessage="Le profil mobile ne peut pas contenir plus de 255 caractères"
+     * )
      */
     private $mobile_screen;
 
     /**
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @Assert\Length(
+     *      max=45, 
+     *      maxMessage="Le titre du profil mobile ne peut pas contenir plus de 45 caractères"
+     * )
      */
     private $mobileScreenTitle;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Advertisement::class, mappedBy="appWebMobile")
-     */
-    private $advertisements;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -52,17 +65,47 @@ class AppWebMobile
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *      max=255, 
+     *      maxMessage="La description ne peut pas contenir plus de 255 caractères"
+     * )
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @Assert\Length(
+     *      max=45, 
+     *      maxMessage="Le statut ne peut pas contenir plus de 45 caractères"
+     * )
      */
     private $status;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Advertisement::class, inversedBy="appWebMobile", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $advertisement;
+
     public function __construct()
     {
-        $this->advertisements = new ArrayCollection();
+    }
+
+    /**
+     * Automatically assign the current date
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function prePersist() {
+        if(empty($this->dateOfDemand)) {
+            $this->dateOfDemand = new \DateTime();
+        }
+        if(empty($this->status)) {
+            $this->status = "En attente de validation";
+        }
     }
 
     public function getId(): ?int
@@ -90,37 +133,6 @@ class AppWebMobile
     public function setMobileScreen(?string $mobile_screen): self
     {
         $this->mobile_screen = $mobile_screen;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Advertisement[]
-     */
-    public function getAdvertisements(): Collection
-    {
-        return $this->advertisements;
-    }
-
-    public function addAdvertisement(Advertisement $advertisement): self
-    {
-        if (!$this->advertisements->contains($advertisement)) {
-            $this->advertisements[] = $advertisement;
-            $advertisement->setAppWebMobile($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAdvertisement(Advertisement $advertisement): self
-    {
-        if ($this->advertisements->contains($advertisement)) {
-            $this->advertisements->removeElement($advertisement);
-            // set the owning side to null (unless already changed)
-            if ($advertisement->getAppWebMobile() === $this) {
-                $advertisement->setAppWebMobile(null);
-            }
-        }
 
         return $this;
     }
@@ -181,6 +193,18 @@ class AppWebMobile
     public function setStatus(?string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getAdvertisement(): ?Advertisement
+    {
+        return $this->advertisement;
+    }
+
+    public function setAdvertisement(Advertisement $advertisement): self
+    {
+        $this->advertisement = $advertisement;
 
         return $this;
     }

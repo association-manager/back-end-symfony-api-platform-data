@@ -1,0 +1,119 @@
+{% extends "base.html.twig" %}
+{% block title %}Applications{% endblock %}
+
+
+{% block body %}
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ADVERTISER') %}
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                            <div class="page-block">
+                                <div class="row align-items-center">
+                                    <div class="col-md-12">
+                                        <div class="page-header-title">
+                                            {# <h5 class="m-b-10">Détails</h5> #}
+                                        </div>
+                                        <ul class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                            <li class="breadcrumb-item"><a href="javascript:">Application / 
+                                            {% if appWebMobile.webPageUrlTitle is null %}
+                                                {{ appWebMobile.getMobileScreenTitle }}
+                                                {% else %}
+                                                    {{ appWebMobile.webPageUrlTitle }}
+                                            {% endif %}
+                                            / Détails</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- [ breadcrumb ] end -->
+                        <div class="main-body">
+                            <div class="page-wrapper">
+                                <!-- [ Main Content ] start -->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>
+                                                    {% if appWebMobile.webPageUrlTitle is not null %}
+                                                        {{ appWebMobile.webPageUrlTitle|capitalize }}
+                                                        {% else %}
+                                                            {{ appWebMobile.mobileScreenTitle|capitalize }}
+                                                    {% endif %}
+                                                </h5>
+                                            </div>
+                                            <div class="card-block">
+                                                {% if appWebMobile.webPageUrlTitle is not null %}
+                                                    <h6>
+                                                        Page Web
+                                                        <span class="badge badge-secondary">
+                                                            {{ appWebMobile.webPageUrlTitle }} | {{ appWebMobile.webPageUrl }}
+                                                        </span>
+                                                    </h6>
+                                                    <hr>
+                                                {% endif %}
+                                                {% if appWebMobile.mobileScreenTitle is not null %}
+                                                    <h6>
+                                                        Application mobile
+                                                        <span class="badge badge-secondary">
+                                                            {{ appWebMobile.mobileScreenTitle }} | {{ appWebMobile.getMobileScreen }}
+                                                        </span>
+                                                    </h6>
+                                                {% endif %}
+                                                <hr>
+                                                <h6>
+                                                    Date de la demande
+                                                    <span class="badge badge-secondary">
+                                                        {{ appWebMobile.dateOfDemand ? appWebMobile.dateOfDemand|date('Y-m-d H:i:s') : '' }}
+                                                    </span>
+                                                </h6>
+                                                <hr>
+                                                <h6>
+                                                    Statut
+                                                    <span class="badge badge-secondary">
+                                                        {{ appWebMobile.getMobileScreen }}
+                                                    </span>
+                                                </h6>
+                                                <hr>
+                                                {% if appWebMobile.description is not null %}
+                                                    <h6>
+                                                        Description 
+                                                        <span class="badge badge-secondary">
+                                                            {{ appWebMobile.description }}
+                                                        </span>
+                                                    </h6>
+                                                {% endif %}
+                                            </div>
+                                            <div class="card-block">
+                                                {% if is_granted('ROLE_ADMIN') %}
+                                                    <a href="{{ path('app_web_mobile_admin_edit', {'id': appWebMobile.id}) }}" class="btn btn-secondary btn-sm">Modifier cette application</a>
+                                                    <a href="{{ path('app_web_mobile_admin_delete', {'id': appWebMobile.id}) }}" class="btn btn-danger btn-sm">Supprimer cette application</a>
+                                                    <a href="{{ path('app_web_mobile_admin_index') }}" class="btn btn-success btn-sm">Applications</a>
+                                                    {% elseif is_granted('ROLE_ADVERTISER') %}
+                                                        <a href="{{ path('app_web_mobile_advertiser_edit', {'id': appWebMobile.id}) }}" class="btn btn-secondary btn-sm">Modifier cette application</a>
+                                                        <a href="{{ path('app_web_mobile_advertiser_delete', {'id': appWebMobile.id}) }}" class="btn btn-danger btn-sm">Supprimer cette application</a>
+                                                        <a href="{{ path('app_web_mobile_index', {'id': appWebMobile.advertisement.id}) }}" class="btn btn-success btn-sm">Applications</a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- [ Main Content ] end -->
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/_alert.js') }}"></script>
+{% endblock %}
