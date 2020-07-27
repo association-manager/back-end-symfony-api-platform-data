@@ -32,7 +32,7 @@ openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
 
 ### Google DNS for gmail service :
 ````Add the Google DNS to use gmail same as .env in your .env.local
-MAILER_DSN=gmail://asso.manage@gmail.com:dslmkubjzqnqkyoj@localhost
+MAILER_DSN=gmail
 ````
 
 ### Advertisement Manager API Routes :
