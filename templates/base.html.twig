@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="{{ asset('assets/plugins/animation/css/animate.min.css') }}">
         <!-- vendor css -->
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-        
+        <link rel="stylesheet" href="{{ asset('build/app.css') }}">
         <!--All custom css can be add in this block-->
         {% block stylesheets %}{% endblock %}
 
@@ -34,14 +34,16 @@
         <!-- [ Header ] start -->
         {% include "/ad_admin/partials/_header_nav.html.twig" %}
         <!-- [ Header ] end -->
-
+       
         {% block body %}{% endblock %}
 
 
         <!--Default JavaScript-->
+        <script src="{{ asset('build/app.js') }}"></script>
         <script src="{{ asset('assets/js/vendor-all.min.js') }}"></script>
         <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('assets/js/pcoded.min.js') }}"></script>
+        <script src="{{ asset('assets/js/_alert.js') }}"></script>
 
         <!--All custom JS can be add in this block-->
         {% block javascripts %}{% endblock %}

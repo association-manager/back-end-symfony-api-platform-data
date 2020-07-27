@@ -1,16 +1,48 @@
+{# <pre>
+    {{ dump(app.user) }}
+</pre> #}
 <nav class="pcoded-navbar">
     <div class="navbar-wrapper">
         <div class="navbar-brand header-logo">
-            <a href="{{ path('app_login') }}" class="b-brand">
+            <a href="{{ path('admin_advertisement_home') }}" class="b-brand">
                 <img src="{{ asset('assets/images/logo.png') }}" alt="Association Manager - Advertisement Management">
             </a>
             <a class="mobile-menu" id="mobile-collapse" href="javascript:"><span></span></a>
         </div>
         <div class="navbar-content scroll-div">
             <ul class="nav pcoded-inner-navbar">
-                <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project" class="nav-item active">
-                    <a href="{{ path('app_login') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
+                <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project" class="nav-item">
+                    <a href="{{ path('admin_advertisement_home') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
                 </li>
+
+                {# Start New NavBar #}
+                {% if app.user is empty or app.user is null %}
+                        <h6 style="color: red !important; font-weigth: bold !important;">Vous n'êtes pas autorisé à afficher ce contenu.</6>
+                        {% elseif app.user.roles is same as (['ROLE_ADMIN', 'ROLE_USER']) %}
+                            <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item">
+                                <a href="{{ path('advertisement_index') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-image"></i></span><span class="pcoded-mtext">Annonces</span></a>
+                            </li>
+                            <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item">
+                                <a href="{{ path('app_web_mobile_admin_index') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-pocket"></i></span><span class="pcoded-mtext">Applications</span></a>
+                            </li>
+                            <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item">
+                                <a href="{{ path('category_index') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-command"></i></span><span class="pcoded-mtext">Catégories</span></a>
+                            </li>
+                            {% elseif app.user.roles is same as (['ROLE_ADVERTISER' , 'ROLE_USER']) %}
+                                <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item">
+                                    <a href="{{ path('advertisement_index') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-image"></i></span><span class="pcoded-mtext">Annonces</span></a>
+                                </li>
+                                {% else %}
+                            <h6 style="color: red !important; font-weigth: bold !important;">Vous n'êtes pas autorisé à afficher les autres sections.</6>
+                {% endif %}
+
+               
+                
+                
+
+                {#
+
+
                 <li class="nav-item pcoded-menu-caption">
                     <label>UI Element</label>
                 </li>
@@ -54,6 +86,9 @@
                 </li>
                 <li data-username="Sample Page" class="nav-item"><a href="sample-page.html" class="nav-link"><span class="pcoded-micon"><i class="feather icon-sidebar"></i></span><span class="pcoded-mtext">Sample page</span></a></li>
                 <li data-username="Disabled Menu" class="nav-item disabled"><a href="javascript:" class="nav-link"><span class="pcoded-micon"><i class="feather icon-power"></i></span><span class="pcoded-mtext">Disabled menu</span></a></li>
+            
+
+            #}
             </ul>
         </div>
     </div>
