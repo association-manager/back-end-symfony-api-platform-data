@@ -19,6 +19,17 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
+    // Select subtype catégorie if not null to advertisement form type
+    public function getCategorySubTypeIfNotNull()
+    {
+        $qb = $this->createQueryBuilder('cst');
+
+        $qb->where('cst.subType IS NOT NULL');
+
+        return $qb;
+    }
+
+
     // /**
     //  * @return Category[] Returns an array of Category objects
     //  */
