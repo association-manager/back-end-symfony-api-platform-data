@@ -33,6 +33,22 @@ class APIFixtures extends BaseFixture
     {
         $this->manager = $manager;
 
+        // Start User Admin
+        $userAdmin = new User();
+        $hash = $this->encoder->encodePassword($userAdmin, "adminPassword");
+        $userAdmin->setFirstName($this->faker->firstName())
+            ->setLastName($this->faker->lastName)
+            ->setEmail('admin@admin.com')
+            ->setCreatedAt($this->faker->dateTime)
+            ->setMobile('+336056368795')
+            ->setSex($this->faker->randomElement(['male', 'female', '']))
+            ->setDob($this->faker->dateTime)
+            ->setPassword($hash)
+            ->setDataUsageAgreement($this->faker->randomElement([1, 0]))
+            ->setRoles(['ROLE_ADMIN']);
+        $this->manager->persist($userAdmin);
+        // End User Admin
+
         $this->createMany(Association::class, 10, function (Association $association, $count) {
 
             // Start Category - fixtures
@@ -64,6 +80,7 @@ class APIFixtures extends BaseFixture
 
             // Association User Custom Phone
             $userCustomPhone = (6023156326 + $count);
+
             // Association User
             $user = new User();
             $hash = $this->encoder->encodePassword($user, "password");
