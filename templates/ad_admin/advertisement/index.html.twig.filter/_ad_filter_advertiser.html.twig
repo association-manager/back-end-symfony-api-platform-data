@@ -1,0 +1,50 @@
+{% for advertisement in advertisementsByUser %}
+
+    {% set objectToDelete = path('advertisement_advertiser_delete', {'id': advertisement.id}) %}
+    {% set objectToDeleteToken = csrf_token('delete' ~ advertisement.id) %}
+
+    <tr>
+        <td scope="row">{{ advertisement.id }}</td>
+        <td>{{ advertisement.title }}</td>
+        <td>
+            {% if advertisement.status %}
+                {{ advertisement.status }}
+            {% endif %}
+        </td>
+        <td>{{ advertisement.user.firstName }} {{ advertisement.user.lastName|upper }}</td>
+        <td>{{ advertisement.createdAt ? advertisement.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+        {# <td>
+            {% if advertisement.advertisementFiles|length > 0 %}
+                {% if advertisement.advertisementFiles|first %}
+                    <div><img src="https://db4dokdxdk085.cloudfront.net/68x68/advertisement_picture/{{ (advertisement.advertisementFiles|first).picture }}"></div>
+                {% endif %}
+            {% endif %}
+        </td> #}
+        <td>
+            {% if is_granted('ROLE_ADVERTISER') %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-info" onclick="location.href='{{ path('advertisement_advertiser_show', {'id': advertisement.id}) }}'">
+                        <i class="fas fa-eye">
+                        </i>
+                    </button>
+                    <button type="button" class="btn btn-info" onclick="location.href='{{ path('advertisement_advertiser_edit', {'id': advertisement.id}) }}'">
+                        <i class="fas fa-pencil-alt">
+                        </i>
+                    </button>
+                    {{ include('ad_admin/partials/_delete_form.html.twig') }}
+                    {% if advertisement.appWebmobile is null %}
+                        <button type="button" class="btn btn-info" onclick="location.href='{{ path('app_web_mobile_new', {'id': advertisement.id}) }}'">
+                            <i class="fas fa-plus">
+                            </i>
+                            App
+                        </button>
+                        {% else %}
+                            <button type="button" class="btn btn-info" onclick="location.href='{{ path('app_web_mobile_index', {'id': advertisement.id}) }}'">
+                                App
+                            </button>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}

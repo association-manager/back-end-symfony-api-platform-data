@@ -1,0 +1,46 @@
+{% block _advertisement_advertisementFiles_widget %}
+    <p>Cliquez sur le bouton suivant pour ajouter une ou plusieurs bannière(s)</p>
+
+    {{ form_widget(form) }}
+    
+    <input type="hidden" id="widgets-counter" value="0">
+
+    <button type="button" id="add-advertisementFiles" class="btn btn-secondary mr-2">Ajouter une bannière</button><hr>
+{% endblock %}
+
+{% block _advertisement_advertisementFiles_entry_row %}
+    {{ form_widget(form) }}
+{% endblock %}
+
+{% block _advertisement_advertisementFiles_entry_widget %}
+    <div class="div-group" id="block_{{id}}">
+    {{ form_errors(form) }}
+        <label for="pictureSize">Choisissez un format</label>
+        <div class="form-group" id="pictureSize">
+            {{ form_widget(form.pictureSize) }}
+            {{ form_errors(form.pictureSize) }}
+        </div>
+        <label for="image">Choisissez une image</label>
+        <div class="form-group" id="image">
+            {{ form_widget(form.imageFile) }}
+            {{ form_errors(form.imageFile) }}
+        </div>
+        {% if form.vars.value %}
+            {% if form.vars.value.picture %}
+                    <div>
+                        {# <img src="https://db4dokdxdk085.cloudfront.net/{{ form.vars.value.pictureSize }}/advertisement_picture/{{ form.vars.value.picture }}" alt="TEST"> #}
+                        <img src="https://advertisement-manager.s3.eu-west-3.amazonaws.com/advertisement_picture/{{ form.vars.value.picture }}">
+                    </div>
+                    {% else %}  
+                        <div>
+                            Aucune bannière pour l'instant
+                        </div>
+            {% endif %}
+        {% endif %}
+        <br>
+        <div class="col-2">
+            <button type="button" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger">X</button>
+        </div>
+        <hr>
+    </div>
+{% endblock %}

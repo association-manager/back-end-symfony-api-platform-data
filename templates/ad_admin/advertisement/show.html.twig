@@ -1,0 +1,167 @@
+{% extends "base.html.twig" %}
+{% block title %}
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ADVERTISER') %}
+        Annonce
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ADVERTISER') %}
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                            <div class="page-block">
+                                <div class="row align-items-center">
+                                    <div class="col-md-12">
+                                        <div class="page-header-title">
+                                            {# <h5 class="m-b-10">Détails</h5> #}
+                                        </div>
+                                        <ul class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                            <li class="breadcrumb-item"><a href="javascript:">Annonce / {{ advertisement.title }} / Détails</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- [ breadcrumb ] end -->
+                        <div class="main-body">
+                            <div class="page-wrapper">
+                                <!-- [ Main Content ] start -->
+                                <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5>{{ advertisement.title|capitalize }}</h5>
+                                                </div>
+
+                                                
+                                                <div class="card-block">
+                                                    <h6>
+                                                        {% if advertisement.categories|length > 1 %}
+                                                            Catégories :
+                                                            {% else %}
+                                                                Catégorie:
+                                                        {% endif %}
+                                                        <span class="badge badge-secondary">
+                                                            {% if advertisement.categories|length > 0 %}
+                                                                {% for category in advertisement.categories %}
+                                                                    {% if loop.length > 0 and loop.length < 2 %}
+                                                                        {{ category.subType }}
+                                                                        {% elseif loop.last %}
+                                                                            {{ category.subType }}
+                                                                            {% else %}
+                                                                                {{ category.subType }} | 
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                                {% else %}
+                                                                    Cette annonce n'appartient à aucune catégorie.
+                                                            {% endif %}
+                                                        </span>
+                                                    </h6>
+                                                    <hr>
+                                                    <h6>
+                                                        Audience
+                                                        <span class="badge badge-secondary">
+                                                            {{ advertisement.audience }}
+                                                        </span>
+                                                    </h6>
+                                                    <hr>
+                                                    {% if advertisement.appWebMobile is not null %}
+                                                        {% if advertisement.appWebMobile.webPageUrlTitle and advertisement.appWebMobile.getMobileScreenTitle %}
+                                                            <h6>Site Web :<span class="badge badge-secondary">{{ advertisement.appWebMobile.webPageUrlTitle }}</span></h6><hr>
+                                                            <h6>Mobile :<span class="badge badge-secondary">{{ advertisement.appWebMobile.getMobileScreenTitle }}</span></h6>
+                                                            {% elseif advertisement.appWebMobile.webPageUrl is null and advertisement.appWebMobile.getMobileScreenTitle is not null %}
+                                                                {{ advertisement.appWebMobile.getMobileScreenTitle }}<hr>
+                                                                {% elseif advertisement.appWebMobile.getMobileScreenTitle is null and advertisement.appWebMobile.webPageUrlTitle is not null %}
+                                                                    {{ advertisement.appWebMobile.getMobileScreenTitle }}
+                                                                    {% else %}
+                                                                        Cette annonce n'est gérée dans aucune Application...<hr>
+                                                        {% endif %}
+                                                        <hr>
+                                                    {% endif %}
+                                                    <p>{{advertisement.details }}</p>
+                                                </div>
+
+                                                {# Start ad images #}
+                                                {% if advertisement.advertisementFiles|length > 0 %}
+                                                    <div class="card-block">
+                                                        <div>
+                                                            {% if advertisement.advertisementFiles|length > 0 %}
+                                                                {% for advertisementFile in advertisement.advertisementFiles %}
+                                                                    {% if advertisementFile.pictureSize %}
+                                                                        <h4>BANNIÈRE {{ advertisementFile.pictureSize }}<h4>
+                                                                    {% endif %}
+                                                                    <br>
+                                                                    {% if advertisementFile.picture %}
+                                                                        <img class="d-block" src="{{ vich_uploader_asset(advertisementFile, 'imageFile') }}" alt="{{ advertisementFile.advertisement.title }}{{ advertisementFile.pictureSize }}">
+                                                                        <hr>
+                                                                        {% elseif loop.last %}
+                                                                        {% if advertisementFile.picture %}
+                                                                        <img class="d-block" src="{{ vich_uploader_asset(advertisementFile, 'imageFile') }}" alt="{{ advertisementFile.advertisement.title }}{{ advertisementFile.pictureSize }}">
+                                                                    {% endif %}
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        <div>
+                                                    </div>
+                                                        {% else %}
+                                                        Aucune annonce n'a encore été enregistrée, cliquez <a href="{{ path('advertisement_new')}}">ici...</a> pour en ajouter.
+                                                {% endif %}
+                                                
+                                                {# End ad image #}
+                                                {# Start vidéo #}
+                                                {% if advertisement.advertisementFiles|length > 0 %}
+                                                    <div class="card-block">
+                                                        {% for advertisementFile in advertisement.advertisementFiles %}
+                                                            {% if advertisementFile.video  %}
+                                                            <h4>BANNIÈRE VIDÉO<h4>
+                                                            <br>
+                                                                    <video title="{{ advertisementFile.advertisement.title }}" preload="auto" width="336" height="280" 
+                                                                    controls autoplay>
+                                                                        <source src="https://advertisement-manager.s3.eu-west-3.amazonaws.com/advertisement_video/{{ advertisementFile.video }}" type="video/mp4">
+                                                                        Nous sommes désolés, votre navigateur ne supporte pat les vidéos intégrées.
+                                                                    </video>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% else %}
+                                                        <div>
+                                                            Aucune vidéo pour cette annonce
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                {# End vidéo #}
+
+                                                <div class="card-block">
+                                                    {% if is_granted('ROLE_ADMIN') %}
+                                                        <a href="{{ path('advertisement_admin_edit', {'id': advertisement.id}) }}" class="btn btn-secondary btn-sm">Modifier cette annonce</a>
+                                                        {% elseif is_granted('ROLE_ADVERTISER') %}
+                                                            <a href="{{ path('advertisement_advertiser_edit', {'id': advertisement.id}) }}" class="btn btn-secondary btn-sm">Modifier cette annonce</a>
+                                                    {% endif %}
+                                                    <a href="{{ path('advertisement_index') }}" class="btn btn-success btn-sm">Annonces</a>
+                                                    <a href="{{ path('advertisement_new') }}" class="btn btn-primary btn-sm">Créer une annonce</a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                </div>
+                                <!-- [ Main Content ] end -->
+                            </div>
+                        </div>
+                        {% else %}
+                        Vous n'avez pas les droits nécessaires pour afficher ce contenu.
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/_alert.js') }}"></script>
+{% endblock %}

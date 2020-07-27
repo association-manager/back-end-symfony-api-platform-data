@@ -1,0 +1,102 @@
+{% extends "base.html.twig" %}
+{% block title %}
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ADVERTISER')%}
+        {% if advertisement.id is not null %}
+            Modification de l'annonce {{ advertisement.title }}
+            {% else %}
+                Création d'une nouvelle annonce
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% form_theme form with [
+    'ad_admin/advertisement/_advertisement_file_collection.html.twig'
+] %}
+
+{% block body %}
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ADVERTISER') %}
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>
+                                                    {% if advertisement.id is not null %}
+                                                        Modification de l'annonce {{ advertisement.title }}
+                                                        {% else %}
+                                                            Création d'une nouvelle annonce
+                                                    {% endif %}
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+                                                            {# <form role="form"> #}
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.title) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.status) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.categories) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.audience) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.details) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.adVideoFiles) }}
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.advertisementFiles) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_rest(form) }}
+                                                                </div>
+
+                                                                <button type="submit" class="btn btn-success mr-2">
+                                                                    {% if advertisement.id is not null %}
+                                                                        Enregistrer les modifications
+                                                                    {% else %}
+                                                                        Enregistrer
+                                                                    {% endif %}
+                                                                </button>
+                                                                <button class="btn btn-danger" type="reset">Annuler</button>
+                                                                <a href="{{ path('advertisement_index') }}" class="btn btn-secondary">Annonces</a>
+                                                            {# </form> #}
+                                                        {{ form_end(form) }}    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    	<script src="{{ asset('assets/js/advertisement-file.js') }}"></script>
+{% endblock %}
