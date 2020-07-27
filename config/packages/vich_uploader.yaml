@@ -1,0 +1,28 @@
+vich_uploader:
+    db_driver: orm
+    storage: gaufrette
+    mappings:
+        ad_picture:
+            inject_on_load: true
+            uri_prefix: "%env(AWS_S3_BASE_URL)%/advertisement_picture"
+            # uri_prefix: "%env(AWS_S3_BASE_URL)%/%env(AWS_S3_BUCKET_NAME)%/document"
+            upload_destination: picture_fs
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            delete_on_update:   true
+            delete_on_remove:   true 
+        ad_video:
+            inject_on_load: true
+            uri_prefix: "%env(AWS_S3_BASE_URL)%/advertisement_video"
+            # uri_prefix: "%env(AWS_S3_BASE_URL)%/%env(AWS_S3_BUCKET_NAME)%/document"
+            upload_destination: video_fs
+            namer: Vich\UploaderBundle\Naming\Base64Namer
+            delete_on_update:   true
+            delete_on_remove:   true 
+        ad_video_poster:
+            inject_on_load: true
+            uri_prefix: "%env(AWS_S3_BASE_URL)%/advertisement_video_poster"
+            # uri_prefix: "%env(AWS_S3_BASE_URL)%/%env(AWS_S3_BUCKET_NAME)%/document"
+            upload_destination: video_poster_fs
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            delete_on_update:   true
+            delete_on_remove:   true

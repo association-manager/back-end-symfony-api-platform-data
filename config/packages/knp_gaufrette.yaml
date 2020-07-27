@@ -1,0 +1,36 @@
+knp_gaufrette:
+    stream_wrapper: ~
+    adapters:
+        picture_adapter:
+            aws_s3:
+                service_id: ct_file_store.s3
+                bucket_name: '%env(AWS_S3_BUCKET_NAME)%'
+                detect_content_type: true
+                options:
+                    create: true
+                    directory: advertisement_picture
+
+        video_adapter:
+            aws_s3:
+                service_id: ct_file_store.s3
+                bucket_name: '%env(AWS_S3_BUCKET_NAME)%'
+                detect_content_type: true
+                options:
+                    create: true
+                    directory: advertisement_video
+
+        video_poster_adapter:
+            aws_s3:
+                service_id: ct_file_store.s3
+                bucket_name: '%env(AWS_S3_BUCKET_NAME)%'
+                detect_content_type: true
+                options:
+                    create: true
+                    directory: advertisement_video_poster
+    filesystems:
+        picture_fs:
+            adapter:    picture_adapter
+        video_fs:
+            adapter:    video_adapter
+        video_poster_fs:
+            adapter:    video_poster_adapter
