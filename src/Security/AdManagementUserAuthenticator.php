@@ -24,7 +24,7 @@ class AdManagementUserAuthenticator extends AbstractFormLoginAuthenticator imple
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
+    public const LOGIN_ROUTE = 'app_advertisement_login';
 
     private $entityManager;
     private $urlGenerator;
@@ -98,7 +98,7 @@ class AdManagementUserAuthenticator extends AbstractFormLoginAuthenticator imple
 
         // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
         // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
-        return new RedirectResponse($this->urlGenerator->generate('home'));
+        return new RedirectResponse($this->urlGenerator->generate('admin_advertisement_home'));
     }
 
     protected function getLoginUrl()

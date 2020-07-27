@@ -1,0 +1,54 @@
+{% block _user_addresses_widget %}
+    <p>Cliquez sur le bouton suivant pour ajouter une ou plusieurs adresse(s)</p>
+
+    {{ form_widget(form) }}
+    
+    <input type="hidden" id="widgets-counter" value="0">
+
+    <button type="button" id="add-addresses" class="btn btn-secondary mr-2">Ajouter une adresse</button><hr>
+{% endblock %}
+
+{% block _user_addresses_entry_row %}
+    {{ form_widget(form) }}
+{% endblock %}
+
+{% block _user_addresses_entry_widget %}
+    <div class="div-group" id="block_{{id}}">
+    {{ form_errors(form) }}
+        <label for="addressLine1">Adresse</label>
+        <div class="form-group" id="addressLine1">
+            {{ form_widget(form.addressLine1) }}
+            {{ form_errors(form.addressLine1) }}
+        </div>
+        <label for="addressLine2">Complément d'adresse</label>
+        <div class="form-group" id="addressLine2">
+            {{ form_widget(form.addressLine2) }}
+            {{ form_errors(form.addressLine2) }}
+        </div>
+        <label for="postalCode">Code postal</label>
+        <div class="form-group" id="postalCode">
+            {{ form_widget(form.postalCode) }}
+            {{ form_errors(form.postalCode) }}
+        </div>
+        <label for="city">Ville</label>
+        <div class="form-group" id="city">
+            {{ form_widget(form.city) }}
+            {{ form_errors(form.city) }}
+        </div>
+        <label for="country">Country</label>
+        <div class="form-group" id="country">
+            {{ form_widget(form.country) }}
+            {{ form_errors(form.country) }}
+        </div>
+        <label for="type">Type d'adresse</label>
+        <div class="form-group" id="type">
+            {{ form_widget(form.type) }}
+            {{ form_errors(form.type) }}
+        </div>
+        <br>
+        <div class="col-2">
+            <button type="button" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger">X</button>
+        </div>
+        <hr>
+    </div>
+{% endblock %}

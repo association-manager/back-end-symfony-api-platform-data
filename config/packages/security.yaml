@@ -42,9 +42,9 @@ security:
                 authenticators:
                     - App\Security\AdManagementUserAuthenticator
             logout:
-                path: app_logout
+                path: app_advertisement_logout
                 # where to redirect after logout
-                # target: app_any_route
+                target: app_advertisement_login
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -74,3 +74,11 @@ security:
         - { path: ^/api/plannings, roles: IS_AUTHENTICATED_FULLY  }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        # START ACCESS CONTROL TO ADVETISEMENT MANAGER
+        # https://localhost:8000/admin/regie-publicitaire
+        - { path: /admin/regie-publicitaire/connexion, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # - { path: '^/admin', roles: [ROLE_ADMIN, ROLE_ADVERTISER] }
+
+    role_hierarchy:
+            ROLE_ADVERTISER:       ROLE_USER
+            ROLE_ADMIN: [ROLE_ADVERTISER, ROLE_ALLOWED_TO_SWITCH]

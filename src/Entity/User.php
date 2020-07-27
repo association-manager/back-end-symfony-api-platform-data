@@ -166,10 +166,7 @@ class User implements UserInterface
      * Getting and setting user password befor enconding by password property
      *
      * @var string
-     * @Assert\NotBlank(message="Le mot de passe est obligatoire")
      * @Assert\Length(
-     *      min=8, 
-     *      maxMessage="Vous ne pouvez pas saisir moins de 8 caractères",
      *      max=255, 
      *      maxMessage="Vous ne pouvez pas saisir plus de 255 caractères"
      * )
@@ -191,7 +188,7 @@ class User implements UserInterface
     private $fileManagers;
 
     /**
-     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Address::class, mappedBy="user")
      * @Groups({"user_read", "member_read"})
      * @ApiSubresource
      * @Assert\Valid

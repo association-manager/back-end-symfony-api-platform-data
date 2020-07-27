@@ -1,0 +1,84 @@
+{% extends "base.html.twig" %}
+{% block title %}
+    {% if app.user %}
+        Mon profil {{ app.user.firstName }}
+    {% endif %}
+{% endblock %}
+
+{% form_theme form 'security/_address_collection.html.twig' %}
+
+{% block body %}
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>
+                                                {% if app.user %}
+                                                    {{ app.user.firstName|upper }} {{ app.user.lastName }}
+                                                {% endif %}
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                   {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+                                                        {# <form role="form"> #}
+                                                            <div class="form-group">
+                                                                {{ form_row(form.firstName) }}
+                                                            </div>
+                                                            <div class="form-group">
+                                                                {{ form_row(form.lastName) }}
+                                                            </div>
+                                                            <div class="form-group">
+                                                                {{ form_row(form.email) }}
+                                                            </div>
+                                                            <div class="form-group">
+                                                                {{ form_row(form.mobile) }}
+                                                            </div>
+                                                            <label for="addresses">
+                                                                {% if form.addresses|length > 1 %}
+                                                                    Adresses
+                                                                {% else %}
+                                                                    Adresse
+                                                                {% endif %}
+                                                            </label>
+                                                            <div class="form-group" id="addresses">
+                                                                {{ form_row(form.addresses) }}
+                                                            </div>
+                                                            <div class="form-group">
+                                                                {{ form_rest(form) }}
+                                                            </div>
+
+                                                            <button type="submit" class="btn btn-success mr-2">Enregistrer</button>
+                                                        {# </form> #}
+                                                    {{ form_end(form) }}    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    	<script src="{{ asset('assets/js/user-address.js') }}"></script>
+{% endblock %}
