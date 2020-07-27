@@ -7,8 +7,10 @@ use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+// use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -27,6 +29,7 @@ class AdCategoryController extends AbstractController
     }
 
     /**
+     * @Security("is_granted('ROLE_ADMIN')", message="Vous devez être un admin pour consulter cette page")
      * @Route("/categories", name="category_index", methods={"GET"})
      */
     public function index(): Response
@@ -39,6 +42,7 @@ class AdCategoryController extends AbstractController
     }
 
     /**
+     * @Security("is_granted('ROLE_ADMIN')", message="Vous devez être un admin pour consulter cette page")
      * @Route("/categories/creer", name="category_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
@@ -63,6 +67,18 @@ class AdCategoryController extends AbstractController
     }
 
     /**
+     * @Security("is_granted('ROLE_ADMIN')", message="Vous devez être un admin pour consulter cette page")
+     * @Route("/categories/{id}/afficher", name="category_show", methods={"GET"})
+     */
+    public function show(Category $category): Response
+    {
+        return $this->render('ad_admin/category/show.html.twig', [
+            'category' => $category,
+        ]);
+    }
+
+    /**
+     * @Security("is_granted('ROLE_ADMIN')", message="Vous devez être un admin pour consulter cette page")
      * @Route("/categories/{id}/modifier", name="category_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Category $category): Response
@@ -85,6 +101,7 @@ class AdCategoryController extends AbstractController
     }
 
     /**
+     * @Security("is_granted('ROLE_ADMIN')", message="Vous devez être un admin pour consulter cette page")
      * @Route("/categories/{id}/supprimer", name="category_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Category $category): Response

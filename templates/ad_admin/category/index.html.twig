@@ -1,5 +1,9 @@
 {% extends "base.html.twig" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}
+    {% if is_granted('ROLE_ADMIN') %}
+        Catégories
+    {% endif %}
+{% endblock %}
 
 {% block body %}
     <!-- [ Main Content ] start -->
@@ -9,7 +13,7 @@
                 <div class="pcoded-inner-content">
                     <!-- [ breadcrumb ] start -->
 
-                    {% include "/ad_admin/partials/_alert.html.twig" %}
+                    {# {% include "/ad_admin/partials/_alert.html.twig" %} #}
 
                     <!-- [ breadcrumb ] end -->
                     <div class="main-body">
@@ -18,95 +22,76 @@
                             <div class="row">
                                 <!--[ year  sales section ] end-->
                                 <!-- [ Hover-table ] start -->
-                                <div class="col-xl-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h5>Catégories</h5>
-                                            <a class="btn btn-success" href="{{ path('category_new') }}">
-                                                <i class="fas fa-plus">
-                                                </i>
-                                                Ajouter
-                                            </a>
-                                        </div>
-                                        <div class="card-block table-border-style">
-                                            <div class="table-responsive">
-                                                <table class="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Nom</th>
-                                                            <th>Type</th>
-                                                            <th>Sous type</th>
-                                                            <th>Détails</th>
-                                                            <th>Actions</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% if categories|length > 0 %}
-                                                                {% for category in categories %}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <div class="col-xl-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>Catégories</h5>
+                                                <a class="btn btn-success" href="{{ path('category_new') }}">
+                                                    <i class="fas fa-plus">
+                                                    </i>
+                                                    Ajouter
+                                                </a>
+                                            </div>
+                                            <div class="card-block table-border-style">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Nom</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% if categories|length > 0 %}
+                                                                    {% for category in categories %}
 
-                                                                    {% set objectToDelete = path('category_delete', {'id': category.id}) %}
-													                {% set objectToDeleteToken = csrf_token('delete' ~ category.id) %}
+                                                                        {% set objectToDelete = path('category_delete', {'id': category.id}) %}
+                                                                        {% set objectToDeleteToken = csrf_token('delete' ~ category.id) %}
 
+                                                                        <tr>
+                                                                            <td scope="row">{{ category.id }}</td>
+                                                                            <td>{{ category.name }}</td>
+                                                                            <td>
+
+                                                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                                                <button type="button" class="btn btn-info" onclick="location.href='{{ path('category_show', {'id': category.id}) }}'">
+                                                                                    <i class="fas fa-eye">
+                                                                                    </i>
+                                                                                </button>
+                                                                                <button type="button" class="btn btn-info" onclick="location.href='{{ path('category_edit', {'id': category.id}) }}'">
+                                                                                    <i class="fas fa-pencil-alt">
+                                                                                    </i>
+                                                                                </button>
+                                                                                {{ include('ad_admin/partials/_delete_form.html.twig') }}
+                                                                            </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tr>
+                                                                    {% endfor %}
+                                                                {% else %}
                                                                     <tr>
-                                                                        <th scope="row">{{ category.id }}</th>
-                                                                        <td>{{ category.name }}</td>
-                                                                        <td>{{ category.type }}</td>
-                                                                        <td>
-                                                                            {% if category.subType %}
-                                                                                {{ category.subType}}
-                                                                            {% endif %}
+                                                                        <td valign="top" colspan="6">
+                                                                            Aucune catégorie n'a encore été enregistrée, cliquez <a href="{{ path('category_new')}}">ici...</a> pour en ajouter.
                                                                         </td>
-                                                                        <td>
-                                                                            {% if category.details %}
-                                                                                {% if category.details|length > 50 %}
-                                                                                    {{ category.details|striptags|slice(0, 50)|raw}}{{"..."}}
-                                                                                    {% else %}
-                                                                                        {{ category.details }}
-                                                                                {% endif %}
-                                                                            {% endif %}
-                                                                        </td>
-                                                                        <td>
-                                                                        
-                                                                        {# Start action delete #}
-
-                                                                        {# End action delete #}
-
-                                                                        <div class="btn-group" role="group" aria-label="Basic example">
-                                                                            <button type="button" class="btn btn-info" onclick="location.href='{{ path('category_edit', {'id': category.id}) }}'">
-                                                                                <i class="fas fa-pencil-alt">
-                                                                                </i>
-                                                                            </button>
-                                                                            {{ include('ad_admin/partials/_delete_form.html.twig') }}
-                                                                        </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    </tr>
-                                                                {% endfor %}
-                                                            {% else %}
-                                                                <tr>
-                                                                    <td valign="top" colspan="6">
-                                                                        Aucune catégorie n'a encore été enregistrée, cliquez <a href="{{ path('category_new')}}">ici...</a> pour en ajouter.
-                                                                    </td>
-                                                                <tr>
-                                                        {% endif %}
-                                                        
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Nom</th>
-                                                            <th>Type</th>
-                                                            <th>Sous type</th>
-                                                            <th>Détails</th>
-                                                            <th>Actions</th>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
+                                                                    <tr>
+                                                            {% endif %}
+                                                            
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Nom</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                {% endif %}
                                 <!-- [ Hover-table ] end -->
                             </div>
                             <!-- [ Main Content ] end -->
@@ -119,6 +104,6 @@
 
 {% endblock %}
 
-{% block javascripts %}
+{# {% block javascripts %}
     <script src="{{ asset('assets/js/_alert.js') }}"></script>
-{% endblock %}
+{% endblock %} #}

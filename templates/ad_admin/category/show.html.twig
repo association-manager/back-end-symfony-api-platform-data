@@ -1,0 +1,102 @@
+{% extends "base.html.twig" %}
+{% block title %}
+    {% if is_granted('ROLE_ADMIN') %}
+        Catégorie
+    {% endif %}
+{% endblock %}
+
+
+{% block body %}
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                            <div class="page-block">
+                                <div class="row align-items-center">
+                                    <div class="col-md-12">
+                                        <div class="page-header-title">
+                                            {# <h5 class="m-b-10">Détails</h5> #}
+                                        </div>
+                                        <ul class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                            <li class="breadcrumb-item"><a href="javascript:">Catégorie / {{ category.name }} / Détails</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- [ breadcrumb ] end -->
+                        <div class="main-body">
+                            <div class="page-wrapper">
+                                <!-- [ Main Content ] start -->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>
+                                                Catégorie
+                                                </h5>
+                                            </div>
+                                            <div class="card-block">
+                                                {% if category.name is not null %}
+                                                    <h6>
+                                                        Catégorie
+                                                        <span class="badge badge-secondary">
+                                                            {{ category.name }}
+                                                        </span>
+                                                    </h6>
+                                                    <hr>
+                                                {% endif %}
+                                                {% if category.type is not null %}
+                                                    <h6>
+                                                        Type
+                                                        <span class="badge badge-secondary">
+                                                            {{ category.type }}
+                                                        </span>
+                                                    </h6>
+                                                {% endif %}
+                                                <hr>
+                                                {% if category.subType is not null %}
+                                                    <h6>
+                                                        Sous type
+                                                        <span class="badge badge-secondary">
+                                                            {{ category.subType }}
+                                                        </span>
+                                                    </h6>
+                                                    <hr>
+                                                {% endif %}
+                                                {% if category.details is not null %}
+                                                    <h6>
+                                                        Détails
+                                                        <span class="badge badge-secondary">
+                                                            {{ category.details }}
+                                                        </span>
+                                                    </h6>
+                                                {% endif %}
+                                            </div>
+                                            <div class="card-block">
+                                                <a href="{{ path('category_edit', {'id': category.id}) }}" class="btn btn-secondary btn-sm">Modifier cette catégorie</a>
+                                                <a href="{{ path('category_new') }}" class="btn btn-primary btn-sm">Créer une catégorie</a>
+                                                <a href="{{ path('category_index') }}" class="btn btn-success btn-sm">Catégories</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- [ Main Content ] end -->
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/_alert.js') }}"></script>
+{% endblock %}

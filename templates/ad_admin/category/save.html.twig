@@ -1,9 +1,11 @@
 {% extends "base.html.twig" %}
 {% block title %}
-    {% if category.id is not null %}
-        Modification de la catégorie {{ category.name }}
-        {% else %}
-            Création d'une nouvelle catégorie
+    {% if is_granted('ROLE_ADMIN') %}
+        {% if category.id is not null %}
+            Modification de la catégorie {{ category.name }}
+            {% else %}
+                Création d'une nouvelle catégorie
+        {% endif %}
     {% endif %}
 {% endblock %}
 
@@ -20,55 +22,57 @@
                         <div class="page-wrapper">
                             <!-- [ Main Content ] start -->
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h5>
-                                                {% if category.id is not null %}
-                                                    Modification de la catégorie {{ category.name }}
-                                                    {% else %}
-                                                        Création d'une nouvelle catégorie
-                                                {% endif %}
-                                            </h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                   {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
-                                                        {# <form role="form"> #}
-                                                            <div class="form-group">
-                                                                {{ form_row(form.name) }}
-                                                            </div>
-                                                            <div class="form-group">
-                                                                {{ form_row(form.type) }}
-                                                            </div>
-                                                            <div class="form-group">
-                                                                {{ form_row(form.subType) }}
-                                                            </div>
-                                                            <div class="form-group">
-                                                                {{ form_row(form.details) }}
-                                                            </div>
-                                                            <div class="form-group">
-                                                                {{ form_rest(form) }}
-                                                            </div>
-                                                            {# <button type="submit" class="btn btn-primary">Submit</button> #}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>
+                                                    {% if category.id is not null %}
+                                                        Modification de la catégorie {{ category.name }}
+                                                        {% else %}
+                                                            Création d'une nouvelle catégorie
+                                                    {% endif %}
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+                                                            {# <form role="form"> #}
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.name) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.type) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.subType) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.details) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_rest(form) }}
+                                                                </div>
+                                                                {# <button type="submit" class="btn btn-primary">Submit</button> #}
 
-                                                            <button type="submit" class="btn btn-success mr-2">
-                                                                {% if category.id is not null %}
-                                                                    Enregistrer les modifications
-                                                                {% else %}
-                                                                    Enregistrer
-                                                                {% endif %}
-                                                            </button>
-                                                            <button class="btn btn-danger" type="reset">Annuler</button>
-                                                            <a href="{{ path('category_index') }}" class="btn btn-dark">Catégories</a>
-                                                        {# </form> #}
-                                                    {{ form_end(form) }}    
+                                                                <button type="submit" class="btn btn-success mr-2">
+                                                                    {% if category.id is not null %}
+                                                                        Enregistrer les modifications
+                                                                    {% else %}
+                                                                        Enregistrer
+                                                                    {% endif %}
+                                                                </button>
+                                                                <button class="btn btn-danger" type="reset">Annuler</button>
+                                                                <a href="{{ path('category_index') }}" class="btn btn-dark">Catégories</a>
+                                                            {# </form> #}
+                                                        {{ form_end(form) }}    
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                {% endif %}
                             </div>
                             <!-- [ Main Content ] end -->
                         </div>

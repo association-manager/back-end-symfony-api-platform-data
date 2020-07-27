@@ -67,6 +67,10 @@ class Category
      * })
      * @Assert\NotBlank(message="Le nom est obligatoire")
      * @Assert\Type("string", message="Le nom de la catégorie n'est pas conforme")
+     * @Assert\Length(
+     *      max=45, 
+     *      maxMessage="Le nom ne peut pas contenir plus de 45 caractères"
+     * )
      */
     private $name;
 
@@ -83,16 +87,28 @@ class Category
      * })
      * @Assert\NotBlank(message="Le type est obligatoire")
      * @Assert\Type("string", message="Le type catégorie n'est pas conforme")
+     * @Assert\Length(
+     *      max=45, 
+     *      maxMessage="Le type ne peut pas contenir plus de 45 caractères"
+     * )
      */
     private $type;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *      max=255, 
+     *      maxMessage="Le détails ne peut pas contenir plus de 255 caractères"
+     * )
      */
     private $details;
 
     /**
      * @ORM\Column(type="string", length=45, nullable=true)
+     * @Assert\Length(
+     *      max=45, 
+     *      maxMessage="Le sous type ne peut pas contenir plus de 45 caractères"
+     * )
      */
     private $subType;
     
