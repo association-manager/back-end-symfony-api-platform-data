@@ -78,6 +78,8 @@ class APIFixtures extends BaseFixture
                     ->setCountry($this->faker->country)
                     ->setType($this->faker->randomElement($userAddressTypes));
 
+            $this->manager->persist($userAddress);
+
             // Association User Custom Phone
             $userCustomPhone = (6023156326 + $count);
 
@@ -94,6 +96,8 @@ class APIFixtures extends BaseFixture
                 ->setPassword($hash)
                 ->setDataUsageAgreement($this->faker->randomElement([1, 0]))
                 ->addAddress($userAddress);
+            
+            $this->manager->persist($user);
             // En User - fictures
 
             // Others Users
@@ -343,6 +347,7 @@ class APIFixtures extends BaseFixture
                 ->setCountry($this->faker->country)
                 ->setType("Notre adresse à ".$this->faker->randomElement($associationAddressTypes));
 
+            $this->manager->persist($associationAddress);
                 // Association Type
             $associationTypes = [
                 1,
