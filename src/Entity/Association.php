@@ -351,6 +351,11 @@ class Association
      */
     private $createdBy;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Advertisement::class, mappedBy="association", cascade={"persist", "remove"})
+     */
+    private $advertisement;
+
     public function __construct()
     {
         $this->workGroups = new ArrayCollection();
@@ -754,6 +759,23 @@ class Association
     public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getAdvertisement(): ?Advertisement
+    {
+        return $this->advertisement;
+    }
+
+    public function setAdvertisement(Advertisement $advertisement): self
+    {
+        $this->advertisement = $advertisement;
+
+        // set the owning side of the relation if necessary
+        if ($advertisement->getAssociation() !== $this) {
+            $advertisement->setAssociation($this);
+        }
 
         return $this;
     }

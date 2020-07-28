@@ -64,11 +64,6 @@ class Advertisement
      */
     private $status;
 
-    // /**
-    //  * @ORM\OneToOne(targetEntity=AppWebMobile::class, mappedBy="advertisement", cascade={"persist", "remove"})
-    //  */
-    // private $appWebMobile;
-
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -77,6 +72,7 @@ class Advertisement
     // File management
     /**
      * @ORM\OneToMany(targetEntity=AdvertisementFile::class, mappedBy="advertisement", orphanRemoval=true, cascade={"persist", "remove"})
+     * @Assert\Valid
      */
     private $advertisementFiles;
 
@@ -97,8 +93,16 @@ class Advertisement
 
     /**
      * @ORM\OneToOne(targetEntity=AppWebMobile::class, mappedBy="advertisement", cascade={"persist", "remove"})
+     * @Assert\Valid
      */
     private $appWebMobile;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Association::class, inversedBy="advertisement", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="Vous devez être administrateur d'une association pour créer une annonce.")
+     */
+    private $association;
 
     public function __construct()
     {
@@ -356,6 +360,18 @@ class Advertisement
         if ($appWebMobile->getAdvertisement() !== $this) {
             $appWebMobile->setAdvertisement($this);
         }
+
+        return $this;
+    }
+
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(Association $association): self
+    {
+        $this->association = $association;
 
         return $this;
     }

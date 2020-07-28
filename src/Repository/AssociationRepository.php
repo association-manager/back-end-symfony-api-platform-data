@@ -19,6 +19,17 @@ class AssociationRepository extends ServiceEntityRepository
         parent::__construct($registry, Association::class);
     }
 
+    public function getAssociationsWhereUserIsAdmin($id)
+    {
+        $qb =$this->createQueryBuilder('a');
+
+        $qb->select('a')
+            ->innerJoin('a.createdBy', 'u')
+            ->where('u.id = :id')
+            ->setParameter('id', $id);
+        return $qb;
+    }
+
     // /**
     //  * @return Association[] Returns an array of Association objects
     //  */
