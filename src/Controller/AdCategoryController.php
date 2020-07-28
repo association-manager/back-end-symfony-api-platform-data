@@ -34,11 +34,15 @@ class AdCategoryController extends AbstractController
      */
     public function index(): Response
     {
+        $user = $this->getUser();
+
         $categories = $this->categoryRepo->findAll();
 
-        return $this->render('ad_admin/category/index.html.twig', [
-            'categories' => $categories,
-        ]);
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
+            return $this->render('ad_admin/category/index.html.twig', [
+                'categories' => $categories,
+            ]);
+        }
     }
 
     /**
@@ -47,23 +51,27 @@ class AdCategoryController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $category = new Category();
-        $form = $this->createForm(CategoryType::class, $category);
-        $form->handleRequest($request);
+        $user =$this->getUser();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->persist($category);
-            $this->manager->flush();
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
+            $category = new Category();
+            $form = $this->createForm(CategoryType::class, $category);
+            $form->handleRequest($request);
 
-            $this->addFlash('success', "La catégorie {$category->getName()} a été créée avec succès");
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->manager->persist($category);
+                $this->manager->flush();
 
-            return $this->redirectToRoute('category_index');
+                $this->addFlash('success', "La catégorie {$category->getName()} a été créée avec succès");
+
+                return $this->redirectToRoute('category_index');
+            }
+
+            return $this->render('ad_admin/category/save.html.twig', [
+                'category' => $category,
+                'form' => $form->createView(),
+            ]);
         }
-
-        return $this->render('ad_admin/category/save.html.twig', [
-            'category' => $category,
-            'form' => $form->createView(),
-        ]);
     }
 
     /**
@@ -72,9 +80,12 @@ class AdCategoryController extends AbstractController
      */
     public function show(Category $category): Response
     {
-        return $this->render('ad_admin/category/show.html.twig', [
-            'category' => $category,
-        ]);
+        $user = $this->getUser();
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
+            return $this->render('ad_admin/category/show.html.twig', [
+                'category' => $category,
+            ]);
+        }
     }
 
     /**
@@ -83,21 +94,25 @@ class AdCategoryController extends AbstractController
      */
     public function edit(Request $request, Category $category): Response
     {
-        $form = $this->createForm(CategoryType::class, $category);
-        $form->handleRequest($request);
+        $user = $this->getUser();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->flush();
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
+            $form = $this->createForm(CategoryType::class, $category);
+            $form->handleRequest($request);
 
-            $this->addFlash('success', "La catégorie {$category->getName()} a été modifiée avec succès");
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->manager->flush();
 
-            return $this->redirectToRoute('category_index');
+                $this->addFlash('success', "La catégorie {$category->getName()} a été modifiée avec succès");
+
+                return $this->redirectToRoute('category_index');
+            }
+
+            return $this->render('ad_admin/category/save.html.twig', [
+                'category' => $category,
+                'form' => $form->createView(),
+            ]);
         }
-
-        return $this->render('ad_admin/category/save.html.twig', [
-            'category' => $category,
-            'form' => $form->createView(),
-        ]);
     }
 
     /**
