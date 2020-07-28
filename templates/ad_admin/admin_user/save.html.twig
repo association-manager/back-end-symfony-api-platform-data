@@ -1,0 +1,101 @@
+{% extends "base.html.twig" %}
+{% block title %}
+    {% if is_granted('ROLE_ADMIN') %}
+        {% if user is defined %}
+            Modification du compte utilisateur {{ user.firstName|upper }} {{ user.lastName }}
+            {% else %}
+                Création d"un compte utilisateur
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>
+                                                    {% if is_granted('ROLE_ADMIN') %}
+                                                        {% if user is defined %}
+                                                            Modification du compte utilisateur {{ user.firstName|upper }} {{ user.lastName }}
+                                                            {% else %}
+                                                                Création de compte utilisateur
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+                                                            {# <form role="form"> #}
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.firstName) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.lastName) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.email) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.dataUsageAgreement) }}
+                                                                </div>
+                                                                {# START CGU #}
+                                                                {% include "ad_admin/partials/_asm.cgu.html.twig" %}
+                                                                {# END CGU #}
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.roles) }}
+                                                                </div>
+                                                                {% if form.plainPassword is defined %}
+                                                                    Test password defined.
+                                                                {% endif %}
+                                                                
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.plainPassword) }}
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    {{ form_rest(form) }}
+                                                                </div>
+                                                                {# <button type="submit" class="btn btn-primary">Submit</button> #}
+
+                                                                <button type="submit" class="btn btn-success mr-2">
+                                                                    {% if user is defined %}
+                                                                        Enregistrer les modifications
+                                                                    {% else %}
+                                                                        Enregistrer
+                                                                    {% endif %}
+                                                                </button>
+                                                                <button class="btn btn-danger" type="reset">Annuler</button>
+                                                                <a href="{{ path('admin_user_index') }}" class="btn btn-dark">Utilisateurs</a>
+                                                            {# </form> #}
+                                                        {{ form_end(form) }}    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

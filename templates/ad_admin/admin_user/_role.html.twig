@@ -1,0 +1,7 @@
+{% if role is same as ("ROLE_ADMIN") %}
+    Administrateur
+    {% elseif role is same as ("ROLE_ADVERTISER") %}
+    Annonceur
+    {% else %}
+        Utilisateur
+{% endif %}
