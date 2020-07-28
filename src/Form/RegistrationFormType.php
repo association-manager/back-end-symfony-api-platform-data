@@ -20,13 +20,12 @@ class RegistrationFormType extends FormConfig
             ->add('email', EmailType::class, $this->getFormConf(true, ' ', 'Votre adresse email'))
             ->add('firstName', TextType::class, $this->getFormConf(true, ' ', 'Votre nom de famille'))
             ->add('lastName', TextType::class, $this->getFormConf(true, ' ', 'Votre prénom'))
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'You should agree to our terms.',
-                    ]),
-                ],
+            ->add('dataUsageAgreement', CheckboxType::class, [
+                'label'    => 'J\'accepte l\'utilisation de mes données personnelles à des fins d\'enregistrement 
+                et de traitement de mon compte électronique sur Association Manager et son opérateur de paiement.',
+                'data' => false,
+                'label_attr' => ['class' => 'switch-custom'],
+                'required' => true,
             ])
             ->add('plainPassword', PasswordType::class, $this->getFormConf(true, ' ', 'Votre mot de passe'))
         ;
