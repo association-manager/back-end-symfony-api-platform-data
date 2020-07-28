@@ -17,9 +17,9 @@
                                 <!--[ daily sales section ] start-->
                                 {% if app.user is empty or app.user is null %}
                                     <h6 style="color: red !important; font-weigth: bold !important;">Vous n'êtes pas autorisé à afficher ce contenu.</h6>
-                                    {% elseif app.user.roles is same as (['ROLE_ADMIN', 'ROLE_USER']) %}
+                                    {% elseif is_granted('ROLE_ADMIN') %}
                                         {% include "ad_admin/stats/_admin_count_ad.html.twig" %}
-                                        {% elseif app.user.roles is same as(['ROLE_ADVERTISER', 'ROLE_USER']) %}
+                                        {% elseif is_granted('ROLE_ADVERTISER') %}
                                             {% include "ad_admin/stats/_advertiser_count_ad.html.twig" %}
                                             {% else %}
                                                 <h6 style="color: red !important; font-weigth: bold !important;">Cette section est vide, vous n'êtes pas encore annonceur.</h6>

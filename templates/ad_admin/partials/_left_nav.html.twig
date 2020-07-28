@@ -18,7 +18,7 @@
                 {# Start New NavBar #}
                 {% if app.user is empty or app.user is null %}
                         <h6 style="color: red !important; font-weigth: bold !important;">Vous n'êtes pas autorisé à afficher ce contenu.</6>
-                        {% elseif app.user.roles is same as (['ROLE_ADMIN', 'ROLE_USER']) %}
+                        {% elseif is_granted('ROLE_ADMIN') %}
                             <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item">
                                 <a href="{{ path('advertisement_index') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-image"></i></span><span class="pcoded-mtext">Annonces</span></a>
                             </li>
@@ -27,6 +27,9 @@
                             </li>
                             <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item">
                                 <a href="{{ path('category_index') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-command"></i></span><span class="pcoded-mtext">Catégories</span></a>
+                            </li>
+                            <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item">
+                                <a href="{{ path('admin_user_index') }}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Annonceurs</span></a>
                             </li>
                             {% elseif app.user.roles is same as (['ROLE_ADVERTISER' , 'ROLE_USER']) %}
                                 <li data-username="form elements advance componant validation masking wizard picker select" class="nav-item">
