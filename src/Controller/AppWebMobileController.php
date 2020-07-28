@@ -32,15 +32,20 @@ class AppWebMobileController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_ADMIN")
      * @Route("/applications", name="app_web_mobile_admin_index", methods={"GET"})
      */
     public function indexAdmin(): Response
     {
-        $appWebMobiles = $this->appWebMobileRepo->findAll();
+        $user = $this->getUser();
 
-        return $this->render('ad_admin/app_web_mobile/index.html.twig', [
-            'appWebMobiles' => $appWebMobiles,
-        ]);
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
+            $appWebMobiles = $this->appWebMobileRepo->findAll();
+
+            return $this->render('ad_admin/app_web_mobile/index.html.twig', [
+                'appWebMobiles' => $appWebMobiles,
+            ]);
+        }
     }
 
 
@@ -50,13 +55,17 @@ class AppWebMobileController extends AbstractController
      */
     public function indexAppShow(Advertisement $advertisement): Response
     {        
-        $appWebMobilesByAd = $this->appWebMobileRepo->findBy(array('advertisement' => $advertisement->getId()));
+        $user = $this->getUser();
 
-        // dd($appWebMobilesByUser);
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles()) || in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles())) {
+            $appWebMobilesByAd = $this->appWebMobileRepo->findBy(array('advertisement' => $advertisement->getId()));
 
-        return $this->render('ad_admin/app_web_mobile/index.html.twig', [
-            'appWebMobilesByAd' => $appWebMobilesByAd
-        ]);
+            // dd($appWebMobilesByUser);
+
+            return $this->render('ad_admin/app_web_mobile/index.html.twig', [
+                'appWebMobilesByAd' => $appWebMobilesByAd
+            ]);
+        }
     }
 
     /**
@@ -69,10 +78,10 @@ class AppWebMobileController extends AbstractController
 
         $user = $this->getUser();
 
-        if ($user->getRoles() === array('ROLE_ADMIN', 'ROLE_USER')) {
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
             $form = $this->createForm(AppWebMobileAdminType::class, $appWebMobile);
             $form->handleRequest($request);
-        }elseif ($user->getRoles() === array('ROLE_ADVERTISER', 'ROLE_USER')) {
+        }elseif (in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles())) {
             $form = $this->createForm(AppWebMobileType::class, $appWebMobile);
             $form->handleRequest($request);
         }
@@ -92,13 +101,13 @@ class AppWebMobileController extends AbstractController
             return $this->redirectToRoute('advertisement_index');
         }
 
-        if ($user->getRoles() === array('ROLE_ADMIN', 'ROLE_USER')) {
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
             return $this->render('ad_admin/app_web_mobile/save.html.twig', [
                 'advertissement' => $advertissement->getId(),
                 'appWebMobile' => $appWebMobile,
                 'form' => $form->createView(),
             ]);
-        }elseif ($user->getRoles() === array('ROLE_ADVERTISER', 'ROLE_USER')) {
+        }elseif (in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles())) {
             return $this->render('ad_admin/app_web_mobile/restricted_save.html.twig', [
                 'advertissement' => $advertissement->getId(),
                 'appWebMobile' => $appWebMobile,
@@ -115,9 +124,13 @@ class AppWebMobileController extends AbstractController
      */
     public function showAdAdmin(AppWebMobile $appWebMobile): Response
     {
-        return $this->render('ad_admin/app_web_mobile/show.html.twig', [
-            'appWebMobile' => $appWebMobile,
-        ]);
+        $user = $this->getUser();
+
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
+            return $this->render('ad_admin/app_web_mobile/show.html.twig', [
+                'appWebMobile' => $appWebMobile,
+            ]);
+        }
     }
 
     /**
@@ -140,7 +153,7 @@ class AppWebMobileController extends AbstractController
     {
         $user = $this->getUser();
 
-        if ($user->getRoles() === array('ROLE_ADMIN', 'ROLE_USER')) {
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
             $form = $this->createForm(AppWebMobileAdminType::class, $appWebMobile);
             $form->handleRequest($request);
         }
@@ -164,8 +177,6 @@ class AppWebMobileController extends AbstractController
      */
     public function editAdAdvertiser(Request $request, AppWebMobile $appWebMobile): Response
     {
-        $user = $this->getUser();
-    
             $form = $this->createForm(AppWebMobileType::class, $appWebMobile);
             $form->handleRequest($request);
 
