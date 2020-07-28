@@ -36,6 +36,25 @@ class AdvertisementFile
     /**
      * @var File
      * @Vich\UploadableField(mapping="ad_picture", fileNameProperty="picture")
+     * @Assert\Image(
+     *     minWidth = 90,
+     *     minWidthMessage = "Largeur minimale acceptée : 90px",
+     *     maxWidth = 728,
+     *     maxWidthMessage = "Largeur maximale acceptée : 728px",
+     *     minHeight = 90,
+     *     minHeightMessage = "Hauteur minimale acceptée : 90px",
+     *     maxHeight = 728,
+     *     maxHeightMessage = "Hauteur maximale acceptée : 728px",
+     *     detectCorrupted = true,
+     *     corruptedMessage = "Votre image est corrompue, merci de charger une autre image.",
+     *     sizeNotDetectedMessage = "La taille de l'image n'est pas détecter, vérifiez s'il vous plait"
+     * )
+     * @Assert\File(
+     *     maxSize = "1024k",
+     *     maxSizeMessage = "Merci de charger une image ne dépassant pas 1Mo",
+     *     mimeTypes = {"image/gif", "image/jpg", "image/jpeg"},
+     *     mimeTypesMessage = "Vous pouvez charge soit une png, gif ou jpg"
+     * )
      */
     private $imageFile;
 
@@ -47,6 +66,12 @@ class AdvertisementFile
     /**
      * @var File
      * @Vich\UploadableField(mapping="ad_video", fileNameProperty="video")
+     * @Assert\File(
+     *     maxSize = "10240K",
+     *     maxSizeMessage = "Merci de charger une vidéo ne dépassant pas 10Mo",
+     *     mimeTypes = {"video/mp4", "video/ogg"},
+     *     mimeTypesMessage = "Vous devez charger une vidéo soit en mp4, soit en ogg"
+     * )
      */
     private $videoFile;
 
