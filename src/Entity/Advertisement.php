@@ -2,15 +2,38 @@
 
 namespace App\Entity;
 
-use App\Repository\AdvertisementRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AdvertisementRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AdvertisementRepository::class)
  * @ORM\HasLifecycleCallbacks()
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/annonces/lister"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/annonces/{id}/afficher"}
+ *          },
+ *      subresourceOperations={
+ *          "user_get_subresource"={"path"="/annonces/{id}/annonceur"},
+ *          "categories_get_subresource"={"path"="/annonces/{id}/categories"},
+ *          "advertisement_files_get_subresource"={"path"="/annonces/{id}/medias"},
+*           "association_get_subresource"={"path"="/annonces/{id}/association"}  
+ *      },
+ *      normalizationContext={
+ *          "groups"={
+ *              "annonces_read"
+ *          }
+ *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
+ * )
  */
 class Advertisement
 {
@@ -18,6 +41,9 @@ class Advertisement
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "annonces_read"
+     * })
      */
     private $id;
 
@@ -27,6 +53,9 @@ class Advertisement
      *      max=45, 
      *      maxMessage="Le titre ne peut pas contenir plus de 45 caractères"
      * )
+     * @Groups({
+     *      "annonces_read"
+     * })
      */
     private $title;
 
@@ -36,17 +65,26 @@ class Advertisement
      *      max=255, 
      *      maxMessage="Le détails ne peut pas contenir plus de 255 caractères"
      * )
+     * @Groups({
+     *      "annonces_read"
+     * })
      */
     private $details;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="advertisements")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({
+     *      "annonces_read"
+     * })
      */
     private $user;
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="advertisements")
+     * @Groups({
+     *      "annonces_read"
+     * })
      */
     private $categories;
 
@@ -61,17 +99,26 @@ class Advertisement
      *      max=45, 
      *      maxMessage="Le statut ne peut pas contenir plus de 45 caractères"
      * )
+     * @Groups({
+     *      "annonces_read"
+     * })
      */
     private $status;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({
+     *      "annonces_read"
+     * })
      */
     private $createdAt;
 
     // File management
     /**
      * @ORM\OneToMany(targetEntity=AdvertisementFile::class, mappedBy="advertisement", orphanRemoval=true, cascade={"persist", "remove"})
+     * @Groups({
+     *      "annonces_read"
+     * })
      * @Assert\Valid
      */
     private $advertisementFiles;
@@ -88,19 +135,38 @@ class Advertisement
      *      max=255, 
      *      maxMessage="Maximum 255 caractères"
      * )
+     * @Groups({
+     *      "annonces_read"
+     * })
      */
     private $audience;
 
     /**
      * @ORM\OneToOne(targetEntity=AppWebMobile::class, mappedBy="advertisement", cascade={"persist", "remove"})
+     * @Groups({
+     *      "annonces_read"
+     * })
      * @Assert\Valid
      */
     private $appWebMobile;
 
     /**
-     * @ORM\OneToOne(targetEntity=Association::class, inversedBy="advertisement", cascade={"persist", "remove"})
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $priority;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $duration;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Association::class, inversedBy="advertisements")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank(message="Vous devez être administrateur d'une association pour créer une annonce.")
+     * @Groups({
+     *      "annonces_read"
+     * })
      */
     private $association;
 
@@ -364,12 +430,36 @@ class Advertisement
         return $this;
     }
 
+    public function getPriority(): ?int
+    {
+        return $this->priority;
+    }
+
+    public function setPriority(?int $priority): self
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(?int $duration): self
+    {
+        $this->duration = $duration;
+
+        return $this;
+    }
+
     public function getAssociation(): ?Association
     {
         return $this->association;
     }
 
-    public function setAssociation(Association $association): self
+    public function setAssociation(?Association $association): self
     {
         $this->association = $association;
 

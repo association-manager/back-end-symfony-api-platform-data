@@ -2,22 +2,38 @@
 
 namespace App\Entity;
 
-use App\Repository\AdvertisementFileRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
+use App\Repository\AdvertisementFileRepository;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 // constraints
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
 
 /**
  * @ORM\Table(name="advertisement_file")
  * @ORM\Entity(repositoryClass=AdvertisementFileRepository::class)
  * @Vich\Uploadable()
  * @ORM\HasLifecycleCallbacks
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/annonces-medias/lister"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/annonces-medias/{id}/afficher"}
+ *          },
+ *      normalizationContext={
+ *          "groups"={
+ *              "annonces_medias_read"
+ *          }
+ *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
+ * )
  */
 class AdvertisementFile
 {
@@ -25,11 +41,19 @@ class AdvertisementFile
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "annonces_read",
+     *      "annonces_medias_read"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({
+     *      "annonces_read",
+     *      "annonces_medias_read"
+     * })
      */
     private $picture;
 
@@ -60,6 +84,10 @@ class AdvertisementFile
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({
+     *      "annonces_read",
+     *      "annonces_medias_read"
+     * })
      */
     private $video;
 
@@ -87,6 +115,10 @@ class AdvertisementFile
      * )
      * 
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({
+     *      "annonces_read",
+     *      "annonces_medias_read"
+     * })
      */
     private $pictureSize;
 

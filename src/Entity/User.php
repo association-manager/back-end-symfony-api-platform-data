@@ -45,7 +45,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"user_read", "member_read"})
+     * @Groups({"user_read", "member_read", "annonces_read"})
      */
     private $id;
 
@@ -82,7 +82,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user_read", "member_read"})
+     * @Groups({"user_read", "member_read", "annonces_read"})
      * @Assert\Type("string", message="Le format du prénom n'est pas valide")
      * @Assert\Length(
      *      max=255, 
@@ -94,7 +94,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user_read", "member_read"})
+     * @Groups({"user_read", "member_read", "annonces_read"})
      * @Assert\Type("string", message="Le format du nom n'est pas valide")
      * @Assert\Length(
      *      max=255, 
