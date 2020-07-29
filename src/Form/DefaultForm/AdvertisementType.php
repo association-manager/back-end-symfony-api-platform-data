@@ -3,6 +3,7 @@
 namespace App\Form\DefaultForm;
 
 use App\Entity\Category;
+use App\Entity\Association;
 use App\Entity\Advertisement;
 use App\Form\VideoPosterType;
 use App\Form\AdvertisementFileType;
@@ -39,6 +40,7 @@ class AdvertisementType extends FormConfig
                 'expanded' => false,
                 'multiple' => true
             ))
+            ->add('duration', TextType::class, $this->getFormConf(false, 'Durée', 'Durée de l\'annonce'))
             ->add('association', EntityType::class, array(
                 'label' => 'Association',
                 'class' => Association::class,

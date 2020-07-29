@@ -54,6 +54,8 @@ class AdvertisementType extends FormConfig
                 'expanded' => false,
                 'multiple' => true
             ))
+            ->add('priority', TextType::class, $this->getFormConf(false, 'Priorité', 'Priorité de l\'annonce'))
+            ->add('duration', TextType::class, $this->getFormConf(false, 'Durée', 'Durée de l\'annonce'))
             ->add('association', EntityType::class, array(
                 'label' => 'Association',
                 'class' => Association::class,
