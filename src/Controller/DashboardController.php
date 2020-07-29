@@ -14,18 +14,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class DashboardController extends AbstractController
 {
     /**
-     * @IsGranted("ROLE_ADVERTISER")
      * @Route("/admin/regie-publicitaire", name="admin_advertisement_home")
      */
     public function index(AdvertisementRepository $adRepo, EntityManagerInterface $manager, StatsService $statsService)
     {
         $user = $this->getUser();
 
-        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles()) || in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles())) {
+        if ($user === null) {
+            return $this->redirectToRoute('app_advertisement_login');
+        }
+        elseif (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles()) === false & in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles()) === false ) {
+            return $this->redirectToRoute('advertisement_new');
+        }
+        elseif (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles()) || in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles())) {
             // ---Start admin user stats
             $stats = $statsService->getStats();
-
-            // dd($stats);
 
             // Ads valid staus
             $findAllValidAds = $adRepo->findBy(array('status' => 'Validé'));
