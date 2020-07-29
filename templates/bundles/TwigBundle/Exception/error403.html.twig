@@ -1,0 +1,12 @@
+{% extends 'error.html.twig' %}
+
+{% block title %}403{% endblock %}
+
+{% block body %}
+    <span class="display-1 d-block">403</span>
+    <div class="alert alert-danger">
+        <p>Vous n'avez pas le droit d'accéder à cette ressource !</p>
+    </div>
+    <a href="{{ path('admin_advertisement_home') }}" class="btn btn-link">Page d'accueil</a>
+{% endblock %}
+

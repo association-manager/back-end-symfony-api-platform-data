@@ -23,3 +23,12 @@ body {
     border-top-left-radius: 0 !important; 
     border-bottom-left-radius: 0 !important;
 }
+
+/* Start errors style */
+body {
+    background: #dedede;
+}
+.page-wrap {
+    min-height: 100vh;
+}
+/* End errors style  */
