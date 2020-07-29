@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 {% block title %}
-    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ADVERTISER')%}
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')%}
         {% if advertisement.id is not null %}
             Modification de l'annonce {{ advertisement.title }}
             {% else %}
@@ -26,7 +26,7 @@
                         <div class="page-wrapper">
                             <!-- [ Main Content ] start -->
                             <div class="row">
-                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ADVERTISER')%}
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')%}
                                     <div class="col-sm-12">
                                         <div class="card">
                                             <div class="card-header">
@@ -50,6 +50,12 @@
                                                                     {{ form_row(form.categories) }}
                                                                 </div>
                                                                 <div class="form-group">
+                                                                    {{ form_row(form.duration) }}
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.association) }}
+                                                                </div>
+                                                                <div class="form-group">
                                                                     {{ form_row(form.audience) }}
                                                                 </div>
                                                                 <div class="form-group">
@@ -66,15 +72,20 @@
                                                                     {{ form_rest(form) }}
                                                                 </div>
 
-                                                                <button type="submit" class="btn btn-success mr-2">
-                                                                    {% if advertisement.id is not null %}
-                                                                        Enregistrer les modifications
+                                                                {% if is_granted('ROLE_USER')%}
+                                                                    <button type="submit" class="btn btn-success mr-2">Enregistrer</button>
+                                                                    <button class="btn btn-danger" type="reset">Annuler</button>
                                                                     {% else %}
-                                                                        Enregistrer
-                                                                    {% endif %}
-                                                                </button>
-                                                                <button class="btn btn-danger" type="reset">Annuler</button>
-                                                                <a href="{{ path('advertisement_index') }}" class="btn btn-secondary">Annonces</a>
+                                                                        <button type="submit" class="btn btn-success mr-2">
+                                                                            {% if advertisement.id is not null %}
+                                                                                Enregistrer les modifications
+                                                                            {% else %}
+                                                                                Enregistrer
+                                                                            {% endif %}
+                                                                        </button>
+                                                                        <button class="btn btn-danger" type="reset">Annuler</button>
+                                                                        <a href="{{ path('advertisement_index') }}" class="btn btn-secondary">Annonces</a>
+                                                                {% endif %}
                                                             {# </form> #}
                                                         {{ form_end(form) }}    
                                                     </div>

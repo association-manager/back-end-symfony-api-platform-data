@@ -1,0 +1,155 @@
+{% extends "base.html.twig" %}
+{% block title %}
+    {% if is_granted('ROLE_ADMIN') %}
+        Utilisateur : {{ user.firstName|upper }} {{ user.lastName }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                            <div class="page-block">
+                                <div class="row align-items-center">
+                                    <div class="col-md-12">
+                                        <div class="page-header-title">
+                                            {# <h5 class="m-b-10">Détails</h5> #}
+                                        </div>
+                                        <ul class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
+                                            <li class="breadcrumb-item"><a href="javascript:">Utilisateur / {{ user.firstName|upper }} {{ user.lastName }} / Profil</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- [ breadcrumb ] end -->
+                        <div class="main-body">
+                            <div class="page-wrapper">
+                                <!-- [ Main Content ] start -->
+                                <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5>{{ user.firstName|upper }} {{ user.lastName }}</h5>
+                                                </div>
+
+                                                
+                                                <div class="card-block">
+                                                    <h6>Conditions générales d'utilisation<span class="badge badge-secondary">
+                                                            {% if user.dataUsageAgreement is same as (false) %}
+                                                                Non acceptées
+                                                                {% elseif user.dataUsageAgreement is same as (true) %}
+                                                                    Acceptées le : {{ user.cguValidatedAt ? user.cguValidatedAt|date('d-m-Y H:i:s') : '' }}
+                                                                    {% else %}
+                                                                        Pas encore acceptées
+                                                            {% endif %}
+                                                        </span>
+                                                    </h6>
+                                                    <hr>
+                                                    <h6>
+                                                        Email
+                                                        <span class="badge badge-secondary">
+                                                            {{ user.email }}
+                                                        </span>
+                                                    </h6>
+                                                    <hr>
+                                                    <h6>
+                                                        {% if user.roles|length > 1 %}
+                                                            Rôles
+                                                            {% else %}
+                                                                Rôle
+                                                        {% endif %}
+                                                        <span class="badge badge-secondary">
+                                                            {% if user.roles|length > 0 %}
+                                                                {% for role in user.roles %}
+                                                                    {% if user.roles|length < 2 or loop.last %}
+                                                                       {% include "ad_admin/admin_user/_role.html.twig" %}
+                                                                        {% else %}
+                                                                            {% include "ad_admin/admin_user/_role.html.twig" %} |
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        </span>
+                                                    </h6>
+                                                </div>
+
+                                                {# Start user ads #}
+                                                <div class="card-header">
+                                                    <h5>Annonces</h5>
+                                                </div>
+                                                <div class="card-block table-border-style">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Titre</th>
+                                                                    <th>statut</th>
+                                                                    <th>Annonceur</th>
+                                                                    <th>Date de création</th>
+                                                                    <th>Actions</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% if is_granted('ROLE_ADMIN') %}
+                                                                    {% if user.advertisements|length > 0 %}
+                                                                        {% set advertisements = user.advertisements %}
+                                                                        {% include "ad_admin/advertisement/index.html.twig.filter/_ad_filter_admin.html.twig" %}
+                                                                        {% else %}
+                                                                            <tr>
+                                                                                <td valign="top" colspan="6">
+                                                                                    Aucune annonce n'a encore été enregistrée pour cet utilisateur.
+                                                                                </td>
+                                                                            <tr>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                                
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Titre</th>
+                                                                    <th>statut</th>
+                                                                    <th>Annonceur</th>
+                                                                    <th>Date de création</th>
+                                                                    <th>Actions</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                {# End user ads  #}
+
+                                                <div class="card-block">
+                                                    {% if is_granted('ROLE_ADMIN') %}
+                                                        <a href="{{ path('admin_user_edit', {'id': user.id}) }}" class="btn btn-secondary btn-sm">Modifier cet utilisateur</a>
+                                                        <a href="{{ path('admin_user_index') }}" class="btn btn-success btn-sm">Utilisateurs</a>
+                                                        <a href="{{ path('admin_user_new') }}" class="btn btn-primary btn-sm">Créer un Utilisateur</a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                </div>
+                                <!-- [ Main Content ] end -->
+                            </div>
+                        </div>
+                        {% else %}
+                        Vous n'avez pas les droits nécessaires pour afficher ce contenu.
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/_alert.js') }}"></script>
+{% endblock %}

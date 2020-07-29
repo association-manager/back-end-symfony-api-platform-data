@@ -45,7 +45,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"user_read", "member_read"})
+     * @Groups({"user_read", "member_read", "annonces_read"})
      */
     private $id;
 
@@ -82,7 +82,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user_read", "member_read"})
+     * @Groups({"user_read", "member_read", "annonces_read"})
      * @Assert\Type("string", message="Le format du prénom n'est pas valide")
      * @Assert\Length(
      *      max=255, 
@@ -94,7 +94,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user_read", "member_read"})
+     * @Groups({"user_read", "member_read", "annonces_read"})
      * @Assert\Type("string", message="Le format du nom n'est pas valide")
      * @Assert\Length(
      *      max=255, 
@@ -111,13 +111,14 @@ class User implements UserInterface
     private $createdAt;
 
     /**
-     * @ORM\Column(type="boolean", options={"default":false})
+     * @ORM\Column(type="boolean")
+     * @Assert\NotBlank(message="L'utilisation de nos services require votre consentement")
      * @Assert\Type(
      *     type="bool",
      *     message="La valeur {{ value }} n'est pas un {{ type }} valid."
      * )
      */
-    private $dataUsageAgreement = false;
+    private $dataUsageAgreement;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
@@ -215,6 +216,11 @@ class User implements UserInterface
      */
     private $adManagementNotifications;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $cguValidatedAt;
+
     public function __construct()
     {
         $this->createdAt = new DateTime();
@@ -240,6 +246,21 @@ class User implements UserInterface
             $this->createdAt = new \DateTime();
         }
     }
+
+    /**
+     * Automatically assign the current date
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function cguValidatedAtByUser() {
+        if(!empty($this->dataUsageAgreement)) {
+            $this->cguValidatedAt = new \DateTime();
+        }
+    }
+
 
     public function getId(): ?int
     {
@@ -659,6 +680,18 @@ class User implements UserInterface
                 $adManagementNotification->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCguValidatedAt(): ?\DateTimeInterface
+    {
+        return $this->cguValidatedAt;
+    }
+
+    public function setCguValidatedAt(?\DateTimeInterface $cguValidatedAt): self
+    {
+        $this->cguValidatedAt = $cguValidatedAt;
 
         return $this;
     }

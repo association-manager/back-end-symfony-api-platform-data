@@ -1,0 +1,136 @@
+{% extends "base.html.twig" %}
+{% block title %}
+    {% if is_granted('ROLE_ADMIN') %}
+        Annonceurs
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+
+                    {# {% include "/ad_admin/partials/_alert.html.twig" %} #}
+
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                <!--[ year  sales section ] end-->
+                                <!-- [ Hover-table ] start -->
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <div class="col-xl-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>Annonceurs</h5>
+                                                <a class="btn btn-success" href="{{ path('admin_user_new') }}">
+                                                    <i class="fas fa-plus">
+                                                    </i>
+                                                    Ajouter
+                                                </a>
+                                            </div>
+                                            <div class="card-block table-border-style">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Nom</th>
+                                                                <th>Prénom</th>
+                                                                <th>Email</th>
+                                                                <th>Statut compte</th>
+                                                                 <th>CGU</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% if users|length > 0 %}
+                                                                    {% for user in users %}
+
+                                                                        {% set objectToDelete = path('admin_user_delete', {'id': user.id}) %}
+                                                                        {% set objectToDeleteToken = csrf_token('delete' ~ user.id) %}
+
+                                                                        <tr>
+                                                                            <td scope="row">{{ user.id }}</td>
+                                                                            <td>{{ user.firstName }}</td>
+                                                                            <td>{{ user.lastName }}</td>
+                                                                            <td>{{ user.email }}</td>
+                                                                            <td>
+                                                                                {% if user.isVerified is same as (true) %}
+                                                                                    Validé
+                                                                                    {% elseif user.isVerified is same as (false) %}
+                                                                                        En attente de validation
+                                                                                    {% else %}
+                                                                                        Inconnu
+                                                                                {% endif %}
+                                                                            </td>
+                                                                            <td>
+                                                                                {% if user.dataUsageAgreement is same as (true) %}
+                                                                                    Acceptées
+                                                                                    {% elseif user.dataUsageAgreement is same as (false) %}
+                                                                                    Non acceptées
+                                                                                    {% else %}
+                                                                                        Pas encore acceptées
+                                                                                {% endif %}
+                                                                            </td>
+                                                                            <td>
+
+                                                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                                                <button type="button" class="btn btn-info" onclick="location.href='{{ path('admin_user_show', {'id': user.id}) }}'">
+                                                                                    <i class="fas fa-eye">
+                                                                                    </i>
+                                                                                </button>
+                                                                                <button type="button" class="btn btn-info" onclick="location.href='{{ path('admin_user_edit', {'id': user.id}) }}'">
+                                                                                    <i class="fas fa-pencil-alt">
+                                                                                    </i>
+                                                                                </button>
+                                                                                {{ include('ad_admin/partials/_delete_form.html.twig') }}
+                                                                            </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tr>
+                                                                    {% endfor %}
+                                                                {% else %}
+                                                                    <tr>
+                                                                        <td valign="top" colspan="6">
+                                                                            Aucune catégorie n'a encore été enregistrée, cliquez <a href="{{ path('admin_user_new')}}">ici...</a> pour en ajouter.
+                                                                        </td>
+                                                                    <tr>
+                                                            {% endif %}
+                                                            
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Nom</th>
+                                                                <th>Prénom</th>
+                                                                <th>Email</th>
+                                                                <th>Statut compte</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <!-- [ Hover-table ] end -->
+                            </div>
+                            <!-- [ Main Content ] end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{# {% block javascripts %}
+    <script src="{{ asset('assets/js/_alert.js') }}"></script>
+{% endblock %} #}

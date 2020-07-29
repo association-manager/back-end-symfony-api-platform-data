@@ -12,7 +12,7 @@
             {% endif %}
         </td>
         <td>{{ advertisement.user.firstName }} {{ advertisement.user.lastName|upper }}</td>
-        <td>{{ advertisement.createdAt ? advertisement.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+        <td>{{ advertisement.createdAt ? advertisement.createdAt|date('d-m-Y H:i:s') : '' }}</td>
         {# <td>
             {% if advertisement.advertisementFiles|length > 0 %}
                 {% if advertisement.advertisementFiles|first %}

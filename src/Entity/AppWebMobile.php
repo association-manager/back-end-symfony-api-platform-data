@@ -27,6 +27,11 @@ class AppWebMobile
      *      max=255, 
      *      maxMessage="L'url de la page web ne peut pas contenir plus de 255 caractères"
      * )
+     * @Assert\Url(
+     *    relativeProtocol = true,
+     *    protocols = {"http", "https"},
+     *    message = "Cette url '{{ value }}' n'est pas valide"
+     * )
      */
     private $webPageUrl;
 

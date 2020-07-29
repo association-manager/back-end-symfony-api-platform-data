@@ -67,7 +67,8 @@ class Association
      *      "task_read", 
      *      "transaction_read", 
      *      "work_group_read",
-     *      "members_subresource"
+     *      "members_subresource",
+     *      "annonces_read"
      * })
      */
     private $id;
@@ -88,7 +89,8 @@ class Association
      *      "task_read", 
      *      "transaction_read", 
      *      "work_group_read",
-     *      "members_subresource"
+     *      "members_subresource",
+     *      "annonces_read"
      * })
      * @Assert\NotBlank(message="Le nom de l'association est obligatoire")
      * @Assert\Type("string", message="Le nom n'est pas conforme")
@@ -119,7 +121,8 @@ class Association
      *      "association_read", 
      *      "donation_read", 
      *      "staff_read", 
-     *      "association_profile_read"
+     *      "association_profile_read",
+     *      "annonces_read"
      * })
      * @Assert\Choice(choices=Association::ASSOTYPES, message="Cette valeur n'est pas proposée, choissez une valeur dans la liste.")
      */
@@ -166,7 +169,8 @@ class Association
      *      "donation_read", 
      *      "staff_read", 
      *      "address_read", 
-     *      "association_profile_read"
+     *      "association_profile_read",
+     *      "annonces_read"
      * })
      * @Assert\Url(
      *    relativeProtocol = true,
@@ -351,6 +355,11 @@ class Association
      */
     private $createdBy;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Advertisement::class, mappedBy="association", cascade={"persist", "remove"})
+     */
+    private $advertisements;
+
     public function __construct()
     {
         $this->workGroups = new ArrayCollection();
@@ -360,6 +369,7 @@ class Association
         $this->plannings = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->fileManagers = new ArrayCollection();
+        $this->advertisements = new ArrayCollection();
     }
 
     /**
@@ -754,6 +764,37 @@ class Association
     public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Advertisement[]
+     */
+    public function getAdvertisements(): Collection
+    {
+        return $this->advertisements;
+    }
+
+    public function addAdvertisement(Advertisement $advertisement): self
+    {
+        if (!$this->advertisements->contains($advertisement)) {
+            $this->advertisements[] = $advertisement;
+            $advertisement->setAssociation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdvertisement(Advertisement $advertisement): self
+    {
+        if ($this->advertisements->contains($advertisement)) {
+            $this->advertisements->removeElement($advertisement);
+            // set the owning side to null (unless already changed)
+            if ($advertisement->getAssociation() === $this) {
+                $advertisement->setAssociation(null);
+            }
+        }
 
         return $this;
     }

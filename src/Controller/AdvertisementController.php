@@ -44,17 +44,38 @@ class AdvertisementController extends AbstractController
         $user = $this->getUser();
         $advertisementsByUser = $this->advertisementRepo->findBy(array('user' => $user));
 
-        // dd($advertisementsByUser);
+        
+        //start user roles
+        // if ad is null
 
-        return $this->render('ad_admin/advertisement/index.html.twig', [
-            'advertisements' => $advertisements,
-            'advertisementsByUser' => $advertisementsByUser
-        ]);
+        // dd(count($user->getAdvertisements()));
+        $advertiserRole = $user->getRoles();
+
+        $ads = count($user->getAdvertisements());
+
+        if(($ads < 1) & (array_search('ROLE_ADMIN', $advertiserRole) === false ) & (array_search('ROLE_ADVERTISER', $advertiserRole) !== false )){  
+            $user->setRoles([]);
+        }
+
+        $this->manager->flush($user);
+        
+        //end user roles
+        
+        // dd($advertisementsByUser);
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles()) || in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles())) {
+            return $this->render('ad_admin/advertisement/index.html.twig', [
+                'advertisements' => $advertisements,
+                'advertisementsByUser' => $advertisementsByUser
+            ]);
+        }
     }
 
     /**
-     * @IsGranted("ROLE_ADVERTISER")
-     * @Route("/annonces/creer", name="advertisement_new", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
+     * @Route("/annonces/creer", name="advertisement_new")
+     *
+     * @param Request $request
+     * @return Response
      */
     public function new(Request $request): Response
     {
@@ -62,17 +83,25 @@ class AdvertisementController extends AbstractController
 
         $user = $this->getUser();
 
-        if ($user->getRoles() === array('ROLE_ADMIN', 'ROLE_USER')) {
-            $form = $this->createForm(AdAdminType::class, $advertisement);
+
+        // $form = $this->createForm(AdAdminType::class, $advertisement);
+        // $form->handleRequest($request);
+
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
+            $form = $this->createForm(AdAdminType::class, $advertisement, ['userID' => $user->getId()]);
             $form->handleRequest($request);
-        }elseif ($user->getRoles() === array('ROLE_ADVERTISER', 'ROLE_USER')) {
-            $form = $this->createForm(AdDefaultType::class, $advertisement);
+        }elseif (in_array($this->isGranted('ROLE_USER'), $user->getRoles())) {
+            $form = $this->createForm(AdDefaultType::class, $advertisement, ['userID' => $user->getId()]);
             $form->handleRequest($request);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Set user app to annonce
-            $user = $this->getUser();
+            // $user = $this->getUser();
+            
+            if (!in_array($this->isGranted('ROLE_ADVERTISE'), $user->getRoles())) {
+                $user->setRoles(['ROLE_ADVERTISER']);
+            }
 
             $advertisement->setUser($user);
 
@@ -90,12 +119,12 @@ class AdvertisementController extends AbstractController
             return $this->redirectToRoute('advertisement_index');
         }
 
-        if ($user->getRoles() === array('ROLE_ADMIN', 'ROLE_USER')) {
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
             return $this->render('ad_admin/advertisement/save.html.twig', [
                 'advertisement' => $advertisement,
                 'form' => $form->createView(),
             ]);
-        }elseif ($user->getRoles() === array('ROLE_ADVERTISER', 'ROLE_USER')) {
+        }elseif (in_array($this->isGranted('ROLE_USER'), $user->getRoles())) {
             return $this->render('ad_admin/advertisement/restricted_save.html.twig', [
                 'advertisement' => $advertisement,
                 'form' => $form->createView(),
@@ -111,9 +140,13 @@ class AdvertisementController extends AbstractController
      */
     public function showAdAdmin(Advertisement $advertisement): Response
     {
-        return $this->render('ad_admin/advertisement/show.html.twig', [
-            'advertisement' => $advertisement,
-        ]);
+        $user = $this->getUser();
+
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
+            return $this->render('ad_admin/advertisement/show.html.twig', [
+                'advertisement' => $advertisement,
+            ]);
+        }
     }
 
     /**
@@ -122,9 +155,13 @@ class AdvertisementController extends AbstractController
      */
     public function showAdAdvertiser(Advertisement $advertisement): Response
     {
-        return $this->render('ad_admin/advertisement/show.html.twig', [
-            'advertisement' => $advertisement,
-        ]);
+        $user = $this->getUser();
+
+        if (in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles())) {
+            return $this->render('ad_admin/advertisement/show.html.twig', [
+                'advertisement' => $advertisement,
+            ]);
+        }
     }
 
 
@@ -136,8 +173,8 @@ class AdvertisementController extends AbstractController
     {
         $user = $this->getUser();
 
-        if ($user->getRoles() === array('ROLE_ADMIN', 'ROLE_USER')) {
-            $form = $this->createForm(AdAdminType::class, $advertisement);
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
+            $form = $this->createForm(AdAdminType::class, $advertisement, ['userID' => $user->getId()]);
             $form->handleRequest($request);
         }
         if ($form->isSubmitted() && $form->isValid()) {
@@ -154,10 +191,12 @@ class AdvertisementController extends AbstractController
 
             return $this->redirectToRoute('advertisement_index');
         }
-        return $this->render('ad_admin/advertisement/save.html.twig', [
-            'advertisement' => $advertisement,
-            'form' => $form->createView(),
-        ]);
+        if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
+            return $this->render('ad_admin/advertisement/save.html.twig', [
+                'advertisement' => $advertisement,
+                'form' => $form->createView(),
+            ]);
+        }
     }
 
     /**
@@ -170,7 +209,7 @@ class AdvertisementController extends AbstractController
 
         // dd($advertisement->getStatus());
 
-        if ($user->getRoles() === array('ROLE_ADVERTISER', 'ROLE_USER')) {
+        if (in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles())) {
             if (
                 $advertisement->getStatus() == 'Validé' || 
                 $advertisement->getStatus() == 'Publié' ||
@@ -178,10 +217,10 @@ class AdvertisementController extends AbstractController
                 $advertisement->getStatus() == 'Dépublié' ||
                 $advertisement->getStatus() == 'Validé et publié'
                 ) {
-                    $form = $this->createForm(AdvertisementType::class, $advertisement);
+                    $form = $this->createForm(AdvertisementType::class, $advertisement, ['userID' => $user->getId()]);
                     $form->handleRequest($request);
             }elseif ($advertisement->getStatus() == 'Refusé' || $advertisement->getStatus() == 'En attente de validation') {
-                $form = $this->createForm(AdDefaultType::class, $advertisement);
+                $form = $this->createForm(AdDefaultType::class, $advertisement, ['userID' => $user->getId()]);
                 $form->handleRequest($request);
             }
 
@@ -199,7 +238,7 @@ class AdvertisementController extends AbstractController
     
                 return $this->redirectToRoute('advertisement_index');
             }
-            if ($user->getRoles() === array('ROLE_ADVERTISER', 'ROLE_USER')) {
+            if (in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles())) {
                 if (
                     $advertisement->getStatus() == 'Validé' || 
                     $advertisement->getStatus() == 'Publié' ||

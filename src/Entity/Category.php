@@ -49,7 +49,8 @@ class Category
      *      "work_group_read", 
      *      "association_read", 
      *      "transaction_read",
-     *      "projects_subresource"
+     *      "projects_subresource",
+     *      "annonces_read"
      * })
      */
     private $id;
@@ -100,6 +101,10 @@ class Category
      *      max=255, 
      *      maxMessage="Le détails ne peut pas contenir plus de 255 caractères"
      * )
+     * @Groups({
+     *      "category_read", 
+     *      "annonces_read"
+     * })
      */
     private $details;
 
@@ -109,6 +114,10 @@ class Category
      *      max=45, 
      *      maxMessage="Le sous type ne peut pas contenir plus de 45 caractères"
      * )
+     * @Groups({
+     *      "category_read", 
+     *      "annonces_read"
+     * })
      */
     private $subType;
     

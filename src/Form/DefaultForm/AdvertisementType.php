@@ -3,11 +3,13 @@
 namespace App\Form\DefaultForm;
 
 use App\Entity\Category;
+use App\Entity\Association;
 use App\Entity\Advertisement;
 use App\Form\VideoPosterType;
 use App\Form\AdvertisementFileType;
 use App\Form\FormConfig\FormConfig;
 use App\Repository\CategoryRepository;
+use App\Repository\AssociationRepository;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,6 +22,8 @@ class AdvertisementType extends FormConfig
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $userID = $options['userID'];
+
         $builder
             ->add('title', TextType::class, $this->getFormConf(false, 'Titre', 'Titre de l\'annonce'))
             ->add('details', TextType::class, $this->getFormConf(false, 'Détails', 'Détails de l\'annonce'))
@@ -36,7 +40,19 @@ class AdvertisementType extends FormConfig
                 'expanded' => false,
                 'multiple' => true
             ))
-            
+            ->add('duration', TextType::class, $this->getFormConf(false, 'Durée', 'Durée de l\'annonce'))
+            ->add('association', EntityType::class, array(
+                'label' => 'Association',
+                'class' => Association::class,
+                'query_builder' => function (AssociationRepository $er) use ($userID) {
+                    return $er->getAssociationsWhereUserIsAdmin($userID);
+                },
+                'choice_label' => 'name',
+                'placeholder' => 'Sélectionner une association parmi lesquelles vous êtes administrateur',
+                'required' => false,
+                'expanded' => false,
+                'multiple' => false
+            ))
             ->add(
                 'advertisementFiles', CollectionType::class,
                 [
@@ -74,5 +90,7 @@ class AdvertisementType extends FormConfig
         $resolver->setDefaults([
             'data_class' => Advertisement::class,
         ]);
+
+        $resolver->setRequired(['userID']);
     }
 }

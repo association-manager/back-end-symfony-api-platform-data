@@ -2,22 +2,38 @@
 
 namespace App\Entity;
 
-use App\Repository\AdvertisementFileRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
+use App\Repository\AdvertisementFileRepository;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 // constraints
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
 
 /**
  * @ORM\Table(name="advertisement_file")
  * @ORM\Entity(repositoryClass=AdvertisementFileRepository::class)
  * @Vich\Uploadable()
  * @ORM\HasLifecycleCallbacks
+ * @ApiResource(
+ *      collectionOperations={
+ *          "GET"={"path"="/annonces-medias/lister"}
+ *           },
+ *      itemOperations={
+ *          "GET"={"path"="/annonces-medias/{id}/afficher"}
+ *          },
+ *      normalizationContext={
+ *          "groups"={
+ *              "annonces_medias_read"
+ *          }
+ *      },
+ *      denormalizationContext={"disable_type_enforcement"=true}
+ * )
  */
 class AdvertisementFile
 {
@@ -25,28 +41,65 @@ class AdvertisementFile
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({
+     *      "annonces_read",
+     *      "annonces_medias_read"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({
+     *      "annonces_read",
+     *      "annonces_medias_read"
+     * })
      */
     private $picture;
 
     /**
      * @var File
      * @Vich\UploadableField(mapping="ad_picture", fileNameProperty="picture")
+     * @Assert\Image(
+     *     minWidth = 90,
+     *     minWidthMessage = "Largeur minimale acceptée : 90px",
+     *     maxWidth = 728,
+     *     maxWidthMessage = "Largeur maximale acceptée : 728px",
+     *     minHeight = 90,
+     *     minHeightMessage = "Hauteur minimale acceptée : 90px",
+     *     maxHeight = 728,
+     *     maxHeightMessage = "Hauteur maximale acceptée : 728px",
+     *     detectCorrupted = true,
+     *     corruptedMessage = "Votre image est corrompue, merci de charger une autre image.",
+     *     sizeNotDetectedMessage = "La taille de l'image n'est pas détecter, vérifiez s'il vous plait"
+     * )
+     * @Assert\File(
+     *     maxSize = "1024k",
+     *     maxSizeMessage = "Merci de charger une image ne dépassant pas 1Mo",
+     *     mimeTypes = {"image/gif", "image/jpg", "image/jpeg"},
+     *     mimeTypesMessage = "Vous pouvez charge soit une png, gif ou jpg"
+     * )
      */
     private $imageFile;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({
+     *      "annonces_read",
+     *      "annonces_medias_read"
+     * })
      */
     private $video;
 
     /**
      * @var File
      * @Vich\UploadableField(mapping="ad_video", fileNameProperty="video")
+     * @Assert\File(
+     *     maxSize = "10240K",
+     *     maxSizeMessage = "Merci de charger une vidéo ne dépassant pas 10Mo",
+     *     mimeTypes = {"video/mp4", "video/ogg"},
+     *     mimeTypesMessage = "Vous devez charger une vidéo soit en mp4, soit en ogg"
+     * )
      */
     private $videoFile;
 
@@ -62,6 +115,10 @@ class AdvertisementFile
      * )
      * 
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({
+     *      "annonces_read",
+     *      "annonces_medias_read"
+     * })
      */
     private $pictureSize;
 

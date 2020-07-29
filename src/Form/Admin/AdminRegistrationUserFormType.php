@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Admin;
 
 use App\Entity\User;
 use App\Form\FormConfig\FormConfig;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
-class RegistrationFormType extends FormConfig
+class AdminRegistrationUserFormType extends FormConfig
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -25,7 +25,19 @@ class RegistrationFormType extends FormConfig
                 et de traitement de mon compte électronique sur Association Manager et son opérateur de paiement.',
                 'data' => false,
                 'label_attr' => ['class' => 'switch-custom'],
-                'required' => true,
+                'required' => false,
+            ])
+            ->add('roles', ChoiceType::class, [
+                'placeholder' => false,
+                'label' => 'Rôles',
+                'required' => false,
+                'multiple' => true,
+                'expanded' => true,
+                'choices'  => [
+                    'Administrateur' => 'ROLE_ADMIN',
+                    'Annonceur' => 'ROLE_ADVERTISER',
+                    'Utilisateur' => 'ROLE_USER'
+                ],
             ])
             ->add('plainPassword', PasswordType::class, $this->getFormConf(true, ' ', 'Votre mot de passe'))
         ;

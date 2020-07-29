@@ -28,8 +28,11 @@
         <!-- [ Pre-loader ] End -->
 
         <!-- [ navigation menu ] start -->
-        {% include "/ad_admin/partials/_left_nav.html.twig" %}
-        <!-- [ navigation menu ] end -->
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ADVERTISER') %}
+            {% include "/ad_admin/partials/_left_nav.html.twig" %}
+            <!-- [ navigation menu ] end -->
+        {% else %}
+        {% endif %}
 
         <!-- [ Header ] start -->
         {% include "/ad_admin/partials/_header_nav.html.twig" %}

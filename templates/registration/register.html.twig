@@ -40,7 +40,8 @@
                             {{ form_row(registrationForm.firstName) }}
                             {{ form_row(registrationForm.lastName) }}
                             {{ form_row(registrationForm.plainPassword) }}
-                            {{ form_row(registrationForm.agreeTerms) }}
+                            <div class="form-group" style="display: block !important;" >{{ form_row(registrationForm.dataUsageAgreement) }}
+                            {% include "ad_admin/partials/_asm.cgu.html.twig" %}</div>
                             
                             <button type="submit" class="btn btn-primary shadow-2 mb-4">Inscription</button>
                             <p class="mb-0 text-muted">Vous avez déjà un compte? <a href="{{ path('app_advertisement_login') }}">Connexion</a></p>
