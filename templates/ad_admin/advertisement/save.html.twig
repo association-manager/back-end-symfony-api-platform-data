@@ -47,19 +47,19 @@
                                                                     {{ form_row(form.title) }}
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    {{ form_row(form.status) }}
-                                                                </div>
-                                                                <div class="form-group">
                                                                     {{ form_row(form.categories) }}
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    {{ form_row(form.priority) }}
                                                                 </div>
                                                                 {% if is_granted('ROLE_ADMIN') %}
                                                                     <div class="form-group">
-                                                                        {{ form_row(form.duration) }}
+                                                                        {{ form_row(form.status) }}
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        {{ form_row(form.priority) }}
                                                                     </div>
                                                                 {% endif %}
+                                                                <div class="form-group">
+                                                                    {{ form_row(form.duration) }}
+                                                                </div>
                                                                 <div class="form-group">
                                                                     {{ form_row(form.association) }}
                                                                 </div>

@@ -90,7 +90,7 @@ class AdvertisementController extends AbstractController
         if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
             $form = $this->createForm(AdAdminType::class, $advertisement, ['userID' => $user->getId()]);
             $form->handleRequest($request);
-        }elseif (in_array($this->isGranted('ROLE_USER'), $user->getRoles())) {
+        }elseif (in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles()) || in_array($this->isGranted('ROLE_USER'), $user->getRoles())) {
             $form = $this->createForm(AdDefaultType::class, $advertisement, ['userID' => $user->getId()]);
             $form->handleRequest($request);
         }
@@ -124,7 +124,7 @@ class AdvertisementController extends AbstractController
                 'advertisement' => $advertisement,
                 'form' => $form->createView(),
             ]);
-        }elseif (in_array($this->isGranted('ROLE_USER'), $user->getRoles())) {
+        }elseif (in_array($this->isGranted('ROLE_USER'), $user->getRoles()) || in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles())) {
             return $this->render('ad_admin/advertisement/restricted_save.html.twig', [
                 'advertisement' => $advertisement,
                 'form' => $form->createView(),
