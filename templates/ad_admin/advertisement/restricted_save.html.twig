@@ -15,7 +15,9 @@
 
 {% block body %}
     <!-- [ Main Content ] start -->
-    {# <div class="pcoded-main-container"> #}
+    {% if is_granted('ROLE_ADVERTISER') %}
+    <div class="pcoded-main-container">
+    {% endif %}
         <div class="pcoded-wrapper">
             <div class="pcoded-content">
                 <div class="pcoded-inner-content">
@@ -101,7 +103,9 @@
                 </div>
             </div>
         </div>
-    {# </div> #}
+    {% if is_granted('ROLE_ADVERTISER') %}
+    </div>
+    {% endif %}
 
 {% endblock %}
 
