@@ -22,7 +22,14 @@
                                         </div>
                                         <ul class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
-                                            <li class="breadcrumb-item"><a href="javascript:">Annonce / {{ advertisement.title }} / Détails</a></li>
+                                            <li class="breadcrumb-item"><a href="javascript:">
+                                            Annonce / 
+                                            {% if advertisement.title %}
+                                                {{ advertisement.title }}
+                                                {% else %}
+                                                    Annonce sans titre
+                                            {% endif %}
+                                             / Détails</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -36,7 +43,13 @@
                                         <div class="col-sm-12">
                                             <div class="card">
                                                 <div class="card-header">
-                                                    <h5>{{ advertisement.title|capitalize }}</h5>
+                                                    <h5>
+                                                    {% if advertisement.title %}
+                                                        {{ advertisement.title|capitalize }}
+                                                        {% else %}
+                                                            Annonce sans titre
+                                                    {% endif %}
+                                                    </h5>
                                                 </div>
 
                                                 
@@ -110,7 +123,11 @@
                                                         <div>
                                                     </div>
                                                         {% else %}
-                                                        Aucune annonce n'a encore été enregistrée, cliquez <a href="{{ path('advertisement_new')}}">ici...</a> pour en ajouter.
+                                                        <div class="card-block">
+                                                            <div>
+                                                                Aucune image n'a encore été enregistrée pour cette annonce, vous pouvez la modifier pour en ajouter.
+                                                            </div>
+                                                        </div>
                                                 {% endif %}
                                                 
                                                 {# End ad image #}
@@ -129,8 +146,10 @@
                                                             {% endif %}
                                                         {% endfor %}
                                                         {% else %}
-                                                        <div>
-                                                            Aucune vidéo pour cette annonce
+                                                        <div class="card-block">
+                                                            <div>
+                                                                Aucune vidéo n'a encore été enregistrée pour cette annonce, vous pouvez la modifier pour en ajouter.
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 {% endif %}
