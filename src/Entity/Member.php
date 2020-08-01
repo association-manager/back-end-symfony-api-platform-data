@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -152,6 +153,7 @@ class Member
      *  @Groups({
      *      "member_read"
      * })
+     * 
      */
     private $memberTaskWorkGroupRelations;
 
@@ -171,6 +173,7 @@ class Member
         $this->donations = new ArrayCollection();
         $this->staff = new ArrayCollection();
         $this->memberTaskWorkGroupRelations = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     public function getId(): ?int

@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -149,6 +150,7 @@ class Task
      *      "association_read",
      *      "projects_subresource"
      * })
+     * @ApiSubresource
      */
     private $memberTaskWorkGroupRelations;
 
@@ -264,4 +266,5 @@ class Task
 
         return $this;
     }
+
 }

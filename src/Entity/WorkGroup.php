@@ -89,7 +89,7 @@ class WorkGroup
      *      "association_read", 
      *      "member_task_work_group_relation_read"
      * })
-     * @ApiSubresource
+     * 
      */
     private $projects;
 
@@ -98,6 +98,7 @@ class WorkGroup
      * @Groups({
      *      "work_group_read"
      * })
+     * 
      */
     private $memberTaskWorkGroupRelations;
 

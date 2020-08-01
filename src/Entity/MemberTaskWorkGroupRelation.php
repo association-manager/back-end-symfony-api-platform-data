@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\MemberTaskWorkGroupRelationRepository;
 
@@ -55,6 +56,7 @@ class MemberTaskWorkGroupRelation
      *      "work_group_read",
      *      "projects_subresource"
      * })
+     * @ApiSubresource
      */
     private $member;
 
@@ -65,6 +67,7 @@ class MemberTaskWorkGroupRelation
      *      "member_task_work_group_relation_read", 
      *      "member_read"
      * })
+     * @ApiSubresource
      */
     private $task;
 
@@ -78,6 +81,7 @@ class MemberTaskWorkGroupRelation
      *      "project_planning_read", 
      *      "task_read"
      * })
+     * @ApiSubresource
      */
     private $workGroup;
 
