@@ -37,6 +37,8 @@ class AdvertisementController extends AbstractController
      */
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         // Admin user :
         $advertisements = $this->advertisementRepo->findAll();
 
@@ -79,6 +81,8 @@ class AdvertisementController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $advertisement = new Advertisement();
 
         $user = $this->getUser();

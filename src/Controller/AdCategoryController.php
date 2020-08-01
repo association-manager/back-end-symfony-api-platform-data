@@ -4,10 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
+use App\Service\AdminAdService;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 // use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -32,11 +33,11 @@ class AdCategoryController extends AbstractController
      * @Security("is_granted('ROLE_ADMIN')", message="Vous devez être un admin pour consulter cette page")
      * @Route("/categories", name="category_index", methods={"GET"})
      */
-    public function index(): Response
+    public function index(AdminAdService $adCategories): Response
     {
         $user = $this->getUser();
 
-        $categories = $this->categoryRepo->findAll();
+        $categories = $adCategories->getAllCategoriesWhereSubTypeIsNotNull();
 
         if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
             return $this->render('ad_admin/category/index.html.twig', [
