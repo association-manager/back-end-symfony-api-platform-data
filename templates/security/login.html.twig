@@ -74,6 +74,10 @@
                                 </label>
                             </div>
                         #}
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1" name="_remember_me">
+                            <label class="custom-control-label" for="customCheck1">Se souvenir de moi</label>
+                        </div>
                         
                         <input type="hidden" name="_csrf_token"
                             value="{{ csrf_token('authenticate') }}"

@@ -3,6 +3,9 @@ doctrine:
         url: '%env(resolve:DATABASE_URL)%'
         mapping_types:
             enum: string
+        # Start remember me
+        schema_filter: ~^(?!rememberme_token)~
+        # End remember me
 
         # IMPORTANT: You MUST configure your server version,
         # either here or in the DATABASE_URL env var (see .env file)

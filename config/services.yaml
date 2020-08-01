@@ -41,3 +41,7 @@ services:
                     key: '%env(AWS_S3_ACCESS_ID)%'
                     secret: '%env(AWS_S3_ACCESS_SECRET)%'
     # End AWS S3 Service
+    
+    # Start Remember me
+    Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~ 
+    # End Remember me 

@@ -18,6 +18,8 @@ class DashboardController extends AbstractController
      */
     public function index(AdvertisementRepository $adRepo, EntityManagerInterface $manager, StatsService $statsService)
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $user = $this->getUser();
 
         if ($user === null) {
