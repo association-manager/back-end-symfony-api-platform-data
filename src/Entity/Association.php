@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
 
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -360,6 +361,16 @@ class Association
      */
     private $advertisements;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({
+     *      "association_read", 
+     *      "association_profile_read",
+     *      "annonces_read"
+     * })
+     */
+    private $logo;
+
     public function __construct()
     {
         $this->workGroups = new ArrayCollection();
@@ -372,6 +383,23 @@ class Association
         $this->advertisements = new ArrayCollection();
     }
 
+    /**
+     * This function is used to initialize the website.
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     *
+     * @return void
+     */
+    public function initializeSlug()
+    {
+        if(empty($this->website))
+        {
+            $slugify = new Slugify();
+            $this->website = $slugify->slugify($this->name);
+        }
+    }
+    
     /**
      * Automatically assign the current date
      *
@@ -795,6 +823,18 @@ class Association
                 $advertisement->setAssociation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(string $logo): self
+    {
+        $this->logo = $logo;
 
         return $this;
     }
