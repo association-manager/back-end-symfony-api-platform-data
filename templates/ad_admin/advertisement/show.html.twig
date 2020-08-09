@@ -80,7 +80,20 @@
                                                     <h6>
                                                         Audience
                                                         <span class="badge badge-secondary">
-                                                            {{ advertisement.audience }}
+                                                            {% if advertisement.audience is same as("APPROVED_UNDER_18") %}
+                                                                Approuvée -18 ans
+                                                                {% elseif advertisement.audience is same as("APPROVED_BETWEEN_18_AND_29_YEARS_OLD") %}
+                                                                Approuvée 18 et 29 ans
+                                                                {% elseif advertisement.audience is same as("APPROVED_BETWEEN_30_AND_45_YEARS_OLD") %}
+                                                                Approuvée 30 et 45 ans
+                                                                {% elseif advertisement.audience is same as("APPROVED_BETWEEN_46_AND_60_YEARS_OLD") %}
+                                                                Approuvée entre 46 et 60 ans
+                                                                {% elseif advertisement.audience is same as("APPROVED_60_YEARS_OLD_AND_OVER") %}
+                                                                Approuvée 60 et plus
+                                                                {% else %}
+                                                                Approbation non définie pour cette annonce    
+                                                            {% endif %}
+                                                            
                                                         </span>
                                                     </h6>
                                                     <hr>
