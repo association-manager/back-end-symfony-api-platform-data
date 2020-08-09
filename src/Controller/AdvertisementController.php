@@ -103,8 +103,11 @@ class AdvertisementController extends AbstractController
             // Set user app to annonce
             // $user = $this->getUser();
             
-            if (!in_array($this->isGranted('ROLE_ADVERTISE'), $user->getRoles())) {
+            if (!in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles()) & !in_array($this->isGranted('ROLE_ADVERTISER'), $user->getRoles())) {
                 $user->setRoles(['ROLE_ADVERTISER']);
+            }
+            else if (in_array($this->isGranted('ROLE_ADMIN'), $user->getRoles())) {
+                $user->setRoles(["ROLE_ADMIN","ROLE_ADVERTISER"]);
             }
 
             $advertisement->setUser($user);

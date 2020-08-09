@@ -1,0 +1,16 @@
+{% for advertisement in advertisementsByUser %}
+    <tr>
+        <td>https://associations-manager.go.yj.fr/annonces/</td>
+        <td>{{ advertisement.iframeLink }}</td>
+        <td>
+            {% if is_granted('ROLE_ADVERTISER') %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-info" onclick="location.href='{{ path('advertisement_public_mobile_show', {'iframeLink': advertisement.iframeLink}) }}'">
+                        <i class="fas fa-eye">
+                        </i>
+                    </button>
+                </div>
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}

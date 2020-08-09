@@ -88,9 +88,11 @@ class AdvertisementType extends FormConfig
                 'label' => 'Public cible',
                 'required' => true,
                 'choices'  => [
-                    'Approuvée' => 'Approuvée',
-                    'Approuvée (pour adultes)' => 'Approuvée (pour adultes)',
-                    'Approuvée (non adaptée à tous publics)' => 'Approuvée (non adaptée à tous publics)'
+                    'Approuvée - 18 ans' => 'APPROVED_UNDER_18',
+                    'Approuvée 18 et 29 ans' => 'APPROVED_BETWEEN_18_AND_29_YEARS_OLD',
+                    'Approuvée 30 et 45 ans' => 'APPROVED_BETWEEN_30_AND_45_YEARS_OLD',
+                    'Approuvée entre 46 et 60 ans' => 'APPROVED_BETWEEN_46_AND_60_YEARS_OLD',
+                    'Approuvée 60 et plus' => 'APPROVED_60_YEARS_OLD_AND_OVER'
                 ],
             ])
         ;
