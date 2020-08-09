@@ -75,9 +75,6 @@ class Advertisement
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="advertisements")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({
-     *      "annonces_read"
-     * })
      */
     private $user;
 
