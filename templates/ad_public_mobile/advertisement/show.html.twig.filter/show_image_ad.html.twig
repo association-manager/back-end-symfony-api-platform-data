@@ -1,0 +1,11 @@
+{% if advertisementFile.picture %}
+    {% if advertisementFile.pictureSize is same as('300x250') %}
+        <div class="card-body text-center" style="width:300px">
+            <img class="img-fluid img-thumbnail" src="{{ vich_uploader_asset(advertisementFile, 'imageFile') }}" alt="{{ advertisementFile.advertisement.title }}{{ advertisementFile.pictureSize }}">
+            <p class="card-text">{{ advertisement.details }}</p>
+            <a href='https://www.association-manager.go.yj.fr/{{ advertisement.association.website }}' class="btn btn-primary">Visitez la page</a>
+        </div>
+        {% else %}
+            Le code n'est pas optimisé pour géré un format d'image supérieur à 300 x 250
+    {% endif %}
+{% endif %}

@@ -1,0 +1,11 @@
+<div class="card-body text-center" style="width:300px">
+    <div class="embedresize">
+        <video title="{{ advertisementFile.advertisement.title }}" preload="auto" width="336" height="280" 
+        autoplay>
+            <source src="https://advertisement-manager.s3.eu-west-3.amazonaws.com/advertisement_video/{{ advertisementFile.video }}" type="video/mp4">
+            Nous sommes désolés, votre navigateur ne supporte pat les vidéos intégrées.
+        </video>
+        <p class="card-text">{{ advertisement.details }}</p>
+        <a href='https://www.association-manager.go.yj.fr/{{ advertisement.association.website }}' class="btn btn-primary">Visitez la page</a>
+    </div>
+</div>

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AdvertisementRepository;
 use Doctrine\Common\Collections\Collection;
@@ -152,11 +153,17 @@ class Advertisement
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({
+     *      "annonces_read"
+     * })
      */
     private $priority;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({
+     *      "annonces_read"
+     * })
      */
     private $duration;
 
@@ -170,12 +177,37 @@ class Advertisement
      */
     private $association;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({
+     *      "annonces_read"
+     * })
+     */
+    private $iframeLink;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->visitorServicePlatforms = new ArrayCollection();
         // File management
         $this->advertisementFiles = new ArrayCollection();
+    }
+
+    /**
+     * This function is used to initialize the website.
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     *
+     * @return void
+     */
+    public function initializeSlug()
+    {
+        if(empty($this->iframeLink))
+        {
+            $slugify = new Slugify();
+            $this->iframeLink = $slugify->slugify($this->id.'_'.$this->title);
+        }
     }
 
     /**
@@ -462,6 +494,18 @@ class Advertisement
     public function setAssociation(?Association $association): self
     {
         $this->association = $association;
+
+        return $this;
+    }
+
+    public function getIframeLink(): ?string
+    {
+        return $this->iframeLink;
+    }
+
+    public function setIframeLink(string $iframeLink): self
+    {
+        $this->iframeLink = $iframeLink;
 
         return $this;
     }

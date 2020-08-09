@@ -380,6 +380,7 @@ class APIFixtures extends BaseFixture
                 ->setAssemblyConstituveDate($this->faker->dateTimeBetween('-6 months'))
                 ->setFoundedAt($this->faker->dateTimeBetween('-6 months'))
                 // ->setCreatedAt($this->faker->dateTimeBetween('-3 months'))
+                ->setLogo('https://img.icons8.com/officel/80/000000/ios-photos.png')
                 ->setCreatedBy($user)
                 ->addAddress($associationAddress)
                 ->setAssociationProfile($associationProfile);
