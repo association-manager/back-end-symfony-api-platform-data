@@ -6,10 +6,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      APP_ENV: test
     steps:
-    - name: create env file
-      env:
-        APP_ENV: test
     - uses: actions/checkout@v2
 
     - name: Validate composer.json and composer.lock
@@ -39,9 +38,6 @@ jobs:
     env:
       APP_ENV: test
     steps:
-      - name: create env file
-        env:
-          APP_ENV: test
       - name: Start Mysql # Add this step
         run: sudo /etc/init.d/mysql start
       - uses: actions/checkout@v1
