@@ -1,4 +1,6 @@
 {
+    "name": "association_manager/api",
+    "description": "api and admin for advertisement",
     "type": "project",
     "license": "proprietary",
     "require": {
