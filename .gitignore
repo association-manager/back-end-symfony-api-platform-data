@@ -1,4 +1,6 @@
 ###> symfony/framework-bundle ###
+.env
+/.env
 .env.save
 /.env.save
 /.env.local
