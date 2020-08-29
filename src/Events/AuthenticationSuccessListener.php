@@ -1,6 +1,6 @@
 <?php
 
-    namespace App\EventListener;
+    namespace App\Events;
     use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 
     use Symfony\Component\Security\Core\User\UserInterface;

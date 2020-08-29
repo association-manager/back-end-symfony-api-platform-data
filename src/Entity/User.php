@@ -26,7 +26,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "DELETE"={"path"="/utilisateur/{id}/supprimer"}
  *          },
  *      subresourceOperations={
- *          "addresses_get_subresource"={"path"="/utilisateurs/{id}/adresses"} ,
+ *          "addresses_get_subresource"={"path"="/utilisateurs/{id}/adresses"},
  *          "members_get_subresource"={"path"="/utilisateurs/{id}/membres"}
  *      },
  *      normalizationContext={
