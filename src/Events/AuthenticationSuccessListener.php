@@ -25,8 +25,9 @@
             $data['data'] = array(
                 'id' => $user->getId(),
                 'firstName' => $user->getFirstName(),
-                'lastName' => $user->getLastName(),
-                'addresse' => $addresses[0]->getId()
+                'lastName' => $user->getLastName()
+                // 'addresse' => strlen($addresses) != 0 ? ["id" => $addresses->getId(), "addressLine1" => $addresses->getAddressLine1()] : 'Aucune adresse enregistrée pour cet utilisateur'
+                // 'addresse' => $addresses[0]->getId()
             );
         
             $event->setData($data);
