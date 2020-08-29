@@ -46,6 +46,6 @@ services:
     Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~ 
     # End Remember me 
     acme_api.event.authentication_success_listener:
-        class: App\Event\AuthenticationSuccessListener
+        class: App\Events\AuthenticationSuccessListener
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
