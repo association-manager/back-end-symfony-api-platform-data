@@ -368,6 +368,7 @@ class Association
      *      "association_profile_read",
      *      "annonces_read"
      * })
+     * @Assert\NotBlank(message="Le logo est obligatoire")
      */
     private $logo;
 
@@ -832,7 +833,7 @@ class Association
         return $this->logo;
     }
 
-    public function setLogo(string $logo): self
+    public function setLogo($logo): self
     {
         $this->logo = $logo;
 
