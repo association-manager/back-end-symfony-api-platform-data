@@ -61,3 +61,11 @@ jobs:
         run: php bin/console doctrine:fixtures:load --append --no-interaction --env=test -vvv
       - name: Run Test
         run: phpdbg -d memory_limit=-1 -qrr bin/phpunit --coverage-text
+      - name: Install Symfony
+        run: wget https://get.symfony.com/cli/installer -O - | bash
+      - name: Start Selenium
+        run: java -Dwebdriver.chrome.driver=$CHROMEWEBDRIVER/chromedriver -jar $SELENIUM_JAR_PATH &
+      - name: Start server
+        run: ~/.symfony/bin/symfony server:start -d --no-tls
+      - name: Acceptance test
+        run: ./vendor/bin/behat --snippets-for FeatureContext
