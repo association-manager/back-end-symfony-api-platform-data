@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6d7d8a45024c56066341333e5044e39",
+    "content-hash": "e395ef974a43beb82c3775e3517310cc",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -8738,6 +8738,49 @@
                 "php"
             ],
             "time": "2020-08-18T19:48:01+00:00"
+        },
+        {
+            "name": "se/selenium-server-standalone",
+            "version": "3.141.59",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sveneisenschmidt/selenium-server-standalone.git",
+                "reference": "ae8e6ab8833a662328bfbdd52aa05d038c65fd5a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sveneisenschmidt/selenium-server-standalone/zipball/ae8e6ab8833a662328bfbdd52aa05d038c65fd5a",
+                "reference": "ae8e6ab8833a662328bfbdd52aa05d038c65fd5a",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "bin": [
+                "bin/selenium-server-standalone"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sven Eisenschmidt",
+                    "email": "sven.eisenschmidt@gmail.com"
+                },
+                {
+                    "name": "James Titcumb",
+                    "email": "hello@jamestitcumb.com"
+                }
+            ],
+            "description": "Composer distribution of Selenium Server Standalone, the browser automation framework. Adds a executable to your composer bin directory.",
+            "homepage": "https://github.com/sveneisenschmidt/selenium-server-standalone",
+            "keywords": [
+                "selenium",
+                "testing"
+            ],
+            "time": "2019-12-23T12:37:36+00:00"
         },
         {
             "name": "symfony/browser-kit",

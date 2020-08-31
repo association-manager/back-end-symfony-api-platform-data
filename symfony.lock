@@ -269,6 +269,9 @@
     "ralouphie/getallheaders": {
         "version": "3.0.3"
     },
+    "se/selenium-server-standalone": {
+        "version": "3.141.59"
+    },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
         "recipe": {
